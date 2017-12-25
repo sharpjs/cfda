@@ -97,7 +97,7 @@ impl Display for AddrReg {
 }
 
 // -----------------------------------------------------------------------------
-// Address Registers
+// Tests
 
 #[cfg(test)]
 mod tests {
