@@ -97,6 +97,36 @@ impl Display for AddrReg {
 }
 
 // -----------------------------------------------------------------------------
+// Miscellaneous Registers
+
+/// The ColdFire program counter register.
+pub struct PcReg;
+
+impl Display for PcReg {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        f.write_str("pc")
+    }
+}
+
+/// The ColdFire condition code register.
+pub struct CcrReg;
+
+impl Display for CcrReg {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        f.write_str("ccr")
+    }
+}
+
+/// The ColdFire status register.
+pub struct SrReg;
+
+impl Display for SrReg {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        f.write_str("sr")
+    }
+}
+
+// -----------------------------------------------------------------------------
 // Tests
 
 #[cfg(test)]
@@ -161,6 +191,21 @@ mod tests {
     #[test]
     pub fn addr_reg_fmt() {
         assert_eq!( format!("{}", AddrReg(3)), "a3" );
+    }
+
+    #[test]
+    pub fn pc_reg_fmt() {
+        assert_eq!( format!("{}", PcReg), "pc" );
+    }
+
+    #[test]
+    pub fn ccr_reg_fmt() {
+        assert_eq!( format!("{}", CcrReg), "ccr" );
+    }
+
+    #[test]
+    pub fn sr_reg_fmt() {
+        assert_eq!( format!("{}", SrReg), "sr" );
     }
 }
 
