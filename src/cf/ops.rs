@@ -14,9 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
-mod mode;
-mod ops;
-mod reg;
+/// A assembler pseudo-operation.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+pub struct CfOp {
+    pub name: &'static str,
+}
 
-pub use self::ops::CfOp;
+static DOT_BYTE: CfOp = CfOp {
+    name: "nop",
+};
 
