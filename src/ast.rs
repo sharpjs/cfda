@@ -30,6 +30,44 @@ pub struct Stmt {
     pub args: Vec<Slot<Arg>>,
 }
 
+/// An assembly operation.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+pub enum Op {
+    /// A platform-agnostic pseudo-op.
+    Asm(&'static AsmOp),
+
+    /// A ColdFire instruction.
+    Cf(&'static CfOp),
+}
+
+#[derive(Clone, PartialEq, Eq, Hash, Debug)]
+pub enum Arg {
+    /// A platform-agnostic argument.
+    Expr(Expr),
+
+    /// A ColdFire-specific argument.
+    Cf(CfArg),
+}
+
+#[derive(Clone, PartialEq, Eq, Hash, Debug)]
+pub enum Expr {
+    Ident(Ident), // when used as the identifier itself, not in reference to something else
+    Num(Num),
+    Str(String),
+    Char(Char),
+    Unary(i32, Box<Slot<Expr>>),
+    Binary(i32, Box<Slot<Expr>>, Box<Slot<Expr>>),
+}
+
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+pub struct Ident (usize);
+
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+pub struct Num (i64);
+
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+pub struct Char (char);
+
 /// A slot containing a value and/or an identifier that resolves to that value.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub enum Slot<V> {
@@ -74,42 +112,4 @@ impl<V> Slot<V> {
         }
     }
 }
-
-/// An assembly operation.
-#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
-pub enum Op {
-    /// A platform-agnostic pseudo-op.
-    Asm(&'static AsmOp),
-
-    /// A ColdFire instruction.
-    Cf(&'static CfOp),
-}
-
-#[derive(Clone, PartialEq, Eq, Hash, Debug)]
-pub enum Arg {
-    /// A platform-agnostic argument.
-    Expr(Expr),
-
-    /// A ColdFire-specific argument.
-    Cf(CfArg),
-}
-
-#[derive(Clone, PartialEq, Eq, Hash, Debug)]
-pub enum Expr {
-    Ident(Ident), // when used as the identifier itself, not in reference to something else
-    Num(Num),
-    Str(String),
-    Char(Char),
-    Unary(i32, Box<Slot<Expr>>),
-    Binary(i32, Box<Slot<Expr>>, Box<Slot<Expr>>),
-}
-
-#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
-pub struct Ident (usize);
-
-#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
-pub struct Num (i64);
-
-#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
-pub struct Char (char);
 
