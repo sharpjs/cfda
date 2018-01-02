@@ -14,21 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
-//pub enum Mode {
-//    DataReg         (DataReg),
-//    AddrReg         (AddrReg),
-//    AddrRegInd      (AddrReg),
-//    AddrRegIndInc   (AddrReg),
-//    AddrRegIndDec   (AddrReg),
-//    AddrRegDisp     (AddrReg, i16),
-//    AddrRegIdx      (AddrReg, i8, Index),
-//    PcDisp          (PcReg),
-//    PcIdx           (PcReg),
-//    AbsShort        (u32),
-//    AbsLong         (u32),
-//    Imm             (u32),
-//}
-
 static MODES: [Mode; 12] = [
     Mode { bits: 0b_000_000, mask: 0b_111_000, words: [0, 0, 0], f: mode_data         },
     Mode { bits: 0b_001_000, mask: 0b_111_000, words: [0, 0, 0], f: mode_addr         },
