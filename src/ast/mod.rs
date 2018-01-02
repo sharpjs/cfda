@@ -21,8 +21,8 @@ use cf::{CfOp, CfArg};
 use ops::AsmOp;
 use num_bigint::BigInt;
 
-use self::char::Char;
-use self::slot::Slot;
+pub use self::char::Char;
+pub use self::slot::Slot;
 
 /// An assembly statement.
 #[derive(Clone, PartialEq, Eq, Debug)]
