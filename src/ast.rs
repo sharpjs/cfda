@@ -53,7 +53,7 @@ pub enum Arg {
 #[derive(Clone, PartialEq, Eq, Hash, Debug)]
 pub enum Expr {
     Ident(Ident), // when used as the identifier itself, not in reference to something else
-    Num(Num),
+    Int(Int),
     Str(String),
     Char(Char),
     Unary(i32, Box<Slot<Expr>>),
@@ -66,7 +66,7 @@ pub struct Ident (usize);
 
 /// An assembly integer literal.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
-pub struct Num (i64);
+pub struct Int (i64);
 
 /// An assembly character literal.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
