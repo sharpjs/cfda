@@ -100,6 +100,7 @@ impl Display for AddrReg {
 // Miscellaneous Registers
 
 /// The ColdFire program counter register.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub struct PcReg;
 
 impl Display for PcReg {
@@ -109,6 +110,7 @@ impl Display for PcReg {
 }
 
 /// The ColdFire condition code register.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub struct CcrReg;
 
 impl Display for CcrReg {
@@ -118,6 +120,7 @@ impl Display for CcrReg {
 }
 
 /// The ColdFire status register.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub struct SrReg;
 
 impl Display for SrReg {
