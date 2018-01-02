@@ -49,6 +49,7 @@ pub enum Arg {
     Cf(CfArg),
 }
 
+/// An assembly expression.
 #[derive(Clone, PartialEq, Eq, Hash, Debug)]
 pub enum Expr {
     Ident(Ident), // when used as the identifier itself, not in reference to something else
@@ -59,12 +60,15 @@ pub enum Expr {
     Binary(i32, Box<Slot<Expr>>, Box<Slot<Expr>>),
 }
 
+/// An assembly identifier.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub struct Ident (usize);
 
+/// An assembly integer literal.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub struct Num (i64);
 
+/// An assembly character literal.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub struct Char (char);
 
