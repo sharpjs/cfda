@@ -15,7 +15,7 @@
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
 use ops::AsmOp;
-use cf::CfOp;
+use cf::{CfOp, CfArg};
 
 /// An assembly statement.
 #[derive(Clone, PartialEq, Eq, Debug)]
@@ -24,10 +24,11 @@ pub struct Stmt {
     pub labels: Vec<Ident>,
 
     /// Operation indicated by the statement.
-    pub op: Op,
+    pub op: Slot<Op>,
 
-//  /// Arguments to the operation.
-//  pub args: Vec<Arg>,
+    /// Arguments to the operation.
+    pub args: Vec<Slot<Arg>>,
+}
 
 /// A slot containing a value and/or an identifier that resolves to that value.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
@@ -84,30 +85,23 @@ pub enum Op {
     Cf(&'static CfOp),
 }
 
-// #[derive(Clone, PartialEq, Eq, Hash, Debug)]
-// pub enum Arg {
-//     /// A platform-agnostic argument.
-//     Asm(AsmArg),
-// 
-//     /// A ColdFire-specific argument.
-//     Cf(CfArg),
-// }
+#[derive(Clone, PartialEq, Eq, Hash, Debug)]
+pub enum Arg {
+    /// A platform-agnostic argument.
+    Expr(Expr),
 
-//#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
-//pub enum Arg {
-//    Expr(Expr),
-//    // string
-//    // character
-//    // number          >-- immediate?
-//    // identifier      >-- refers to something
-//    // addressing mode \
-//    // cache specifier  >- platform-specific
-//    // register-pair   /
-//}
+    /// A ColdFire-specific argument.
+    Cf(CfArg),
+}
 
-#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+#[derive(Clone, PartialEq, Eq, Hash, Debug)]
 pub enum Expr {
-    Ident(Ident),
+    Ident(Ident), // when used as the identifier itself, not in reference to something else
+    Num(Num),
+    Str(String),
+    Char(Char),
+    Unary(i32, Box<Slot<Expr>>),
+    Binary(i32, Box<Slot<Expr>>, Box<Slot<Expr>>),
 }
 
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
@@ -115,4 +109,7 @@ pub struct Ident (usize);
 
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub struct Num (i64);
+
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+pub struct Char (char);
 
