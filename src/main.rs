@@ -17,6 +17,8 @@
 #![allow(dead_code)]
 #![allow(unused_variables)]
 
+extern crate num_bigint;
+
 mod ast;
 mod cf;
 mod ops;

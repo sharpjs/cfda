@@ -14,8 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
-use ops::AsmOp;
 use cf::{CfOp, CfArg};
+use ops::AsmOp;
+use num_bigint::BigInt;
 
 /// An assembly statement.
 #[derive(Clone, PartialEq, Eq, Debug)]
@@ -65,8 +66,8 @@ pub enum Expr {
 pub struct Ident (usize);
 
 /// An assembly integer literal.
-#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
-pub struct Int (i64);
+#[derive(Clone, PartialEq, Eq, Hash, Debug)]
+pub struct Int (BigInt);
 
 /// An assembly character literal.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
