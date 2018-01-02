@@ -14,11 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
-mod ast;
-mod mode;
-mod ops;
-mod reg;
-
-pub use self::ast::CfArg;
-pub use self::ops::CfOp;
+/// A ColdFire-specific argument to an operation.
+#[derive(Clone, PartialEq, Eq, Hash, Debug)]
+pub enum CfArg {
+    Bc,     // TODO
+    Mode,   // TODO
+    Pair,   // TODO
+}
 
