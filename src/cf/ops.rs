@@ -74,17 +74,17 @@ pub enum OperandForm {
 /// Opcode flags.
 pub type Flags = u16;
 
-pub const ISA_A:  Flags = 1 <<  0; // ColdFire ISA_A
-pub const ISA_A2: Flags = 1 <<  1; // ColdFire ISA_A+
-pub const ISA_B:  Flags = 1 <<  2; // ColdFire ISA_B
-pub const ISA_C:  Flags = 1 <<  3; // ColdFire ISA_C
-pub const HWDIV:  Flags = 1 <<  4; // ColdFire hardware divide
-pub const FPU:    Flags = 1 <<  5; // ColdFire FPU
-pub const MAC:    Flags = 1 <<  6; // ColdFire MAC
-pub const EMAC:   Flags = 1 <<  7; // ColdFire EMAC
-pub const EMAC_B: Flags = 1 <<  8; // ColdFire EMAC_B
-pub const MMU:    Flags = 1 <<  9; // ColdFire user stack pointer
-pub const USP:    Flags = 1 << 10; // ColdFire user stack pointer
+pub const ISA_A:  Flags = 1 <<  0; // Present in ColdFire ISA_A
+pub const ISA_A2: Flags = 1 <<  1; // Present in ColdFire ISA_A+
+pub const ISA_B:  Flags = 1 <<  2; // Present in ColdFire ISA_B
+pub const ISA_C:  Flags = 1 <<  3; // Present in ColdFire ISA_C
+pub const HWDIV:  Flags = 1 <<  4; // Present in ColdFire hardware divide
+pub const FPU:    Flags = 1 <<  5; // Present in ColdFire FPU
+pub const MAC:    Flags = 1 <<  6; // Present in ColdFire MAC
+pub const EMAC:   Flags = 1 <<  7; // Present in ColdFire EMAC
+pub const EMAC_B: Flags = 1 <<  8; // Present in ColdFire EMAC_B
+pub const MMU:    Flags = 1 <<  9; // Present in ColdFire MMU
+pub const USP:    Flags = 1 << 10; // Present in ColdFire user stack pointer
 
 pub const ISA_A_UP:   Flags = ISA_A | ISA_A2 | ISA_B | ISA_C;
 pub const ISA_A2_UP:  Flags =         ISA_A2 | ISA_B | ISA_C;
