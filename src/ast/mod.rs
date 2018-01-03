@@ -17,7 +17,7 @@
 mod char;
 mod slot;
 
-use cf::{CfOp, CfArg};
+use cf;
 use ops::AsmOp;
 use num_bigint::BigInt;
 
@@ -44,7 +44,7 @@ pub enum Op {
     Asm(&'static AsmOp),
 
     /// A ColdFire instruction.
-    Cf(&'static CfOp),
+    Cf(&'static cf::Op),
 }
 
 #[derive(Clone, PartialEq, Eq, Hash, Debug)]
@@ -53,7 +53,7 @@ pub enum Arg {
     Expr(Expr),
 
     /// A ColdFire-specific argument.
-    Cf(CfArg),
+    Cf(cf::Arg),
 }
 
 /// An assembly expression.

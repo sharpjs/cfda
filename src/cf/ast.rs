@@ -19,7 +19,7 @@ use super::reg::{AddrReg, DataReg, PcReg};
 
 /// A ColdFire-specific argument to an operation.
 #[derive(Clone, PartialEq, Eq, Hash, Debug)]
-pub enum CfArg {
+pub enum Arg {
 // General addressing modes
 
     /// Data register direct.

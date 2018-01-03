@@ -19,6 +19,6 @@ mod mode;
 mod ops;
 mod reg;
 
-pub use self::ast::CfArg;
-pub use self::ops::CfOp;
+pub use self::ast::Arg;
+pub use self::ops::Op;
 

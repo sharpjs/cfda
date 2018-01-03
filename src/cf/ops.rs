@@ -16,11 +16,11 @@
 
 /// A assembler pseudo-operation.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
-pub struct CfOp {
+pub struct Op {
     pub name: &'static str,
 }
 
-static DOT_BYTE: CfOp = CfOp {
+static DOT_BYTE: Op = Op {
     name: "nop",
 };
 
