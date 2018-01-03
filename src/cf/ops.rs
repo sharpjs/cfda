@@ -16,8 +16,24 @@
 
 pub type BitPos = u8;
 
+/// Operand form combinations.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+pub enum OperandForms {
+    /// No operands.
+    Nullary,
+
+    /// One operand.
+    Unary([OperandForm; 1]),
+
+    /// Two operands.
+    Binary([OperandForm; 2]),
+
+    /// Three operands.
+    Ternary([OperandForm; 3]),
+}
+
 /// Operand forms.
-#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub enum OperandForm {
     /// Modes daipmdxDXnfI (any) (6 bits)
     AnyMode(BitPos),
@@ -97,6 +113,7 @@ pub struct Op {
     pub name:  &'static str,
     pub bits:  (u16, u16),
     pub mask:  (u16, u16), // 0 in 2nd word => no 2nd word
+    pub args:  OperandForms,
     pub flags: Flags,
 }
 
@@ -104,6 +121,7 @@ static NOP: Op = Op {
     name:  "nop",
     bits:  (0x4E71, 0),
     mask:  (0xFFFF, 0),
+    args:  OperandForms::Nullary,
     flags: ISA_A_UP,
 };
 
@@ -111,6 +129,7 @@ static REMSL: Op = Op {
     name:  "rems.l",
     bits:  (0o046100, 0o004000),
     mask:  (0o177700, 0o107770),
+    args:  OperandForms::Nullary, // TODO
     flags: HWDIV,
 };
 
@@ -118,6 +137,7 @@ static REMUL: Op = Op {
     name:  "remu.l",
     bits:  (0o046100, 0o000000),
     mask:  (0o177700, 0o107770),
+    args:  OperandForms::Nullary, // TODO
     flags: HWDIV,
 };
 
