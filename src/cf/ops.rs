@@ -14,15 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
-/// A assembler pseudo-operation.
-#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
-pub struct Op {
-    /// Instruction name.
-    pub name: &'static str,
-    pub bits: (u16, u16),
-    pub mask: (u16, u16), // 0 in 2nd word => no 2nd word
-}
-
 pub type BitPos = u8;
 
 /// Operand forms.
@@ -83,34 +74,50 @@ pub enum OperandForm {
 /// Opcode flags.
 pub type Flags = u16;
 
-pub const ISA_A:  Flags = 1 << 0; // Appears in ColdFire ISA_A
-pub const ISA_A2: Flags = 1 << 1; // Appears in ColdFire ISA_A+
-pub const ISA_B:  Flags = 1 << 2; // Appears in ColdFire ISA_B
-pub const ISA_C:  Flags = 1 << 3; // Appears in ColdFire ISA_C
-pub const FPU:    Flags = 1 << 4; // Appears in ColdFire FPU
-pub const MAC:    Flags = 1 << 5; // Appears in ColdFire MAC
-pub const EMAC:   Flags = 1 << 6; // Appears in ColdFire EMAC
-pub const EMAC_B: Flags = 1 << 7; // Appears in ColdFire EMAC_B
+pub const ISA_A:  Flags = 1 <<  0; // ColdFire ISA_A
+pub const ISA_A2: Flags = 1 <<  1; // ColdFire ISA_A+
+pub const ISA_B:  Flags = 1 <<  2; // ColdFire ISA_B
+pub const ISA_C:  Flags = 1 <<  3; // ColdFire ISA_C
+pub const HWDIV:  Flags = 1 <<  4; // ColdFire hardware divide
+pub const FPU:    Flags = 1 <<  5; // ColdFire FPU
+pub const MAC:    Flags = 1 <<  6; // ColdFire MAC
+pub const EMAC:   Flags = 1 <<  7; // ColdFire EMAC
+pub const EMAC_B: Flags = 1 <<  8; // ColdFire EMAC_B
+pub const MMU:    Flags = 1 <<  9; // ColdFire user stack pointer
+pub const USP:    Flags = 1 << 10; // ColdFire user stack pointer
 
 pub const ISA_A_UP:   Flags = ISA_A | ISA_A2 | ISA_B | ISA_C;
 pub const ISA_A2_UP:  Flags =         ISA_A2 | ISA_B | ISA_C;
 pub const ISA_B_UP:   Flags =                  ISA_B | ISA_C;
 
+/// A assembler pseudo-operation.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+pub struct Op {
+    /// Instruction name.
+    pub name:  &'static str,
+    pub bits:  (u16, u16),
+    pub mask:  (u16, u16), // 0 in 2nd word => no 2nd word
+    pub flags: Flags,
+}
+
 static NOP: Op = Op {
-    name: "nop",
-    bits: (0x4E71, 0),
-    mask: (0xFFFF, 0),
+    name:  "nop",
+    bits:  (0x4E71, 0),
+    mask:  (0xFFFF, 0),
+    flags: ISA_A_UP,
 };
 
 static REMSL: Op = Op {
-    name: "rems.l",
-    bits: (0o046100, 0o004000),
-    mask: (0o177700, 0o107770),
+    name:  "rems.l",
+    bits:  (0o046100, 0o004000),
+    mask:  (0o177700, 0o107770),
+    flags: HWDIV,
 };
 
 static REMUL: Op = Op {
-    name: "remu.l",
-    bits: (0o046100, 0o000000),
-    mask: (0o177700, 0o107770),
+    name:  "remu.l",
+    bits:  (0o046100, 0o000000),
+    mask:  (0o177700, 0o107770),
+    flags: HWDIV,
 };
 
