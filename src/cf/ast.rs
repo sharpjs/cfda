@@ -20,57 +20,84 @@ use super::reg::{AddrReg, DataReg, PcReg};
 /// A ColdFire-specific argument to an operation.
 #[derive(Clone, PartialEq, Eq, Hash, Debug)]
 pub enum CfArg {
-    Mode,   // TODO
+// General addressing modes
 
-    // Data register pair.
+    /// Data register direct.
+    DataReg(Slot<DataReg>),
+
+    /// Address register direct.
+    AddrReg(Slot<AddrReg>),
+
+    /// Address register indirect.
+    AddrRegInd(Slot<AddrReg>),
+
+    /// Address register indirect with post-increment.
+    AddrRegIndInc(Slot<AddrReg>),
+
+    /// Address register indirect with pre-decrement.
+    AddrRegIndDec(Slot<AddrReg>),
+
+    /// Address register indirect with displacement.
+    AddrRegDisp(Slot<AddrReg>, Slot<Expr>),
+
+    /// Address register indirect with displacement and scaled index.
+    AddrRegIdx(Slot<AddrReg>, Slot<Expr>, Slot<Index>),
+
+    /// Program counter relative with displacement.
+    PcDisp(Slot<PcReg>, Slot<Expr>),
+
+    /// Program counter relative with displacement and scaled index.
+    PcIdx(Slot<PcReg>, Slot<Expr>, Slot<Index>),
+
+    /// Absolute short.
+    AbsShort(Slot<Expr>),
+
+    /// Absolute long.
+    AbsLong(Slot<Expr>),
+
+    /// Immediate.
+    Imm(Slot<Expr>),
+
+// Special addressing modes
+
+    /// Data register pair (REMS, REMU).
     DataRegPair(DataRegPair),
 
-    // Cache specifier.
+    /// Cache specifier.
     Cache(Cache),
 }
 
-#[derive(Clone, PartialEq, Eq, Hash, Debug)]
-pub enum Loc {
-    DataReg         (Slot<DataReg>),
-    AddrReg         (Slot<AddrReg>),
-    AddrRegInd      (Slot<AddrReg>),
-    AddrRegIndInc   (Slot<AddrReg>),
-    AddrRegIndDec   (Slot<AddrReg>),
-    AddrRegDisp     (Slot<AddrReg>, Slot<Expr>),
-    AddrRegIdx      (Slot<AddrReg>, Slot<Expr>, Slot<Index>),
-    PcDisp          (Slot<PcReg>, Slot<Expr>),
-    PcIdx           (Slot<PcReg>, Slot<Expr>, Slot<Index>),
-    AbsShort        (Slot<Expr>),
-    AbsLong         (Slot<Expr>),
-    Imm             (Slot<Expr>),
-}
-
-/// ColdFire data register pair.
+/// ColdFire index register and scale.
 #[derive(Clone, PartialEq, Eq, Hash, Debug)]
 pub struct Index {
-    reg:   Slot<IndexReg>,
-    scale: Slot<Expr>,
+    /// Index register.
+    pub reg: Slot<IndexReg>,
+
+    /// Scale factor applied to index value.
+    pub scale: Slot<Expr>,
 }
 
-/// ColdFire data register pair.
+/// ColdFire index register.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub enum IndexReg {
+    /// Data register.
     Data(DataReg),
+
+    /// Address register.
     Addr(AddrReg),
 }
 
 /// ColdFire data register pair.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub struct DataRegPair (
-    Slot<DataReg>,
-    Slot<DataReg>,
+    Slot<DataReg>,  // remainder
+    Slot<DataReg>,  // divisor
 );
 
 /// ColdFire cache selectors.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub enum Cache {
-    // Inst,    // ic
-    // Data,    // dc
-    Both,       // bc
+    /// Both instruction and data caches.
+    Both,
 }
 
