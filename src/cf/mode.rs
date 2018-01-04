@@ -14,18 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
-pub const MODE_DATA:            u8 = 1 <<  0;   // d "data"
-pub const MODE_ADDR:            u8 = 1 <<  1;   // a "address"
-pub const MODE_ADDR_IND:        u8 = 1 <<  2;   // i "indirect"
-pub const MODE_ADDR_IND_INC:    u8 = 1 <<  3;   // p "plus"
-pub const MODE_ADDR_IND_DEC:    u8 = 1 <<  4;   // m "minus"
-pub const MODE_ADDR_DISP:       u8 = 1 <<  5;   // d "displacement"
-pub const MODE_ADDR_DISP_IDX:   u8 = 1 <<  6;   // x "index"
-pub const MODE_ABS_NEAR:        u8 = 1 <<  7;   // n "near"
-pub const MODE_ABS_FAR:         u8 = 1 <<  8;   // f "far"
-pub const MODE_PC_DISP:         u8 = 1 <<  9;   // D "Displacement"
-pub const MODE_PC_DISP_IDX:     u8 = 1 << 10;   // X "indeX"
-pub const MODE_IMM:             u8 = 1 << 11;   // I "Immediate"
+pub const MODE_DATA:            u16 = 1 <<  0;  // d "data"
+pub const MODE_ADDR:            u16 = 1 <<  1;  // a "address"
+pub const MODE_ADDR_IND:        u16 = 1 <<  2;  // i "indirect"
+pub const MODE_ADDR_IND_INC:    u16 = 1 <<  3;  // p "plus"
+pub const MODE_ADDR_IND_DEC:    u16 = 1 <<  4;  // m "minus"
+pub const MODE_ADDR_DISP:       u16 = 1 <<  5;  // d "displacement"
+pub const MODE_ADDR_DISP_IDX:   u16 = 1 <<  6;  // x "index"
+pub const MODE_ABS_NEAR:        u16 = 1 <<  7;  // n "near"
+pub const MODE_ABS_FAR:         u16 = 1 <<  8;  // f "far"
+pub const MODE_PC_DISP:         u16 = 1 <<  9;  // D "Displacement"
+pub const MODE_PC_DISP_IDX:     u16 = 1 << 10;  // X "indeX"
+pub const MODE_IMM:             u16 = 1 << 11;  // I "Immediate"
 
 static MODES: [Mode; 12] = [
     Mode { bits: 0b_000_000, mask: 0b_111_000, words: [0, 0, 0], f: mode_data         },
