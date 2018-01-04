@@ -129,7 +129,11 @@ static REMSL: Op = Op {
     name:  "rems.l",
     bits:  (0o046100, 0o004000),
     mask:  (0o177700, 0o107770),
-    args:  OperandForms::Nullary, // TODO
+    args:  OperandForms::Ternary([
+        OperandForm::AnyMode(00+00),    // x dividend (TODO)
+        OperandForm::DataReg(16+00),    // w remainder
+        OperandForm::DataReg(16+12),    // y divisor
+    ]),
     flags: HWDIV,
 };
 
@@ -137,7 +141,11 @@ static REMUL: Op = Op {
     name:  "remu.l",
     bits:  (0o046100, 0o000000),
     mask:  (0o177700, 0o107770),
-    args:  OperandForms::Nullary, // TODO
+    args:  OperandForms::Ternary([
+        OperandForm::AnyMode(00+00),    // x dividend (TODO)
+        OperandForm::DataReg(16+00),    // w remainder
+        OperandForm::DataReg(16+12),    // y divisor
+    ]),
     flags: HWDIV,
 };
 
