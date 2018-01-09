@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
+/*
 pub type BitPos = u8;
 
 /// Operand form combinations.
@@ -31,6 +32,22 @@ pub enum OperandForms {
     /// Three operands.
     Ternary([OperandForm; 3]),
 }
+
+// 1 .  4 4  6 2
+//  1    8    8
+//
+// 1 1  4 4  12 2
+//  2    8    14
+//    10      14
+//        24 bytes
+//
+// daipmdxnfDXI
+// 0123456789AB = 12 bits + 4 bits bitpos => 17 bits
+// 
+// 0000mmmm mmmmmmmm .pppppPP PPPppppp
+// 1....... ........
+//
+//
 
 /// Operand forms.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
@@ -106,17 +123,49 @@ pub const ISA_A_UP:   Flags = ISA_A | ISA_A2 | ISA_B | ISA_C;
 pub const ISA_A2_UP:  Flags =         ISA_A2 | ISA_B | ISA_C;
 pub const ISA_B_UP:   Flags =                  ISA_B | ISA_C;
 
-/// A assembler pseudo-operation.
+//
+// 4 bits  \__ 8 ___
+// 4 mask  /        \
+// 1 mnem  \         > 16
+// 1 arg0   \_ 4    /
+// 1 arg1   /   \_ 8
+// 1 arg2  /    /
+// 2 pos   \__ 4
+// 2 flag  /
+
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+#[repr(u8)]
+pub enum Mnemonic {
+    Nop,
+    Remsl,
+    Remul,
+}
+*/
+
+/// A ColdFire opcode.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub struct Op {
-    /// Instruction name.
-    pub name:  &'static str,
-    pub bits:  (u16, u16),
-    pub mask:  (u16, u16), // 0 in 2nd word => no 2nd word
-    pub args:  OperandForms,
+    /// Values of required bits in opword and extension word.
+    pub bits: (u16, u16),
+
+    /// Mask of required bits in opword and extension word.
+    pub mask: (u16, u16),
+
+/*
+    /// Opcode mnemonic name.
+    pub name: Mnemonic,
+
+    /// Argument specification.
+    pub arg_kinds: [u8; 3], // ArgSpec,
+
+    pub arg_sites: u16, // 3x packed 5-bit
+
+    /// Flags.
     pub flags: Flags,
+*/
 }
 
+/*
 static NOP: Op = Op {
     name:  "nop",
     bits:  (0x4E71, 0),
@@ -148,4 +197,5 @@ static REMUL: Op = Op {
     ]),
     flags: HWDIV,
 };
+*/
 
