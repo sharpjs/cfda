@@ -268,3 +268,197 @@ static REMUL: Op = Op {
 };
 */
 
+// // Integer user instructions
+// Addl,
+// Addal,
+// Addil,
+// Addql,
+// Addxl,
+// Andl,
+// Andil,
+// Asll,
+// Asrl,
+// 
+// Beqs,
+// Beqw,
+// 
+// Bges,
+// Bgew,
+// 
+// Bgts,
+// Bgtw,
+// 
+// Bhis,
+// Bhiw,
+// 
+// Bhss,
+// Bhsw,
+// 
+// Bles,
+// Blew,
+// 
+// Blos,
+// Blow,
+// 
+// Blss,
+// Blsw,
+// 
+// Blts,
+// Bltw,
+// 
+// Bmis,
+// Bmiw,
+// 
+// Bnes,
+// Bnew,
+// 
+// Bpls,
+// Bplw,
+// 
+// Bvcs,
+// Bvcw,
+// 
+// Bvss,
+// Bvsw,
+// 
+// Bchgb,
+// Bchgl,
+// 
+// Bclrb,
+// Bclrl,
+// 
+// Bsetb,
+// Bsetl,
+// 
+// Btstb,
+// Btstl,
+// 
+// Bras,
+// Braw,
+// 
+// Bsrs,
+// Bsrw,
+// 
+// Clrb,
+// Clrw,
+// Clrl,
+// 
+// Cmpl,
+// Cmpal,
+// Cmpil,
+// 
+// Divsw,
+// Divsl,
+// 
+// Divuw,
+// Divul,
+// 
+// Eorl,
+// Eoril,
+// 
+// Extw,
+// Extl,
+// Extbl,
+// 
+// Jmp,
+// 
+// Jsr,
+// 
+// Leal,
+// 
+// Linkw,
+// 
+// Lsll,
+// Lsrl,
+// 
+// Moveb,
+// Movew,
+// Movel,
+// Moveaw,
+// Moveal,
+// Moveml,
+// Moveql,
+// 
+// Mulsw,
+// Mulsl,
+// 
+// Muluw,
+// Mulul,
+// 
+// Negl,
+// 
+// Negxl,
+// 
+// Nop,
+// 
+// Notl,
+// 
+// Orl,
+// Oril,
+// 
+// Peal,
+// 
+// Pulse,
+// 
+// Rts,
+// 
+// Seqb,
+// Sfb,
+// Sgeb,
+// Sgtb,
+// Shib,
+// Shsb,
+// Sleb,
+// Slob,
+// Slsb,
+// Sltb,
+// Smib,
+// Sneb,
+// Splb,
+// Stb,
+// Svcb,
+// Svsb,
+// 
+// Subl,
+// Subal,
+// Subil,
+// Subql,
+// Subxl,
+// 
+// Swapw,
+// 
+// Remsl,
+// 
+// Remul,
+// 
+// Tpf,
+// Tpfw,
+// Tpfl,
+// 
+// Trap,
+// 
+// Tstb,
+// Tstw,
+// Tstl,
+// 
+// Unlk,
+// 
+// Wddatab,
+// Wddataw,
+// Wddatal,
+// 
+// // TODO: MAC, EMAC, FPU, ISA_A+...
+// 
+// // Supervisor instructions
+// Cpushl,
+// 
+// Halt,
+// 
+// Movecl,
+// 
+// Rte,
+// 
+// Stop,
+// 
+// Wdebugl,
+
