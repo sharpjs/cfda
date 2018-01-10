@@ -26,14 +26,11 @@ pub struct Op {
     /// Mask of required bits in opword and extension word.
     pub mask: (u16, u16),
 
-    /// Arity (count of operands).
-    pub arity: u8, // Arity
-
     /// Operand specifications.
     pub operands: [Operand; 3],
 
     /// Flags.
-    pub flags: u16, // Flags
+    pub flags: u16, // Flags (arch, arity, extension word,)
 
     /// Performs assembly pass 0 (resolve aliases, validate, collect symbols).
     pub asm0: fn(),
