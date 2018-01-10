@@ -17,14 +17,14 @@
 /// ColdFire opcode and operands specification.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub struct Op {
+    /// Mnemonic name.
+    pub name: &'static str,
+
     /// Values of required bits in opword and extension word.
     pub bits: (u16, u16),
 
     /// Mask of required bits in opword and extension word.
     pub mask: (u16, u16),
-
-    /// Mnemonic name.
-    pub name: u8, // Mnemonic
 
     /// Arity (count of operands).
     pub arity: u8, // Arity
