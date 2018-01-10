@@ -30,7 +30,7 @@ pub struct Op {
     pub arity: u8, // Arity
 
     /// Operand specifications.
-    pub operands: [u16; 3], // [OperandKind; 3]
+    pub operands: [Operand; 3],
 
     /// Flags.
     pub flags: u16, // Flags
@@ -51,36 +51,55 @@ pub struct Op {
     pub run: fn(),
 }
 
-/// Valid operand combinations.
+pub type BitPos = u8;
+
+/// Specifies the bit position and accepted kinds of an operand.
 #[allow(non_camel_case_types)]
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
-pub enum OperandKind {
+pub enum Operand {
+    // General addressing modes
+    //
+    // d a i p m d x n f D X I
+    //
+    // d: data register    direct
+    // a: address register direct
+    // i: address register indirect
+    // p: address register indirect, post-increment
+    // m: address register indirect, pre-decrement
+    // d: address register indirect + displacement
+    // x: address register indirect + displacement + scaled index
+    // n: absolute near
+    // f: absolute far
+    // D: pc-relative + displacement
+    // X: pc-relative + displacement + scaled index
+    // I: immediate
+
     /// Any addressing mode (6 bits)
-    MdaipmdxnfDXI,
+    MdaipmdxnfDXI(BitPos),
 
     /// Readable data addressing modes (6 bits)
-    Md_ipmdxnfDXI,
+    Md_ipmdxnfDXI(BitPos),
 
     /// Writable addressing modes (6 bits)
-    Mdaipmdxnf___,
+    Mdaipmdxnf___(BitPos),
 
     /// Writable memory addressing modes (6 bits)
-    M__ipmdxnf___,
+    M__ipmdxnf___(BitPos),
 
     /// Data register (3 bits)
-    DataReg,
+    DataReg(BitPos),
 
     /// Address register (3 bits)
-    AddrReg,
+    AddrReg(BitPos),
 
     /// Data or address register (4 bits)
-    NormalReg,
+    NormalReg(BitPos),
 
     /// Control register (12 bits)
-    CtlReg,
+    CtlReg(BitPos),
 
     /// Debug control register (5 bits)
-    DbgReg,
+    DbgReg(BitPos),
 
     /// Condition code register (implicit)
     Ccr,
@@ -92,19 +111,19 @@ pub enum OperandKind {
     RegList,
 
     /// Condition code (4 bits),
-    Cond,
+    Cond(BitPos),
 
     /// Cache selector (2 bits)
-    CacheSel,
+    CacheSel(BitPos),
 
-    /// Immediate (16 or 32 bits in extension words)
+    /// Immediate (16 or 32 bits following opword)
     Immediate,
 
     /// Quick immediate (3 bits unsigned; 0 => 8)
-    Quick3,
+    Quick3(BitPos),
 
     /// Quick immediate (8 bits signed)
-    Quick8,
+    Quick8(BitPos),
 }
 
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
@@ -187,8 +206,6 @@ mod tests {
 }
 
 /*
-pub type BitPos = u8;
-
 /// Opcode flags.
 pub type Flags = u16;
 
