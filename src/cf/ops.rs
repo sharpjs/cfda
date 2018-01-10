@@ -14,6 +14,43 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
+/// ColdFire opcode and operands specification.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+pub struct Op {
+    /// Values of required bits in opword and extension word.
+    pub bits: (u16, u16),
+
+    /// Mask of required bits in opword and extension word.
+    pub mask: (u16, u16),
+
+    /// Mnemonic name.
+    pub name: u8, // Mnemonic
+
+    /// Arity (count of operands).
+    pub arity: u8, // Arity
+
+    /// Operand specifications.
+    pub operands: [u16; 3], // [OperandKind; 3]
+
+    /// Flags.
+    pub flags: u16, // Flags
+
+    /// Performs assembly pass 0 (resolve aliases, validate, collect symbols).
+    pub asm0: fn(),
+
+    /// Performs assembly pass 1 (generate binary).
+    pub asm1: fn(),
+
+    /// Performs disassembly (validate, apply symbols/aliases).
+    pub disasm: fn(),
+
+    /// Formats as code.
+    pub fmt: fn(),
+
+    /// Runs in simulation.
+    pub run: fn(),
+}
+
 /// Valid operand combinations.
 #[allow(non_camel_case_types)]
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
@@ -171,16 +208,6 @@ pub const ISA_A_UP:   Flags = ISA_A | ISA_A2 | ISA_B | ISA_C;
 pub const ISA_A2_UP:  Flags =         ISA_A2 | ISA_B | ISA_C;
 pub const ISA_B_UP:   Flags =                  ISA_B | ISA_C;
 
-//
-// 4 bits  \__ 8 ___
-// 4 mask  /        \
-// 1 mnem  \         > 16
-// 1 arg0   \_ 4    /
-// 1 arg1   /   \_ 8
-// 1 arg2  /    /
-// 2 pos   \__ 4
-// 2 flag  /
-
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 #[repr(u8)]
 pub enum Mnemonic {
@@ -189,29 +216,6 @@ pub enum Mnemonic {
     Remul,
 }
 */
-
-/// A ColdFire opcode.
-#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
-pub struct Op {
-    /// Values of required bits in opword and extension word.
-    pub bits: (u16, u16),
-
-    /// Mask of required bits in opword and extension word.
-    pub mask: (u16, u16),
-
-/*
-    /// Opcode mnemonic name.
-    pub name: Mnemonic,
-
-    /// Argument specification.
-    pub arg_kinds: [u8; 3], // ArgSpec,
-
-    pub arg_sites: u16, // 3x packed 5-bit
-
-    /// Flags.
-    pub flags: Flags,
-*/
-}
 
 /*
 static NOP: Op = Op {
