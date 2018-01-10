@@ -14,6 +14,62 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
+/// Valid operand combinations.
+#[allow(non_camel_case_types)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+pub enum OperandKind {
+    /// Any addressing mode (6 bits)
+    MdaipmdxnfDXI,
+
+    /// Readable data addressing modes (6 bits)
+    Md_ipmdxnfDXI,
+
+    /// Writable addressing modes (6 bits)
+    Mdaipmdxnf___,
+
+    /// Writable memory addressing modes (6 bits)
+    M__ipmdxnf___,
+
+    /// Data register (3 bits)
+    DataReg,
+
+    /// Address register (3 bits)
+    AddrReg,
+
+    /// Data or address register (4 bits)
+    NormalReg,
+
+    /// Control register (12 bits)
+    CtlReg,
+
+    /// Debug control register (5 bits)
+    DbgReg,
+
+    /// Condition code register (implicit)
+    Ccr,
+
+    /// Condition code register (implicit)
+    Sr,
+
+    /// Data/address register list (16 bits in extension word)
+    RegList,
+
+    /// Condition code (4 bits),
+    Cond,
+
+    /// Cache selector (2 bits)
+    CacheSel,
+
+    /// Immediate (16 or 32 bits in extension words)
+    Immediate,
+
+    /// Quick immediate (3 bits unsigned; 0 => 8)
+    Quick3,
+
+    /// Quick immediate (8 bits signed)
+    Quick8,
+}
+
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub struct OperandPos (u16);
 
@@ -95,93 +151,6 @@ mod tests {
 
 /*
 pub type BitPos = u8;
-
-/// Operand form combinations.
-#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
-pub enum OperandForms {
-    /// No operands.
-    Nullary,
-
-    /// One operand.
-    Unary([OperandForm; 1]),
-
-    /// Two operands.
-    Binary([OperandForm; 2]),
-
-    /// Three operands.
-    Ternary([OperandForm; 3]),
-}
-
-// 1 .  4 4  6 2
-//  1    8    8
-//
-// 1 1  4 4  12 2
-//  2    8    14
-//    10      14
-//        24 bytes
-//
-// daipmdxnfDXI
-// 0123456789AB = 12 bits + 4 bits bitpos => 17 bits
-// 
-// 0000mmmm mmmmmmmm .pppppPP PPPppppp
-// 1....... ........
-//
-//
-
-/// Operand forms.
-#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
-pub enum OperandForm {
-    /// Modes daipmdxDXnfI (any) (6 bits)
-    AnyMode(BitPos),
-
-    /// Modes d_ipmdxDXnfI (any except addr reg) (6 bits)
-    DataMode(BitPos),
-
-    /// Modes daipmdx__nf_ (mutable) (6 bits)
-    MutMode(BitPos),
-
-    /// Modes __ipmdx__nf_ (mutable memory) (6 bits)
-    MutMemMode(BitPos),
-
-    /// Data register (3 bits)
-    DataReg(BitPos),
-
-    /// Address register (3 bits)
-    AddrReg(BitPos),
-
-    /// Data or address register (4 bits)
-    NormalReg(BitPos),
-
-    /// Control register (12 bits)
-    CtlReg(BitPos),
-
-    /// Debug control register (5 bits)
-    DbgReg(BitPos),
-
-    /// Condition code register (implicit)
-    Ccr,
-
-    /// Condition code register (implicit)
-    Sr,
-
-    /// Data/address register list (16 bits in extension word)
-    RegList,
-
-    /// Condition code (4 bits),
-    Cond(BitPos),
-
-    /// Cache selector (2 bits)
-    CacheSel(BitPos),
-
-    /// Immediate (16 or 32 bits in extension words)
-    Immediate,
-
-    /// Quick immediate (3 bits; 0 => 8)
-    Quick3(BitPos),
-
-    /// Quick immediate (8 bits signed)
-    Quick8(BitPos),
-}
 
 /// Opcode flags.
 pub type Flags = u16;
