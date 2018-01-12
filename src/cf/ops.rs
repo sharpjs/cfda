@@ -16,36 +16,44 @@
 
 /// ColdFire opcode and operands specification.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
-pub struct Op {
-    /// Mnemonic name.
-    pub name: &'static str,
+pub struct Op {                                                     // 64-bit    | 32-bit
+    /// Mnemonic names.  The first name is the preferred one.
+    pub names: &'static [&'static str],                             // +16 => 16 | + 8 =>  8
 
     /// Values of required bits in opword and extension word.
-    pub bits: (u16, u16),
-
+    pub bits: (u16, u16),                                           // + 4 => 20 | + 4 => 12
+ 
     /// Mask of required bits in opword and extension word.
-    pub mask: (u16, u16),
+    pub mask: (u16, u16),                                           // + 4 => 24 | + 4 => 16
 
-    /// Operand specifications.
-    pub operands: [Operand; 3],
+    /// Number of operands.
+    pub arity: u8,
 
-    /// Flags.
-    pub flags: u16, // Flags (arch, arity, extension word,)
+    /// Size of operands.  Determines size of immediate.
+    pub size: Size,
 
-    /// Performs assembly pass 0 (resolve aliases, validate, collect symbols).
-    pub asm0: fn(),
+    /// Operand kinds and positions.                
+    pub operands: [Operand; 5],                                     // +10 => 34 | +10 => 26
 
-    /// Performs assembly pass 1 (generate binary).
-    pub asm1: fn(),
+    /// Supported architectures, arity, and extension word count.
+    pub flags: Flags,                                               // + 2 => 36 | + 2 => 28
 
-    /// Performs disassembly (validate, apply symbols/aliases).
-    pub disasm: fn(),
+    /// Disassembly special-case handler.
+    pub disasm: Option<fn(/*ctx: &mut DasmContext*/) -> bool>,      // + 8 => 48 | + 4 => 32
 
-    /// Formats as code.
-    pub fmt: fn(),
+    /// Simulation runner.
+    pub run: fn(/*ctx: &mut RunContext*/),                          // + 8 => 56 | + 4 => 36
 
-    /// Runs in simulation.
-    pub run: fn(),
+    pub padding: usize,                                             // + 8 => 64
+}
+
+/// Operand sizes.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+#[repr(u8)]
+pub enum Size {
+    Byte,
+    Word,
+    Long
 }
 
 /// Bit position within opword or extension word.
@@ -372,4 +380,16 @@ static REMUL: Op = Op {
 // Stop,
 // 
 // Wdebugl,
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    use std::mem::size_of;
+
+    #[test]
+    fn op_size_of() {
+        assert_eq!( size_of::<Op>(), 64 );
+    }
+}
 
