@@ -143,15 +143,6 @@ pub const ISA_A_UP:   Flags = ISA_A | ISA_A2 | ISA_B | ISA_C;
 pub const ISA_A2_UP:  Flags =         ISA_A2 | ISA_B | ISA_C;
 pub const ISA_B_UP:   Flags =                  ISA_B | ISA_C;
 
-#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
-#[repr(u8)]
-pub enum Mnemonic {
-    Nop,
-    Remsl,
-    Remul,
-}
-*/
-
 /*
 static NOP: Op = Op {
     name:  "nop",
