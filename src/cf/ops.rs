@@ -27,24 +27,24 @@ pub struct Op {                                                     // 64-bit   
     pub mask: (u16, u16),                                           // + 4 => 24 | + 4 => 16
 
     /// Number of operands.
-    pub arity: u8,
+    pub arity: u8,                                                  // + 1 => 25 | + 1 => 17
 
     /// Size of operands.  Determines size of immediate.
-    pub size: Size,
+    pub size: Size,                                                 // + 1 => 26 | + 1 => 18
 
     /// Operand kinds and positions.                
-    pub operands: [Operand; 5],                                     // +10 => 34 | +10 => 26
+    pub operands: [Operand; 5],                                     // +10 => 36 | +10 => 28
 
     /// Supported architectures, arity, and extension word count.
-    pub flags: Flags,                                               // + 2 => 36 | + 2 => 28
+    pub flags: Flags,                                               // + 4 => 40 | + 4 => 32
 
     /// Disassembly special-case handler.
-    pub disasm: Option<fn(/*ctx: &mut DasmContext*/) -> bool>,      // + 8 => 48 | + 4 => 32
+    pub disasm: Option<fn(/*ctx: &mut DasmContext*/) -> bool>,      // + 8 => 48 | + 4 => 36
 
     /// Simulation runner.
-    pub run: fn(/*ctx: &mut RunContext*/),                          // + 8 => 56 | + 4 => 36
+    pub run: fn(/*ctx: &mut RunContext*/),                          // + 8 => 56 | + 4 => 40
 
-    pub padding: usize,                                             // + 8 => 64
+    pub padding: usize,                                             // + 8 => 64 | + 4 => 44
 }
 
 /// Operand sizes.
