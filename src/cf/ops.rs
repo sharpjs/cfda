@@ -48,9 +48,10 @@ pub struct Op {
     pub run: fn(),
 }
 
+/// Bit position within opword or extension word.
 pub type BitPos = u8;
 
-/// Specifies the bit position and accepted kinds of an operand.
+/// Specifies the bit position and accepted forms of an operand.
 #[allow(non_camel_case_types)]
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub enum Operand {
