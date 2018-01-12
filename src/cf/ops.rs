@@ -51,6 +51,7 @@ pub struct Op {                                                     // 64-bit   
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 #[repr(u8)]
 pub enum Size {
+    None,
     Byte,
     Word,
     Long
@@ -63,6 +64,9 @@ pub type BitPos = u8;
 #[allow(non_camel_case_types)]
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub enum Operand {
+    /// Operand not used.
+    None,
+
     // General addressing modes
     //
     // d a i p m d x n f D X I
