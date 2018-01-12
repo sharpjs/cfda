@@ -155,15 +155,26 @@ pub const ISA_A_UP:   Flags = ISA_A | ISA_A2 | ISA_B | ISA_C;
 pub const ISA_A2_UP:  Flags =         ISA_A2 | ISA_B | ISA_C;
 pub const ISA_B_UP:   Flags =                  ISA_B | ISA_C;
 
-/*
 static NOP: Op = Op {
-    name:  "nop",
-    bits:  (0x4E71, 0),
-    mask:  (0xFFFF, 0),
-    args:  OperandForms::Nullary,
-    flags: ISA_A_UP,
+    names:    &["nop"],
+    bits:     (0x4E71, 0),
+    mask:     (0xFFFF, 0),
+    arity:    0,
+    size:     Size::None,
+    operands: [Operand::None,
+               Operand::None,
+               Operand::None,
+               Operand::None,
+               Operand::None],
+    flags:     ISA_A_UP,
+    disasm:    None,
+    run:       nothing,
+    padding:   0,
 };
 
+fn nothing() { }
+
+/*
 static REMSL: Op = Op {
     name:  "rems.l",
     bits:  (0o046100, 0o004000),
