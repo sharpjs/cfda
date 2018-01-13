@@ -29,13 +29,13 @@ pub struct Op {                                                     // 64-bit   
     /// Number of operands.
     pub arity: u8,                                                  // + 1 => 25 | + 1 => 17
 
-    /// Size of operands.  Determines size of immediate.
+    /// Size of operands.
     pub size: Size,                                                 // + 1 => 26 | + 1 => 18
 
     /// Operand kinds and positions.                
     pub operands: [Operand; 5],                                     // +10 => 36 | +10 => 28
 
-    /// Supported architectures, arity, and extension word count.
+    /// Flags (supported architectures, extension word usage)
     pub flags: Flags,                                               // + 4 => 40 | + 4 => 32
 
     /// Disassembly special-case handler.
