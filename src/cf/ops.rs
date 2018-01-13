@@ -96,6 +96,9 @@ pub enum Operand {
     /// Writable memory addressing modes (6 bits)
     M__ipmdxnf___(BitPos),
 
+    /// Source modes for op with extension word (6 bits)
+    Md_ipmd______(BitPos),
+
     /// Data register (3 bits)
     DataReg(BitPos),
 
@@ -175,31 +178,39 @@ static NOP: Op = Op {
     reserved:   0,
 };
 
-/*
 static REMSL: Op = Op {
-    name:  "rems.l",
-    bits:  (0o046100, 0o004000),
-    mask:  (0o177700, 0o107770),
-    args:  OperandForms::Ternary([
-        OperandForm::AnyMode(00+00),    // x dividend (TODO)
-        OperandForm::DataReg(16+00),    // w remainder
-        OperandForm::DataReg(16+12),    // y divisor
-    ]),
-    flags: HWDIV,
+    names:      &["rems.l", "remsl"],
+    bits:       (0o046100, 0o004000),
+    mask:       (0o177700, 0o107770),
+    arity:      3,
+    size:       Size::Long,
+    operands:   [Operand::Md_ipmd______ ( 0),
+                 Operand::DataReg       (16),
+                 Operand::DataReg       (28), // TODO: Cannot be same register as arg1
+                 Operand::None,
+                 Operand::None],
+    flags:      HWDIV,
+    disasm:     None,
+    run:        run_stub,
+    reserved:   0,
 };
 
 static REMUL: Op = Op {
-    name:  "remu.l",
-    bits:  (0o046100, 0o000000),
-    mask:  (0o177700, 0o107770),
-    args:  OperandForms::Ternary([
-        OperandForm::AnyMode(00+00),    // x dividend (TODO)
-        OperandForm::DataReg(16+00),    // w remainder
-        OperandForm::DataReg(16+12),    // y divisor
-    ]),
-    flags: HWDIV,
+    names:      &["remu.l", "remul"],
+    bits:       (0o046100, 0o000000),
+    mask:       (0o177700, 0o107770),
+    arity:      3,
+    size:       Size::Long,
+    operands:   [Operand::Md_ipmd______ ( 0),
+                 Operand::DataReg       (16),
+                 Operand::DataReg       (28), // TODO: Cannot be same register as arg1
+                 Operand::None,
+                 Operand::None],
+    flags:      HWDIV,
+    disasm:     None,
+    run:        run_stub,
+    reserved:   0,
 };
-*/
 
 // // Integer user instructions
 // Addl,
