@@ -44,7 +44,7 @@ pub struct Op {                                                     // 64-bit   
     /// Simulation runner.
     pub run: fn(/*ctx: &mut RunContext*/),                          // + 8 => 56 | + 4 => 40
 
-    pub padding: usize,                                             // + 8 => 64 | + 4 => 44
+    pub reserved: usize,                                            // + 8 => 64 | + 4 => 44
 }
 
 /// Operand sizes.
@@ -155,24 +155,24 @@ pub const ISA_A_UP:   Flags = ISA_A | ISA_A2 | ISA_B | ISA_C;
 pub const ISA_A2_UP:  Flags =         ISA_A2 | ISA_B | ISA_C;
 pub const ISA_B_UP:   Flags =                  ISA_B | ISA_C;
 
-static NOP: Op = Op {
-    names:    &["nop"],
-    bits:     (0x4E71, 0),
-    mask:     (0xFFFF, 0),
-    arity:    0,
-    size:     Size::None,
-    operands: [Operand::None,
-               Operand::None,
-               Operand::None,
-               Operand::None,
-               Operand::None],
-    flags:     ISA_A_UP,
-    disasm:    None,
-    run:       nothing,
-    padding:   0,
-};
+fn run_stub() { }
 
-fn nothing() { }
+static NOP: Op = Op {
+    names:      &["nop"],
+    bits:       (0x4E71, 0),
+    mask:       (0xFFFF, 0),
+    arity:      0,
+    size:       Size::None,
+    operands:   [Operand::None,
+                 Operand::None,
+                 Operand::None,
+                 Operand::None,
+                 Operand::None],
+    flags:      ISA_A_UP,
+    disasm:     None,
+    run:        run_stub,
+    reserved:   0,
+};
 
 /*
 static REMSL: Op = Op {
