@@ -51,7 +51,7 @@ pub struct Op {                                                     // 64-bit   
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 #[repr(u8)]
 pub enum Size {
-    None,
+    Zero,
     Byte,
     Word,
     Long
@@ -166,7 +166,7 @@ static NOP: Op = Op {
     bits:       (0x4E71, 0),
     mask:       (0xFFFF, 0),
     arity:      0,
-    size:       Size::None,
+    size:       Size::Zero,
     operands:   [Operand::None,
                  Operand::None,
                  Operand::None,
