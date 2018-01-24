@@ -212,6 +212,83 @@ static REMUL: Op = Op {
     reserved:   0,
 };
 
+macro_rules! opcodes {
+    {
+        $(
+            $name:expr => $size:tt
+                ( $($bits:expr),+ ) ( $($mask:expr),+ )
+                [ $( $($arg:tt):+ ),* ] $flags:expr ;
+        )*
+    } =>
+    {
+        pub static OPCODES: &'static [Op/*code*/] = &[
+            $(
+                Op/*code*/ {
+                    names:      &[$name],
+                    bits:       words!($($bits),+),
+                    mask:       words!($($mask),+),
+                    arity:      0,           // TODO
+                    size:       size!($size),
+                    operands:   [Operand::None, Operand::None, Operand::None, Operand::None, Operand::None], // args!($( $($arg):+ ),*),
+                    flags:      $flags, // | ext!($($bits),+),
+                    disasm:     None,
+                    run:        run_stub,
+                    reserved:   0,
+                },
+            )*
+        ];
+    };
+}
+
+
+macro_rules! size {
+    { - } => { Size::Zero };
+    { S } => { Size::Byte };
+    { B } => { Size::Byte };
+    { W } => { Size::Word };
+    { L } => { Size::Long };
+}
+
+macro_rules! words {
+    { $a:expr          } => { ($a,  0) };
+    { $a:expr, $b:expr } => { ($a, $b) };
+}
+
+macro_rules! ext {
+    { $a:expr          } => { 0        };
+    { $a:expr, $b:expr } => { EXT_WORD };
+}
+
+macro_rules! operands {
+    { } => {[ operand!(None), operand!(None), operand!(None), operand!(None), operand!(None) ]};
+
+    { $($a:tt):+ }
+        => {[ operand!($($a):+), operand!(None), operand!(None), operand!(None), operand!(None) ]};
+
+    { $($a:tt):+, $($b:tt):+ }
+        => {[ operand!($($a):+), operand!($($b):+), operand!(None), operand!(None), operand!(None) ]};
+
+    { $($a:tt):+, $($b:tt):+, $($c:tt):+ }
+        => {[ operand!($($a):+), operand!($($b):+), operand!($($c):+), operand!(None), operand!(None) ]};
+
+    { $($a:tt):+, $($b:tt):+, $($c:tt):+, $($d:tt):+ }
+        => {[ operand!($($a):+), operand!($($b):+), operand!($($c):+), operand!($($d):+), operand!(None) ]};
+
+    { $($a:tt):+, $($b:tt):+, $($c:tt):+, $($d:tt):+, $($e:tt):+ }
+        => {[ operand!($($a):+), operand!($($b):+), operand!($($c):+), operand!($($d):+), operand!($($e):+) ]};
+}
+
+macro_rules! operand {
+    { $kind:ident             } => { Operand::$kind       };
+    { $kind:ident : $pos:expr } => { Operand::$kind($pos) };
+}
+
+opcodes! {
+//  NAME        S  WORDS             MASKS             OPERANDS                          FLAGS
+//  ------      -  ----------------  ----------------  --------------------------------  -----
+    "adda.l" => L  (0xD1C0)          (0xF1C0)          [MdaipmdxnfDXI:0, AddrReg:9]      ISA_A_UP;
+}
+
 // // Integer user instructions
 // Addl,
 // Addal,
