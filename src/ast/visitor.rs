@@ -49,4 +49,3 @@ pub trait Visitor<T: Default = (), E = ()> {
     }
 }
 
-
