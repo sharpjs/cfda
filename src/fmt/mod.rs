@@ -1,5 +1,5 @@
 // This file is part of cfda, a fun little disassembler project.
-// Copyright (C) 2017 Jeffrey Sharp
+// Copyright (C) 2018 Jeffrey Sharp
 //
 // cfda is free software: you can redistribute it and/or modify it
 // under the terms of the GNU General Public License as published
@@ -14,17 +14,5 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
-#![allow(dead_code)]
-#![allow(unused_variables)]
-
-extern crate num_bigint;
-
-mod ast;
-mod cf;
-mod fmt;
-mod ops;
-
-fn main() {
-    println!("Hello, world!");
-}
+mod moto;
 
