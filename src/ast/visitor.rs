@@ -52,7 +52,14 @@ pub trait Visitor<T: Default = (), E = ()> {
     }
 
     fn visit_expr(&mut self, node: &Expr) -> Result<T, E> {
-        Ok(T::default())
+        Ok(match *node {
+            Expr::Ident  (ref i)                => self.visit_ident(i)?,
+            Expr::Int    (ref i)                => self.visit_int(i)?,
+            Expr::Str    (ref s)                => self.visit_str(s)?,
+            Expr::Char   (c)                    => panic!(),
+            Expr::Unary  (op, ref sub)          => panic!(),
+            Expr::Binary (op, ref lhs, ref rhs) => panic!(),
+        })
     }
 
     fn visit_ident(&mut self, node: &Ident) -> Result<T, E> {
