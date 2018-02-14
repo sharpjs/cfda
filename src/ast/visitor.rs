@@ -16,13 +16,29 @@
 
 use super::*;
 
-pub trait Visitor<R: Default = ()> {
+pub trait VisitorResult {
+    fn default() -> Self;
+    fn and(self, other: Self) -> Self;
+    fn is_err(&self) -> bool;
+}
+
+impl VisitorResult for () {
+    fn default() -> Self { () }
+    fn and(self, other: Self) -> Self { () }
+    fn is_err(&self) -> bool { false }
+}
+
+pub trait Visitor<R: VisitorResult = ()> {
 
     fn visit_stmt(&mut self, node: &Stmt) -> R {
+        let mut r = R::default();
+
         for label in node.labels.iter() {
-            self.visit_ident(label);
+            r = r.and(self.visit_ident(label));
+            if r.is_err() { return r }
         }
-        R::default()
+
+        r
     }
 
     fn visit_op
