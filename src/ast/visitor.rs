@@ -18,28 +18,32 @@ use super::*;
 
 pub trait Visitor<T: Default = (), E = ()> {
     fn visit_stmts(&mut self, nodes: &[Stmt]) -> Result<T, E> {
-        for stmt in nodes {
-            self.visit_stmt(stmt)?;
-        }
-
+        for stmt in nodes { self.visit_stmt(stmt)?; }
         Ok(T::default())
     }
 
     fn visit_stmt(&mut self, node: &Stmt) -> Result<T, E> {
-        for label in &node.labels {
-            self.visit_ident(label)?;
-        }
-
+        self.visit_labels(&node.labels)?;
         self.visit_op(&node.op)?;
+        self.visit_args(&node.args)?;
+        Ok(T::default())
+    }
 
-        for arg in &node.args {
-            self.visit_arg(arg)?;
-        }
+    fn visit_labels(&mut self, nodes: &[Ident]) -> Result<T, E> {
+        for node in nodes { self.visit_label(node)?; }
+        Ok(T::default())
+    }
 
+    fn visit_label(&mut self, node: &Ident) -> Result<T, E> {
         Ok(T::default())
     }
 
     fn visit_op(&mut self, node: &Slot<Op>) -> Result<T, E> {
+        Ok(T::default())
+    }
+
+    fn visit_args(&mut self, nodes: &[Slot<Arg>]) -> Result<T, E> {
+        for node in nodes { self.visit_arg(node)?; }
         Ok(T::default())
     }
 
