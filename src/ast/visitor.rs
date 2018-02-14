@@ -17,8 +17,13 @@
 use super::*;
 
 pub trait Visitor<R: Default = ()> {
-    fn visit_stmt
-        (&mut self, node: &Stmt) -> R { R::default() }
+
+    fn visit_stmt(&mut self, node: &Stmt) -> R {
+        for label in node.labels.iter() {
+            self.visit_ident(label);
+        }
+        R::default()
+    }
 
     fn visit_op
         (&mut self, node: &Op) -> R { R::default() }
@@ -39,35 +44,4 @@ pub trait Visitor<R: Default = ()> {
         (&mut self, node: &str) -> R { R::default() }
 }
 
-pub trait Accept<R> {
-    fn accept(&self, v: &mut Visitor<R>) -> R;
-}
-
-impl<R: Default> Accept<R> for Stmt {
-    fn accept(&self, v: &mut Visitor<R>) -> R { v.visit_stmt(self) }
-}
-
-impl<R: Default> Accept<R> for Op {
-    fn accept(&self, v: &mut Visitor<R>) -> R { v.visit_op(self) }
-}
-
-impl<R: Default> Accept<R> for Arg {
-    fn accept(&self, v: &mut Visitor<R>) -> R { v.visit_arg(self) }
-}
-
-impl<R: Default> Accept<R> for Expr {
-    fn accept(&self, v: &mut Visitor<R>) -> R { v.visit_expr(self) }
-}
-
-impl<R: Default> Accept<R> for Ident {
-    fn accept(&self, v: &mut Visitor<R>) -> R { v.visit_ident(self) }
-}
-
-impl<R: Default> Accept<R> for Int {
-    fn accept(&self, v: &mut Visitor<R>) -> R { v.visit_int(self) }
-}
-
-impl<R: Default> Accept<R> for String {
-    fn accept(&self, v: &mut Visitor<R>) -> R { v.visit_str(self) }
-}
 
