@@ -16,48 +16,31 @@
 
 use super::*;
 
-pub trait VisitorResult {
-    fn default() -> Self;
-    fn and(self, other: Self) -> Self;
-    fn is_err(&self) -> bool;
-}
-
-impl VisitorResult for () {
-    fn default() -> Self { () }
-    fn and(self, other: Self) -> Self { () }
-    fn is_err(&self) -> bool { false }
-}
-
-pub trait Visitor<R: VisitorResult = ()> {
-
-    fn visit_stmt(&mut self, node: &Stmt) -> R {
-        let mut r = R::default();
-
+pub trait Visitor<T: Default = (), E = ()> {
+    fn visit_stmt(&mut self, node: &Stmt) -> Result<T, E> {
         for label in node.labels.iter() {
-            r = r.and(self.visit_ident(label));
-            if r.is_err() { return r }
+            self.visit_ident(label)?;
         }
-
-        r
+        Ok(T::default())
     }
 
     fn visit_op
-        (&mut self, node: &Op) -> R { R::default() }
+        (&mut self, node: &Op) -> Result<T, E> { Ok(T::default()) }
 
     fn visit_arg
-        (&mut self, node: &Arg) -> R { R::default() }
+        (&mut self, node: &Arg) -> Result<T, E> { Ok(T::default()) }
 
     fn visit_expr
-        (&mut self, node: &Expr) -> R { R::default() }
+        (&mut self, node: &Expr) -> Result<T, E> { Ok(T::default()) }
 
     fn visit_ident
-        (&mut self, node: &Ident) -> R { R::default() }
+        (&mut self, node: &Ident) -> Result<T, E> { Ok(T::default()) }
 
     fn visit_int
-        (&mut self, node: &Int) -> R { R::default() }
+        (&mut self, node: &Int) -> Result<T, E> { Ok(T::default()) }
 
     fn visit_str
-        (&mut self, node: &str) -> R { R::default() }
+        (&mut self, node: &str) -> Result<T, E> { Ok(T::default()) }
 }
 
 
