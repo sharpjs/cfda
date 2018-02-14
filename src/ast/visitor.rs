@@ -53,12 +53,12 @@ pub trait Visitor<T: Default = (), E = ()> {
 
     fn visit_expr(&mut self, node: &Expr) -> Result<T, E> {
         Ok(match *node {
-            Expr::Ident  (i)                    => self.visit_ident(i)?,
-            Expr::Int    (ref i)                => self.visit_int(i)?,
-            Expr::Str    (ref s)                => self.visit_str(s)?,
-            Expr::Char   (c)                    => self.visit_char(c)?,
-            Expr::Unary  (op, ref sub)          => panic!(),
-            Expr::Binary (op, ref lhs, ref rhs) => panic!(),
+            Expr::Ident  (    i) => self.visit_ident(i)?,
+            Expr::Int    (ref i) => self.visit_int(i)?,
+            Expr::Str    (ref s) => self.visit_str(s)?,
+            Expr::Char   (    c) => self.visit_char(c)?,
+            Expr::Unary  (ref e) => self.visit_unary(e)?,
+            Expr::Binary (ref e) => self.visit_binary(e)?,
         })
     }
 
@@ -75,6 +75,21 @@ pub trait Visitor<T: Default = (), E = ()> {
     }
 
     fn visit_char(&mut self, node: Char) -> Result<T, E> {
+        Ok(T::default())
+    }
+
+    fn visit_unary(&mut self, node: &Unary) -> Result<T, E> {
+        self.visit_subexpr(&node.expr)?;
+        Ok(T::default())
+    }
+
+    fn visit_binary(&mut self, node: &Binary) -> Result<T, E> {
+        self.visit_subexpr(&node.lhs)?;
+        self.visit_subexpr(&node.rhs)?;
+        Ok(T::default())
+    }
+
+    fn visit_subexpr(&mut self, node: &Slot<Expr>) -> Result<T, E> {
         Ok(T::default())
     }
 }

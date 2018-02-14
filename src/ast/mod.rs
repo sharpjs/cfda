@@ -65,8 +65,8 @@ pub enum Expr {
     Int(Int),
     Str(String),
     Char(Char),
-    Unary(i32, Box<Slot<Expr>>),
-    Binary(i32, Box<Slot<Expr>>, Box<Slot<Expr>>),
+    Unary(Unary),
+    Binary(Binary),
 }
 
 /// An assembly identifier.
@@ -76,4 +76,19 @@ pub struct Ident (usize);
 /// An assembly integer literal.
 #[derive(Clone, PartialEq, Eq, Hash, Debug)]
 pub struct Int (BigInt);
+
+/// An assembly unary operator expression.
+#[derive(Clone, PartialEq, Eq, Hash, Debug)]
+pub struct Unary { 
+    op:   i32,
+    expr: Box<Slot<Expr>>,
+}
+
+/// An assembly binary operator expression.
+#[derive(Clone, PartialEq, Eq, Hash, Debug)]
+pub struct Binary {
+    op:  i32,
+    lhs: Box<Slot<Expr>>,
+    rhs: Box<Slot<Expr>>,
+}
 
