@@ -18,9 +18,16 @@ use super::*;
 
 pub trait Visitor<T: Default = (), E = ()> {
     fn visit_stmt(&mut self, node: &Stmt) -> Result<T, E> {
-        for label in node.labels.iter() {
+        for label in &node.labels {
             self.visit_ident(label)?;
         }
+
+        self.visit_op(&node.op)?;
+
+        for arg in &node.args {
+            self.visit_arg(arg)?;
+        }
+
         Ok(T::default())
     }
 
