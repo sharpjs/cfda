@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
+#![allow(unused_macros)]
+
 /// ColdFire opcode and operands specification.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub struct Op {                                                     // 64-bit    | 32-bit
