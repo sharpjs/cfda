@@ -24,6 +24,7 @@ use num_bigint::BigInt;
 
 pub use self::char::Char;
 pub use self::slot::Slot;
+pub use self::visitor::Visitor;
 
 /// An assembly statement.
 #[derive(Clone, PartialEq, Eq, Debug)]
