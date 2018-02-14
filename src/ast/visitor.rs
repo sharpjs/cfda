@@ -30,11 +30,11 @@ pub trait Visitor<T: Default = (), E = ()> {
     }
 
     fn visit_labels(&mut self, nodes: &[Ident]) -> Result<T, E> {
-        for node in nodes { self.visit_label(node)?; }
+        for node in nodes { self.visit_label(*node)?; }
         Ok(T::default())
     }
 
-    fn visit_label(&mut self, node: &Ident) -> Result<T, E> {
+    fn visit_label(&mut self, node: Ident) -> Result<T, E> {
         Ok(T::default())
     }
 
@@ -53,7 +53,7 @@ pub trait Visitor<T: Default = (), E = ()> {
 
     fn visit_expr(&mut self, node: &Expr) -> Result<T, E> {
         Ok(match *node {
-            Expr::Ident  (ref i)                => self.visit_ident(i)?,
+            Expr::Ident  (i)                    => self.visit_ident(i)?,
             Expr::Int    (ref i)                => self.visit_int(i)?,
             Expr::Str    (ref s)                => self.visit_str(s)?,
             Expr::Char   (c)                    => panic!(),
@@ -62,7 +62,7 @@ pub trait Visitor<T: Default = (), E = ()> {
         })
     }
 
-    fn visit_ident(&mut self, node: &Ident) -> Result<T, E> {
+    fn visit_ident(&mut self, node: Ident) -> Result<T, E> {
         Ok(T::default())
     }
 
