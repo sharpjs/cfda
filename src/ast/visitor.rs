@@ -24,11 +24,11 @@ pub trait Visitor<T: Default = (), E = ()> {
         Ok(T::default())
     }
 
-    fn visit_op(&mut self, node: &Op) -> Result<T, E> {
+    fn visit_op(&mut self, node: &Slot<Op>) -> Result<T, E> {
         Ok(T::default())
     }
 
-    fn visit_arg(&mut self, node: &Arg) -> Result<T, E> {
+    fn visit_arg(&mut self, node: &Slot<Arg>) -> Result<T, E> {
         Ok(T::default())
     }
 
