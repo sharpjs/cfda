@@ -16,6 +16,7 @@
 
 mod char;
 mod slot;
+mod visitor;
 
 use cf;
 use ops::AsmOp;
