@@ -24,23 +24,29 @@ pub trait Visitor<T: Default = (), E = ()> {
         Ok(T::default())
     }
 
-    fn visit_op
-        (&mut self, node: &Op) -> Result<T, E> { Ok(T::default()) }
+    fn visit_op(&mut self, node: &Op) -> Result<T, E> {
+        Ok(T::default())
+    }
 
-    fn visit_arg
-        (&mut self, node: &Arg) -> Result<T, E> { Ok(T::default()) }
+    fn visit_arg(&mut self, node: &Arg) -> Result<T, E> {
+        Ok(T::default())
+    }
 
-    fn visit_expr
-        (&mut self, node: &Expr) -> Result<T, E> { Ok(T::default()) }
+    fn visit_expr(&mut self, node: &Expr) -> Result<T, E> {
+        Ok(T::default())
+    }
 
-    fn visit_ident
-        (&mut self, node: &Ident) -> Result<T, E> { Ok(T::default()) }
+    fn visit_ident(&mut self, node: &Ident) -> Result<T, E> {
+        Ok(T::default())
+    }
 
-    fn visit_int
-        (&mut self, node: &Int) -> Result<T, E> { Ok(T::default()) }
+    fn visit_int(&mut self, node: &Int) -> Result<T, E> {
+        Ok(T::default())
+    }
 
-    fn visit_str
-        (&mut self, node: &str) -> Result<T, E> { Ok(T::default()) }
+    fn visit_str(&mut self, node: &str) -> Result<T, E> {
+        Ok(T::default())
+    }
 }
 
 
