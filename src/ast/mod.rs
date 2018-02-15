@@ -80,15 +80,52 @@ pub struct Int (BigInt);
 /// An assembly unary operator expression.
 #[derive(Clone, PartialEq, Eq, Hash, Debug)]
 pub struct Unary { 
-    op:   i32,
+    op:   UnaryOp,
     expr: Box<Slot<Expr>>,
 }
 
 /// An assembly binary operator expression.
 #[derive(Clone, PartialEq, Eq, Hash, Debug)]
 pub struct Binary {
-    op:  i32,
+    op:  BinaryOp,
     lhs: Box<Slot<Expr>>,
     rhs: Box<Slot<Expr>>,
+}
+
+/// An assembly unary operator.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+pub enum UnaryOp {
+    Pos,        // +x
+    Neg,        // -x
+    BitNot,     // ~x
+    LogNot,     // !x (not in GAS)
+}
+
+/// An assembly binary operator.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+pub enum BinaryOp {
+    // Arithmetic
+    Mul,        // *
+    Div,        // /
+    Mod,        // %
+    Add,        // +
+    Sub,        // -
+    // Bitwise
+    Shl,        // <<
+    Shr,        // >>
+    BitAnd,     // &
+    BitOr,      // |
+    BitXor,     // ^
+    BitOrNot,   // ! (GAS only)
+    // Relational
+    Lt,         // <
+    LtEq,       // <=
+    Gt,         // >
+    GtEq,       // >=
+    Eq,         // ==
+    NotEq,      // !=
+    // Logical
+    LogAnd,     // &&
+    LogOr,      // ||
 }
 
