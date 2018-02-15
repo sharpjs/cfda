@@ -14,13 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
-/// A assembler pseudo-operation.
+/// An assembler pseudo-operation.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
-pub struct AsmOp {
-    pub name: &'static str,
+pub enum AsmOp {
+    Origin,
+    Skip,
+    Zero8,
+    Zero16,
+    Zero32,
+    Zero64,
+    Data8,
+    Data16,
+    Data32,
+    Data64,
+    Chars,
+    CharsZ,
+    Public,
+    Section,
 }
-
-static DOT_BYTE: AsmOp = AsmOp {
-    name: ".byte",
-};
 
