@@ -75,3 +75,28 @@ fn fmt_esc_utf8(c: char, f: &mut Formatter) -> Result<(), Error> {
     Ok(())
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use ops::*;
+
+    #[test]
+    pub fn foo() {
+        let stmts = &[
+            Stmt {
+                labels: vec![],
+                op:     Slot::Value(Op::Asm(&AsmOp::CharsZ)),
+                args:   vec![
+                    Slot::Value(Arg::Expr(Expr::Str("eh".to_string())))
+                ],
+            }
+        ];
+
+        let styled = MotoStyled { code: stmts };
+
+        let code = format!("{}", styled);
+
+        assert_eq!("\"eh\"", code);
+    }
+}
+
