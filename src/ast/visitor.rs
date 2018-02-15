@@ -39,6 +39,11 @@ pub trait Visitor<T: Default = (), E = ()> {
     }
 
     fn visit_op(&mut self, node: &Slot<Op>) -> Result<T, E> {
+        let op = match *node {
+            Slot::Ident    (i       ) => return self.visit_ident(i),
+            Slot::Resolved (_, ref o) => o,
+            Slot::Value    (   ref o) => o,
+        };
         Ok(T::default())
     }
 
@@ -48,7 +53,15 @@ pub trait Visitor<T: Default = (), E = ()> {
     }
 
     fn visit_arg(&mut self, node: &Slot<Arg>) -> Result<T, E> {
-        Ok(T::default())
+        let arg = match *node {
+            Slot::Ident    (i       ) => return self.visit_ident(i),
+            Slot::Resolved (_, ref a) => a,
+            Slot::Value    (   ref a) => a,
+        };
+        match *arg {
+            Arg::Expr (ref e) => self.visit_expr(e),
+            Arg::Cf   (ref a) => Ok(T::default()),
+        }
     }
 
     fn visit_expr(&mut self, node: &Expr) -> Result<T, E> {
