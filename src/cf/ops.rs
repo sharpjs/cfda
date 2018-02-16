@@ -297,8 +297,34 @@ macro_rules! operand {
 opcodes! {
 //  NAME                              WORDS             MASKS             OPERANDS                          S  FLAGS
 //  ------                            ----------------  ----------------  --------------------------------  -  -----
-    "addal"                        => (0xD1C0)          (0xF1C0)          [MdaipmdxnfDXI:0, AddrReg:9]      L  ISA_A_UP;
+    "addxl"                        => (0o150600)        (0o170770)        [DataReg:0, DataReg:9]            L  ISA_A_UP;
+    "addl"                         => (0o150200)        (0o170700)        [MdaipmdxnfDXI:0, DataReg:9]      L  ISA_A_UP;
+    "addl"                         => (0o150600)        (0o170700)        [DataReg:9, M__ipmdxnf___:0]      L  ISA_A_UP;
+    "addal"                        => (0o150700)        (0o170700)        [MdaipmdxnfDXI:0, AddrReg:9]      L  ISA_A_UP;
+    "addil"                        => (0o003200)        (0o177770)        [Immediate, DataReg:0]            L  ISA_A_UP;
+    "addql"                        => (0o050200)        (0o170700)        [Quick3:9, Mdaipmdxnf___:0]       L  ISA_A_UP;
+
+    "andl"                         => (0o140200)        (0o170700)        [Md_ipmdxnfDXI:0, DataReg:9]      L  ISA_A_UP;
+    "andl"                         => (0o140600)        (0o170700)        [DataReg:9, M__ipmdxnf___:0]      L  ISA_A_UP;
+    "andil"                        => (0o001200)        (0o177770)        [Immediate, DataReg:0]            L  ISA_A_UP;
+
+    "orl"                          => (0o100200)        (0o170700)        [Md_ipmdxnfDXI:0, DataReg:9]      L  ISA_A_UP;
+    "orl"                          => (0o100600)        (0o170700)        [DataReg:9, M__ipmdxnf___:0]      L  ISA_A_UP;
+    "oril"                         => (0o000200)        (0o177770)        [Immediate, DataReg:0]            L  ISA_A_UP;
                                                                                                
+    "eorl"                         => (0o130600)        (0o170700)        [DataReg:9, M__ipmdxnf___:0]      L  ISA_A_UP;
+    "eoril"                        => (0o005200)        (0o177770)        [Immediate, DataReg:0]            L  ISA_A_UP;
+
+    "asr.l"                        => (0o160200)        (0o170770)        [Quick3:9, DataReg:0]             L  ISA_A_UP;
+    "asl.l"                        => (0o160600)        (0o170770)        [Quick3:9, DataReg:0]             L  ISA_A_UP;
+    "asr.l"                        => (0o160240)        (0o170770)        [DataReg:9, DataReg:0]            L  ISA_A_UP;
+    "asl.l"                        => (0o160640)        (0o170770)        [DataReg:9, DataReg:0]            L  ISA_A_UP;
+
+    "lsr.l"                        => (0o160210)        (0o170770)        [Quick3:9, DataReg:0]             L  ISA_A_UP;
+    "lsl.l"                        => (0o160610)        (0o170770)        [Quick3:9, DataReg:0]             L  ISA_A_UP;
+    "lsr.l"                        => (0o160250)        (0o170770)        [DataReg:9, DataReg:0]            L  ISA_A_UP;
+    "lsl.l"                        => (0o160650)        (0o170770)        [DataReg:9, DataReg:0]            L  ISA_A_UP;
+
     "braw"                         => (0x6000)          (0xFFFF)          [PcRel16]                         W  ISA_A_UP;
     "bsrw"                         => (0x6100)          (0xFFFF)          [PcRel16]                         W  ISA_A_UP;
     "bhiw"                         => (0x6200)          (0xFFFF)          [PcRel16]                         W  ISA_A_UP;
