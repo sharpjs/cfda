@@ -226,9 +226,9 @@ static REMUL: Op = Op {
 macro_rules! opcodes {
     {
         $(
-            $($name:expr),+ => $size:tt
+            $($name:expr),+ =>
                 ( $($bits:expr),+ ) ( $($mask:expr),+ )
-                [ $( $($arg:tt):+ ),* ] $flags:expr ;
+                [ $( $($arg:tt):+ ),* ] $size:ident $flags:expr ;
         )*
     } =>
     {
@@ -295,9 +295,9 @@ macro_rules! operand {
 }
 
 opcodes! {
-//  NAME                 S  WORDS             MASKS             OPERANDS                          FLAGS
-//  ------               -  ----------------  ----------------  --------------------------------  -----
-    "adda.l", "addal" => L  (0xD1C0)          (0xF1C0)          [MdaipmdxnfDXI:0, AddrReg:9]      ISA_A_UP;
+//  NAME                              WORDS             MASKS             OPERANDS                          S  FLAGS
+//  ------                            ----------------  ----------------  --------------------------------  -  -----
+    "addal"                        => (0xD1C0)          (0xF1C0)          [MdaipmdxnfDXI:0, AddrReg:9]      L  ISA_A_UP;
 }
 
 // // Integer user instructions
