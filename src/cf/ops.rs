@@ -172,63 +172,12 @@ pub const ISA_B_UP:   Flags =                  ISA_B | ISA_C;
 
 fn run_stub() { }
 
-static NOP: Op = Op {
-    names:      &["nop"],
-    bits:       (0x4E71, 0),
-    mask:       (0xFFFF, 0),
-    arity:      0,
-    size:       Size::Zero,
-    operands:   [Operand::None,
-                 Operand::None,
-                 Operand::None,
-                 Operand::None,
-                 Operand::None],
-    flags:      ISA_A_UP,
-    disasm:     None,
-    run:        run_stub,
-    reserved:   0,
-};
-
-static REMSL: Op = Op {
-    names:      &["rems.l", "remsl"],
-    bits:       (0o046100, 0o004000),
-    mask:       (0o177700, 0o107770),
-    arity:      3,
-    size:       Size::Long,
-    operands:   [Operand::Md_ipmd______ ( 0),
-                 Operand::DataReg       (16),
-                 Operand::DataReg       (28), // TODO: Cannot be same register as arg1
-                 Operand::None,
-                 Operand::None],
-    flags:      HWDIV,
-    disasm:     None,
-    run:        run_stub,
-    reserved:   0,
-};
-
-static REMUL: Op = Op {
-    names:      &["remu.l", "remul"],
-    bits:       (0o046100, 0o000000),
-    mask:       (0o177700, 0o107770),
-    arity:      3,
-    size:       Size::Long,
-    operands:   [Operand::Md_ipmd______ ( 0),
-                 Operand::DataReg       (16),
-                 Operand::DataReg       (28), // TODO: Cannot be same register as arg1
-                 Operand::None,
-                 Operand::None],
-    flags:      HWDIV,
-    disasm:     None,
-    run:        run_stub,
-    reserved:   0,
-};
-
 macro_rules! opcodes {
     {
         $(
             $($name:expr),+ =>
                 ( $($bits:expr),+ ) ( $($mask:expr),+ )
-                [ $( $($arg:tt):+ ),* ] $size:ident $flags:expr ;
+                [ $( $($arg:tt):+ ),* ] $size:tt $flags:expr ;
         )*
     } =>
     {
@@ -375,6 +324,13 @@ opcodes! {
     "blts", "bltb"                 => (0x6D00)          (0xFF00)          [PcRel8:0]                        B  ISA_A_UP;
     "bgts", "bgtb"                 => (0x6E00)          (0xFF00)          [PcRel8:0]                        B  ISA_A_UP;
     "bles", "bleb"                 => (0x6F00)          (0xFF00)          [PcRel8:0]                        B  ISA_A_UP;
+
+    "nop"                          => (0x4E71)          (0xFFFF)          []                                -  ISA_A_UP;
+
+//  NAME        WORDS                 MASKS                 OPERANDS                                   S  FLAGS
+//  ------      --------------------  ----------------      -----------------------------------------  -  -----
+    "rems.l" => (0o046100, 0o004000)  (0o177700, 0o107770)  [Md_ipmd______:0, DataReg:16, DataReg:28]  L  HWDIV; // TODO: arg2 cannot be same register as arg1
+    "remu.l" => (0o046100, 0o000000)  (0o177700, 0o107770)  [Md_ipmd______:0, DataReg:16, DataReg:28]  L  HWDIV; // TODO: arg2 cannot be same register as arg1
 }
 
 // // Integer user instructions
