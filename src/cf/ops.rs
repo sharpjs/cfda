@@ -298,6 +298,57 @@ opcodes! {
 //  NAME                              WORDS             MASKS             OPERANDS                          S  FLAGS
 //  ------                            ----------------  ----------------  --------------------------------  -  -----
     "addal"                        => (0xD1C0)          (0xF1C0)          [MdaipmdxnfDXI:0, AddrReg:9]      L  ISA_A_UP;
+                                                                                               
+    "braw"                         => (0x6000)          (0xFFFF)          [PcRel16]                         W  ISA_A_UP;
+    "bsrw"                         => (0x6100)          (0xFFFF)          [PcRel16]                         W  ISA_A_UP;
+    "bhiw"                         => (0x6200)          (0xFFFF)          [PcRel16]                         W  ISA_A_UP;
+    "blsw"                         => (0x6300)          (0xFFFF)          [PcRel16]                         W  ISA_A_UP;
+    "bhsw", "bccw"                 => (0x6400)          (0xFFFF)          [PcRel16]                         W  ISA_A_UP;
+    "blow", "bcsw"                 => (0x6500)          (0xFFFF)          [PcRel16]                         W  ISA_A_UP;
+    "bnew", "bnzw"                 => (0x6600)          (0xFFFF)          [PcRel16]                         W  ISA_A_UP;
+    "beqw", "bzw"                  => (0x6700)          (0xFFFF)          [PcRel16]                         W  ISA_A_UP;
+    "bvcw"                         => (0x6800)          (0xFFFF)          [PcRel16]                         W  ISA_A_UP;
+    "bvsw"                         => (0x6900)          (0xFFFF)          [PcRel16]                         W  ISA_A_UP;
+    "bplw"                         => (0x6A00)          (0xFFFF)          [PcRel16]                         W  ISA_A_UP;
+    "bmiw"                         => (0x6B00)          (0xFFFF)          [PcRel16]                         W  ISA_A_UP;
+    "bgew"                         => (0x6C00)          (0xFFFF)          [PcRel16]                         W  ISA_A_UP;
+    "bltw"                         => (0x6D00)          (0xFFFF)          [PcRel16]                         W  ISA_A_UP;
+    "bgtw"                         => (0x6E00)          (0xFFFF)          [PcRel16]                         W  ISA_A_UP;
+    "blew"                         => (0x6F00)          (0xFFFF)          [PcRel16]                         W  ISA_A_UP;
+                                                                                               
+    "bral"                         => (0x60FF)          (0xFFFF)          [PcRel32]                         L  ISA_B_UP;
+    "bsrl"                         => (0x61FF)          (0xFFFF)          [PcRel32]                         L  ISA_B_UP;
+    "bhil"                         => (0x62FF)          (0xFFFF)          [PcRel32]                         L  ISA_B_UP;
+    "blsl"                         => (0x63FF)          (0xFFFF)          [PcRel32]                         L  ISA_B_UP;
+    "bhsl", "bccl"                 => (0x64FF)          (0xFFFF)          [PcRel32]                         L  ISA_B_UP;
+    "blol", "bcsl"                 => (0x65FF)          (0xFFFF)          [PcRel32]                         L  ISA_B_UP;
+    "bnel", "bnzl"                 => (0x66FF)          (0xFFFF)          [PcRel32]                         L  ISA_B_UP;
+    "beql", "bzl"                  => (0x67FF)          (0xFFFF)          [PcRel32]                         L  ISA_B_UP;
+    "bvcl"                         => (0x68FF)          (0xFFFF)          [PcRel32]                         L  ISA_B_UP;
+    "bvsl"                         => (0x69FF)          (0xFFFF)          [PcRel32]                         L  ISA_B_UP;
+    "bpll"                         => (0x6AFF)          (0xFFFF)          [PcRel32]                         L  ISA_B_UP;
+    "bmil"                         => (0x6BFF)          (0xFFFF)          [PcRel32]                         L  ISA_B_UP;
+    "bgel"                         => (0x6CFF)          (0xFFFF)          [PcRel32]                         L  ISA_B_UP;
+    "bltl"                         => (0x6DFF)          (0xFFFF)          [PcRel32]                         L  ISA_B_UP;
+    "bgtl"                         => (0x6EFF)          (0xFFFF)          [PcRel32]                         L  ISA_B_UP;
+    "blel"                         => (0x6FFF)          (0xFFFF)          [PcRel32]                         L  ISA_B_UP;
+                                                                                               
+    "bras", "brab"                 => (0x6000)          (0xFF00)          [PcRel8:0]                        B  ISA_A_UP;
+    "bsrs", "bsrb"                 => (0x6100)          (0xFF00)          [PcRel8:0]                        B  ISA_A_UP;
+    "bhis", "bhib"                 => (0x6200)          (0xFF00)          [PcRel8:0]                        B  ISA_A_UP;
+    "blss", "blsb"                 => (0x6300)          (0xFF00)          [PcRel8:0]                        B  ISA_A_UP;
+    "bhss", "bhsb", "bccs", "bccb" => (0x6400)          (0xFF00)          [PcRel8:0]                        B  ISA_A_UP;
+    "blos", "blob", "bcss", "bcsb" => (0x6500)          (0xFF00)          [PcRel8:0]                        B  ISA_A_UP;
+    "bnes", "bneb", "bnzs", "bnzb" => (0x6600)          (0xFF00)          [PcRel8:0]                        B  ISA_A_UP;
+    "beqs", "beqb", "bzs",  "bzb"  => (0x6700)          (0xFF00)          [PcRel8:0]                        B  ISA_A_UP;
+    "bvcs", "bvcb"                 => (0x6800)          (0xFF00)          [PcRel8:0]                        B  ISA_A_UP;
+    "bvss", "bvsb"                 => (0x6900)          (0xFF00)          [PcRel8:0]                        B  ISA_A_UP;
+    "bpls", "bplb"                 => (0x6A00)          (0xFF00)          [PcRel8:0]                        B  ISA_A_UP;
+    "bmis", "bmib"                 => (0x6B00)          (0xFF00)          [PcRel8:0]                        B  ISA_A_UP;
+    "bges", "bgeb"                 => (0x6C00)          (0xFF00)          [PcRel8:0]                        B  ISA_A_UP;
+    "blts", "bltb"                 => (0x6D00)          (0xFF00)          [PcRel8:0]                        B  ISA_A_UP;
+    "bgts", "bgtb"                 => (0x6E00)          (0xFF00)          [PcRel8:0]                        B  ISA_A_UP;
+    "bles", "bleb"                 => (0x6F00)          (0xFF00)          [PcRel8:0]                        B  ISA_A_UP;
 }
 
 // // Integer user instructions
