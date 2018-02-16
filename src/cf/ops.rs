@@ -46,7 +46,7 @@ pub struct Op {                                                     // 64-bit   
     /// Simulation runner.
     pub run: fn(/*ctx: &mut RunContext*/),                          // + 8 => 56 | + 4 => 40
 
-    pub reserved: usize,                                            // + 8 => 64 | + 4 => 44
+    pub reserved: u64,                                              // + 8 => 64 | + 8 => 48
 }
 
 /// Operand sizes.
