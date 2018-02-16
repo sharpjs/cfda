@@ -139,6 +139,15 @@ pub enum Operand {
 
     /// Quick immediate (8 bits signed)
     Quick8(BitPos),
+
+    /// PC-relative immediate (8 bits signed)
+    PcRel8(BitPos),
+
+    /// PC-relative immediate (16 bits signed in extension word)
+    PcRel16,
+
+    /// PC-relative immediate (32 bits signed in extension words)
+    PcRel32,
 }
 
 /// Opcode flags.
