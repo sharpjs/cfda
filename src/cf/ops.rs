@@ -200,15 +200,6 @@ macro_rules! opcodes {
     };
 }
 
-
-macro_rules! size {
-    { - } => { Size::Zero };
-    { S } => { Size::Byte };
-    { B } => { Size::Byte };
-    { W } => { Size::Word };
-    { L } => { Size::Long };
-}
-
 macro_rules! words {
     { $a:expr          } => { ($a,  0) };
     { $a:expr, $b:expr } => { ($a, $b) };
@@ -217,6 +208,13 @@ macro_rules! words {
 macro_rules! ext {
     { $a:expr          } => { 0        };
     { $a:expr, $b:expr } => { EXT_WORD };
+}
+
+macro_rules! size {
+    { - } => { Size::Zero };
+    { B } => { Size::Byte };
+    { W } => { Size::Word };
+    { L } => { Size::Long };
 }
 
 macro_rules! operands {
