@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
-#![allow(unused_macros)]
-
 /// ColdFire opcode and operands specification.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub struct Op {                                                     // 64-bit    | 32-bit
@@ -189,8 +187,8 @@ macro_rules! opcodes {
                     mask:       words!($($mask),+),
                     arity:      0,           // TODO
                     size:       size!($size),
-                    operands:   [Operand::None, Operand::None, Operand::None, Operand::None, Operand::None], // args!($( $($arg):+ ),*),
-                    flags:      $flags, // | ext!($($bits),+),
+                    operands:   operands!($( $($arg):+ ),*),
+                    flags:      $flags | ext!($($bits),+),
                     disasm:     None,
                     run:        run_stub,
                     reserved:   0,
