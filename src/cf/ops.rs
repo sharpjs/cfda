@@ -18,7 +18,7 @@
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub struct Op {                                                     // 64-bit    | 32-bit
     /// Mnemonic names.  The first name is the preferred one.
-    pub names: &'static [&'static str],                             // +16 => 16 | + 8 =>  8
+    pub names: &'static [&'static str],                             // +16 => 16 | + 8 =>  8 (bytes)
 
     /// Values of required bits in opword and extension word.
     pub bits: (u16, u16),                                           // + 4 => 20 | + 4 => 12
@@ -44,6 +44,7 @@ pub struct Op {                                                     // 64-bit   
     /// Simulation runner.
     pub run: fn(/*ctx: &mut RunContext*/),                          // + 8 => 56 | + 4 => 40
 
+    /// Reserved.
     pub reserved: u64,                                              // + 8 => 64 | + 8 => 48
 }
 
