@@ -217,7 +217,7 @@ static REMUL: Op = Op {
 macro_rules! opcodes {
     {
         $(
-            $name:expr => $size:tt
+            $($name:expr),+ => $size:tt
                 ( $($bits:expr),+ ) ( $($mask:expr),+ )
                 [ $( $($arg:tt):+ ),* ] $flags:expr ;
         )*
@@ -226,7 +226,7 @@ macro_rules! opcodes {
         pub static OPCODES: &'static [Op/*code*/] = &[
             $(
                 Op/*code*/ {
-                    names:      &[$name],
+                    names:      &[$($name),+],
                     bits:       words!($($bits),+),
                     mask:       words!($($mask),+),
                     arity:      0,           // TODO
@@ -286,9 +286,9 @@ macro_rules! operand {
 }
 
 opcodes! {
-//  NAME        S  WORDS             MASKS             OPERANDS                          FLAGS
-//  ------      -  ----------------  ----------------  --------------------------------  -----
-    "adda.l" => L  (0xD1C0)          (0xF1C0)          [MdaipmdxnfDXI:0, AddrReg:9]      ISA_A_UP;
+//  NAME                 S  WORDS             MASKS             OPERANDS                          FLAGS
+//  ------               -  ----------------  ----------------  --------------------------------  -----
+    "adda.l", "addal" => L  (0xD1C0)          (0xF1C0)          [MdaipmdxnfDXI:0, AddrReg:9]      ISA_A_UP;
 }
 
 // // Integer user instructions
