@@ -356,7 +356,7 @@ opcodes! {
     "nop"                          => (0x4E71)          (0xFFFF)          []                                -  ISA_A_UP;
 
 //  NAME        WORDS                 MASKS                 OPERANDS                                   S  FLAGS
-//  ------      --------------------  ----------------      -----------------------------------------  -  -----
+//  ------      --------------------  --------------------  -----------------------------------------  -  -----
     "rems.l" => (0o046100, 0o004000)  (0o177700, 0o107770)  [Md_ipmd______:0, DataReg:16, DataReg:28]  L  HWDIV; // TODO: arg2 cannot be same register as arg1
     "remu.l" => (0o046100, 0o000000)  (0o177700, 0o107770)  [Md_ipmd______:0, DataReg:16, DataReg:28]  L  HWDIV; // TODO: arg2 cannot be same register as arg1
 }
