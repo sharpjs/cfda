@@ -14,6 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
+/// ColdFire instruction specification.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+pub struct Instruction {
+    pub names: &'static [&'static str],                             // +16 => 16 | + 8 =>  8 (bytes)
+}
+
 /// ColdFire opcode and operands specification.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub struct Op {                                                     // 64-bit    | 32-bit
@@ -171,6 +177,21 @@ pub const ISA_B_UP:   Flags =                  ISA_B | ISA_C;
 
 fn run_stub() { }
 
+macro_rules! instructions {
+    {
+        $(
+            $id:ident [ $($name:expr),+ ] ;
+        )*
+    } =>
+    {
+        $(
+            pub static $id: Instruction = Instruction {
+                names: &[$($name),+],
+            };
+        )*
+    };
+}
+
 macro_rules! opcodes {
     {
         $(
@@ -238,6 +259,16 @@ macro_rules! operands {
 macro_rules! operand {
     { $kind:ident             } => { Operand::$kind       };
     { $kind:ident : $pos:expr } => { Operand::$kind($pos) };
+}
+
+instructions! {
+//  IDENT  NAMES
+//  -----  ---------------------------
+    ADDL   ["add.l",  "addl" , "add" ];
+    ADDAL  ["adda.l", "addal", "adda"];
+    ADDIL  ["addi.l", "addil", "addi"];
+    ADDQL  ["addq.l", "addql", "addq"];
+    ADDXL  ["addx.l", "addxl", "addx"];
 }
 
 opcodes! {
