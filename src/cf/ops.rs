@@ -18,6 +18,12 @@
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub struct Instruction {
     pub names: &'static [&'static str],                             // +16 => 16 | + 8 =>  8 (bytes)
+
+    /// Disassembly special-case handler.
+    pub disasm: Option<fn(/*ctx: &mut DasmContext*/) -> bool>,      // + 8 => 48 | + 4 => 36
+
+    /// Simulation runner.
+    pub run: fn(/*ctx: &mut RunContext*/),                          // + 8 => 56 | + 4 => 40
 }
 
 /// ColdFire opcode and operands specification.
@@ -43,15 +49,6 @@ pub struct Op {                                                     // 64-bit   
 
     /// Flags (supported architectures, extension word usage)
     pub flags: Flags,                                               // + 4 => 40 | + 4 => 32
-
-    /// Disassembly special-case handler.
-    pub disasm: Option<fn(/*ctx: &mut DasmContext*/) -> bool>,      // + 8 => 48 | + 4 => 36
-
-    /// Simulation runner.
-    pub run: fn(/*ctx: &mut RunContext*/),                          // + 8 => 56 | + 4 => 40
-
-    /// Reserved.
-    pub reserved: u64,                                              // + 8 => 64 | + 8 => 48
 }
 
 /// Operand sizes.
@@ -187,6 +184,8 @@ macro_rules! instructions {
         $(
             pub static $id: Instruction = Instruction {
                 names: &[$($name),+],
+                disasm:     None,
+                run:        run_stub,
             };
         )*
     };
@@ -204,16 +203,13 @@ macro_rules! opcodes {
         pub static OPCODES: &'static [Op/*code*/] = &[
             $(
                 Op/*code*/ {
-                    names:      &[$($name),+],
-                    bits:       words!($($bits),+),
-                    mask:       words!($($mask),+),
-                    arity:      0,           // TODO
-                    size:       size!($size),
-                    operands:   operands!($( $($arg):+ ),*),
-                    flags:      $flags | ext!($($bits),+),
-                    disasm:     None,
-                    run:        run_stub,
-                    reserved:   0,
+                    names:    &[$($name),+],
+                    bits:     words!($($bits),+),
+                    mask:     words!($($mask),+),
+                    arity:    0,           // TODO
+                    size:     size!($size),
+                    operands: operands!($( $($arg):+ ),*),
+                    flags:    $flags | ext!($($bits),+),
                 },
             )*
         ];
@@ -563,7 +559,7 @@ mod tests {
 
     #[test]
     fn op_size_of() {
-        assert_eq!( size_of::<Op>(), 64 );
+        assert_eq!( size_of::<Op>(), 40 /* temporarily, until it is 32 */ );
     }
 }
 
