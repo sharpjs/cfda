@@ -262,6 +262,7 @@ macro_rules! operand {
 }
 
 instructions! {
+//  Integer User Instructions
 //  IDENT     MNEMONIC    RUN
 //  -----     --------    --------
     ADDL    = "add.l",    run_stub;
@@ -336,14 +337,128 @@ instructions! {
     BGTL    = "bgt.l",    run_stub;
     BLEL    = "ble.l",    run_stub;
 
+    BCHGB   = "bchg.b",   run_stub;
+    BCHGL   = "bchg.l",   run_stub;
+                     
+    BCLRB   = "bclr.b",   run_stub;
+    BCLRL   = "bclr.l",   run_stub;
+                     
+    BSETB   = "bset.b",   run_stub;
+    BSETL   = "bset.l",   run_stub;
+                     
+    BTSTB   = "btst.b",   run_stub;
+    BTSTL   = "btst.l",   run_stub;
+                     
+    CLRB    = "clr.b",    run_stub;
+    CLRW    = "clr.w",    run_stub;
+    CLRL    = "clr.l",    run_stub;
+                     
+    CMPL    = "cmp.l",    run_stub;
+    CMPAL   = "cmpa.l",   run_stub;
+    CMPIL   = "cmpi.l",   run_stub;
+                     
+    DIVSW   = "divs.w",   run_stub;
+    DIVSL   = "divs.l",   run_stub;
+                     
+    DIVUW   = "divu.w",   run_stub;
+    DIVUL   = "divu.l",   run_stub;
+                     
+    EXTW    = "ext.w",    run_stub;
+    EXTL    = "ext.l",    run_stub;
+    EXTBL   = "extb.l",   run_stub;
+                     
+    JMP     = "jmp",      run_stub;
+                     
+    JSR     = "jsr",      run_stub;
+                     
+    LEAL    = "lea.l",    run_stub;
+                     
+    LINKW   = "link.w",   run_stub;
+                     
+    MOVEB   = "move.b",   run_stub;
+    MOVEW   = "move.w",   run_stub;
+    MOVEL   = "move.l",   run_stub;
+    MOVEAW  = "movea.w",  run_stub;
+    MOVEAL  = "movea.l",  run_stub;
+    MOVEML  = "movem.l",  run_stub;
+    MOVEQL  = "moveq.l",  run_stub;
+                     
+    MULSW   = "muls.w",   run_stub;
+    MULSL   = "muls.l",   run_stub;
+                     
+    MULUW   = "mulu.w",   run_stub;
+    MULUL   = "mulu.l",   run_stub;
+                     
+    NEGL    = "neg.l",    run_stub;
+                     
+    NEGXL   = "negx.l",   run_stub;
+                     
     NOP     = "nop",      run_stub;
+
+    NOTL    = "not.l",    run_stub;
+                    
+    PEAL    = "pea.l",    run_stub;
+                    
+    PULSE   = "pulse",    run_stub;
+                    
+    RTS     = "rts",      run_stub;
+                    
+    SEQB    = "seq.b",    run_stub;
+    SFB     = "sf.b",     run_stub;
+    SGEB    = "sge.b",    run_stub;
+    SGTB    = "sgt.b",    run_stub;
+    SHIB    = "shi.b",    run_stub;
+    SHSB    = "shs.b",    run_stub;
+    SLEB    = "sle.b",    run_stub;
+    SLOB    = "slo.b",    run_stub;
+    SLSB    = "sls.b",    run_stub;
+    SLTB    = "slt.b",    run_stub;
+    SMIB    = "smi.b",    run_stub;
+    SNEB    = "sne.b",    run_stub;
+    SPLB    = "spl.b",    run_stub;
+    STB     = "st.b",     run_stub;
+    SVCB    = "svc.b",    run_stub;
+    SVSB    = "svs.b",    run_stub;
+                    
+    SUBL    = "sub.l",    run_stub;
+    SUBAL   = "suba.l",   run_stub;
+    SUBIL   = "subi.l",   run_stub;
+    SUBQL   = "subq.l",   run_stub;
+    SUBXL   = "subx.l",   run_stub;
+                    
+    SWAPW   = "swap.w",   run_stub;
 
     REMSL   = "rems.l",   run_stub;
     REMUL   = "remu.l",   run_stub;
 
+    TPF     = "tpf",      run_stub;
+    TPFW    = "tpf.w",    run_stub;
+    TPFL    = "tpf.l",    run_stub;
+                   
+    TRAP    = "trap",     run_stub;
+                   
+    TSTB    = "tst.b",    run_stub;
+    TSTW    = "tst.w",    run_stub;
+    TSTL    = "tst.l",    run_stub;
+                   
+    UNLK    = "unlk",     run_stub;
+
     WDDATAB = "wddata.b", run_stub;
     WDDATAW = "wddata.w", run_stub;
     WDDATAL = "wddata.l", run_stub;
+
+// TODO: MAC, EMAC, FPU, ISA_A+, ...
+
+//  Supervisor instructions
+//
+//  IDENT     MNEMONIC    RUN
+//  -----     --------    --------
+    CPUSHL  = "cpushl",   run_stub;
+    HALT    = "halt",     run_stub;
+    MOVECL  = "movec.l",  run_stub;
+    RTE     = "rte",      run_stub;
+    STOP    = "stop",     run_stub;
+    WDEBUGL = "wdebug.l", run_stub;
 }
 
 opcodes! {
