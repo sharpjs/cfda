@@ -177,6 +177,10 @@ pub const ISA_B_UP:   Flags =                  ISA_B | ISA_C;
 
 fn run_stub() { }
 
+macro_rules! one {
+    { $($x:tt)* } => { 1 }
+}
+
 macro_rules! instructions {
     {
         $(
@@ -203,7 +207,7 @@ macro_rules! opcodes {
         )*
     } =>
     {
-        pub static OPCODES: &'static [Op/*code*/] = &[
+        pub static OPCODES: [Op/*code*/; 0 $(+ one!($name))*] = [
             $(
                 Op/*code*/ {
                     names:    &[$($name),+],
