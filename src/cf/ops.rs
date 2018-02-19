@@ -435,6 +435,55 @@ opcodes! {
     REMSL    (0o046100, 0o004000)  (0o177700, 0o107770)  [Md_ipmd______:0, DataReg:16, DataRegDiff:28]  L  HWDIV;
     REMUL    (0o046100, 0o000000)  (0o177700, 0o107770)  [Md_ipmd______:0, DataReg:16, DataRegDiff:28]  L  HWDIV;
 }
+
+macro_rules! aliases {
+    {
+        $( $name:expr => $instruction:ident ; )*
+    } =>
+    {
+        pub static ALIASES: [(&str, &Instruction); 0 $(+ one!($name))*] = [
+            $( ($name, &$instruction) ),*
+        ];
+    };
+}
+
+aliases! {
+    "bra.b" => BRAS;
+    "bsr.b" => BSRS;
+    "bhi.b" => BHIS;
+    "bls.b" => BLSS;
+    "bhs.b" => BHSS;
+    "blo.b" => BLOS;
+    "bne.b" => BNES;
+    "beq.b" => BEQS;
+    "bvc.b" => BVCS;
+    "bvs.b" => BVSS;
+    "bpl.b" => BPLS;
+    "bmi.b" => BMIS;
+    "bge.b" => BGES;
+    "blt.b" => BLTS;
+    "bgt.b" => BGTS;
+    "ble.b" => BLES;
+
+    "bcc.s" => BHSS;
+    "bcs.s" => BLOS;
+    "bnz.s" => BNES;
+    "bz.s"  => BEQS;
+
+    "bcc.b" => BHSS;
+    "bcs.b" => BLOS;
+    "bnz.b" => BNES;
+    "bz.b"  => BEQS;
+
+    "bcc.w" => BHSW;
+    "bcs.w" => BLOW;
+    "bnz.w" => BNEW;
+    "bz.w"  => BEQW;
+
+    "bcc.l" => BHSL;
+    "bcs.l" => BLOL;
+    "bnz.l" => BNEL;
+    "bz.l"  => BEQL;
 }
 
 // // Integer user instructions
