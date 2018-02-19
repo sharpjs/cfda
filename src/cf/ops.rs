@@ -133,9 +133,6 @@ pub enum Operand {
     /// Data/address register list (16 bits in extension word)
     RegList,
 
-    /// Condition code (4 bits),
-    Cond(BitPos),
-
     /// Cache selector (2 bits)
     CacheSel(BitPos),
 
