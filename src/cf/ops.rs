@@ -183,9 +183,7 @@ macro_rules! one {
 
 macro_rules! instructions {
     {
-        $(
-            $id:ident = $name:expr , $run:expr ;
-        )*
+        $( $id:ident = $name:expr, $run:expr; )*
     } =>
     {
         $(
