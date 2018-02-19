@@ -106,6 +106,12 @@ pub enum Operand {
     /// Data register (3 bits)
     DataReg(BitPos),
 
+    /// Data register, same one as previous operand (3 bits)
+    DataRegSame(BitPos),
+
+    /// Data register, different one from prevous operand (3 bits)
+    DataRegDiff(BitPos),
+
     /// Address register (3 bits)
     AddrReg(BitPos),
 
