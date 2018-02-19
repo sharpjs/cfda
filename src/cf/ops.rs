@@ -265,6 +265,7 @@ instructions! {
 //  Integer User Instructions
 //  IDENT     MNEMONIC    RUN
 //  -----     --------    --------
+    // Add
     ADDL    = "add.l",    run_stub;
     ADDAL   = "adda.l",   run_stub;
     ADDIL   = "addi.l",   run_stub;
@@ -286,6 +287,7 @@ instructions! {
     LSRL    = "lsr.l",    run_stub;
     LSLL    = "lsl.l",    run_stub;
 
+    // Branch
     BRAS    = "bra.s",    run_stub;
     BSRS    = "bsr.s",    run_stub;
     BHIS    = "bhi.s",    run_stub;
@@ -337,6 +339,7 @@ instructions! {
     BGTL    = "bgt.l",    run_stub;
     BLEL    = "ble.l",    run_stub;
 
+    // Bit
     BCHGB   = "bchg.b",   run_stub;
     BCHGL   = "bchg.l",   run_stub;
                      
@@ -598,200 +601,6 @@ aliases! {
     "bnz.l" => BNEL;
     "bz.l"  => BEQL;
 }
-
-// // Integer user instructions
-// Addl,
-// Addal,
-// Addil,
-// Addql,
-// Addxl,
-// Andl,
-// Andil,
-// Asll,
-// Asrl,
-// 
-// Beqs,
-// Beqw,
-// 
-// Bges,
-// Bgew,
-// 
-// Bgts,
-// Bgtw,
-// 
-// Bhis,
-// Bhiw,
-// 
-// Bhss,
-// Bhsw,
-// 
-// Bles,
-// Blew,
-// 
-// Blos,
-// Blow,
-// 
-// Blss,
-// Blsw,
-// 
-// Blts,
-// Bltw,
-// 
-// Bmis,
-// Bmiw,
-// 
-// Bnes,
-// Bnew,
-// 
-// Bpls,
-// Bplw,
-// 
-// Bvcs,
-// Bvcw,
-// 
-// Bvss,
-// Bvsw,
-// 
-// Bchgb,
-// Bchgl,
-// 
-// Bclrb,
-// Bclrl,
-// 
-// Bsetb,
-// Bsetl,
-// 
-// Btstb,
-// Btstl,
-// 
-// Bras,
-// Braw,
-// 
-// Bsrs,
-// Bsrw,
-// 
-// Clrb,
-// Clrw,
-// Clrl,
-// 
-// Cmpl,
-// Cmpal,
-// Cmpil,
-// 
-// Divsw,
-// Divsl,
-// 
-// Divuw,
-// Divul,
-// 
-// Eorl,
-// Eoril,
-// 
-// Extw,
-// Extl,
-// Extbl,
-// 
-// Jmp,
-// 
-// Jsr,
-// 
-// Leal,
-// 
-// Linkw,
-// 
-// Lsll,
-// Lsrl,
-// 
-// Moveb,
-// Movew,
-// Movel,
-// Moveaw,
-// Moveal,
-// Moveml,
-// Moveql,
-// 
-// Mulsw,
-// Mulsl,
-// 
-// Muluw,
-// Mulul,
-// 
-// Negl,
-// 
-// Negxl,
-// 
-// Nop,
-// 
-// Notl,
-// 
-// Orl,
-// Oril,
-// 
-// Peal,
-// 
-// Pulse,
-// 
-// Rts,
-// 
-// Seqb,
-// Sfb,
-// Sgeb,
-// Sgtb,
-// Shib,
-// Shsb,
-// Sleb,
-// Slob,
-// Slsb,
-// Sltb,
-// Smib,
-// Sneb,
-// Splb,
-// Stb,
-// Svcb,
-// Svsb,
-// 
-// Subl,
-// Subal,
-// Subil,
-// Subql,
-// Subxl,
-// 
-// Swapw,
-// 
-// Remsl,
-// 
-// Remul,
-// 
-// Tpf,
-// Tpfw,
-// Tpfl,
-// 
-// Trap,
-// 
-// Tstb,
-// Tstw,
-// Tstl,
-// 
-// Unlk,
-// 
-// Wddatab,
-// Wddataw,
-// Wddatal,
-// 
-// // TODO: MAC, EMAC, FPU, ISA_A+...
-// 
-// // Supervisor instructions
-// Cpushl,
-// 
-// Halt,
-// 
-// Movecl,
-// 
-// Rte,
-// 
-// Stop,
-// 
-// Wdebugl,
 
 #[cfg(test)]
 mod tests {
