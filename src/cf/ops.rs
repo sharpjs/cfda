@@ -136,7 +136,7 @@ pub enum Operand {
     /// Cache selector (2 bits)
     CacheSel(BitPos),
 
-    /// Immediate (16 or 32 bits following opword)
+    /// Immediate (16 or 32 bits in extension words)
     Immediate,
 
     /// Quick immediate (3 bits unsigned; 0 => 8)
@@ -145,13 +145,13 @@ pub enum Operand {
     /// Quick immediate (8 bits signed)
     Quick8(BitPos),
 
-    /// PC-relative immediate (8 bits signed)
+    /// PC-relative immediate offset (8 bits signed)
     PcRel8(BitPos),
 
-    /// PC-relative immediate (16 bits signed in extension word)
+    /// PC-relative immediate offset (16 bits signed in extension word)
     PcRel16,
 
-    /// PC-relative immediate (32 bits signed in extension words)
+    /// PC-relative immediate offset (32 bits signed in extension words)
     PcRel32,
 }
 
