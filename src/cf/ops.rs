@@ -271,6 +271,81 @@ instructions! {
     ADDIL   = "addi.l",   run_stub;
     ADDQL   = "addq.l",   run_stub;
     ADDXL   = "addx.l",   run_stub;
+
+    ANDL    = "and.l",    run_stub;
+    ANDIL   = "andi.l",   run_stub;
+
+    ORL     = "or.l",     run_stub;
+    ORIL    = "ori.l",    run_stub;
+
+    EORL    = "eor.l",    run_stub;
+    EORIL   = "eori.l",   run_stub;
+
+    ASRL    = "asr.l",    run_stub;
+    ASLL    = "asl.l",    run_stub;
+
+    LSRL    = "lsr.l",    run_stub;
+    LSLL    = "lsl.l",    run_stub;
+
+    BRAS    = "bra.s",    run_stub;
+    BSRS    = "bsr.s",    run_stub;
+    BHIS    = "bhi.s",    run_stub;
+    BLSS    = "bls.s",    run_stub;
+    BHSS    = "bhs.s",    run_stub;
+    BLOS    = "blo.s",    run_stub;
+    BNES    = "bne.s",    run_stub;
+    BEQS    = "beq.s",    run_stub;
+    BVCS    = "bvc.s",    run_stub;
+    BVSS    = "bvs.s",    run_stub;
+    BPLS    = "bpl.s",    run_stub;
+    BMIS    = "bmi.s",    run_stub;
+    BGES    = "bge.s",    run_stub;
+    BLTS    = "blt.s",    run_stub;
+    BGTS    = "bgt.s",    run_stub;
+    BLES    = "ble.s",    run_stub;
+
+    BRAW    = "bra.w",    run_stub;
+    BSRW    = "bsr.w",    run_stub;
+    BHIW    = "bhi.w",    run_stub;
+    BLSW    = "bls.w",    run_stub;
+    BHSW    = "bhs.w",    run_stub;
+    BLOW    = "blo.w",    run_stub;
+    BNEW    = "bne.w",    run_stub;
+    BEQW    = "beq.w",    run_stub;
+    BVCW    = "bvc.w",    run_stub;
+    BVSW    = "bvs.w",    run_stub;
+    BPLW    = "bpl.w",    run_stub;
+    BMIW    = "bmi.w",    run_stub;
+    BGEW    = "bge.w",    run_stub;
+    BLTW    = "blt.w",    run_stub;
+    BGTW    = "bgt.w",    run_stub;
+    BLEW    = "ble.w",    run_stub;
+
+    BRAL    = "bra.l",    run_stub;
+    BSRL    = "bsr.l",    run_stub;
+    BHIL    = "bhi.l",    run_stub;
+    BLSL    = "bls.l",    run_stub;
+    BHSL    = "bhs.l",    run_stub;
+    BLOL    = "blo.l",    run_stub;
+    BNEL    = "bne.l",    run_stub;
+    BEQL    = "beq.l",    run_stub;
+    BVCL    = "bvc.l",    run_stub;
+    BVSL    = "bvs.l",    run_stub;
+    BPLL    = "bpl.l",    run_stub;
+    BMIL    = "bmi.l",    run_stub;
+    BGEL    = "bge.l",    run_stub;
+    BLTL    = "blt.l",    run_stub;
+    BGTL    = "bgt.l",    run_stub;
+    BLEL    = "ble.l",    run_stub;
+
+    NOP     = "nop",      run_stub;
+
+    REMSL   = "rems.l",   run_stub;
+    REMUL   = "remu.l",   run_stub;
+
+    WDDATAB = "wddata.b", run_stub;
+    WDDATAW = "wddata.w", run_stub;
+    WDDATAL = "wddata.l", run_stub;
 }
 
 opcodes! {
