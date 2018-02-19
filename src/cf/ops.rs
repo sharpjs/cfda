@@ -16,14 +16,14 @@
 
 /// ColdFire instruction specification.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
-pub struct Instruction {
-    pub names: &'static [&'static str],                             // +16 => 16 | + 8 =>  8 (bytes)
-
-    /// Disassembly special-case handler.
-    pub disasm: Option<fn(/*ctx: &mut DasmContext*/) -> bool>,      // + 8 => 48 | + 4 => 36
+pub struct Instruction {                                            // 64-bit    | 32-bit
+    /// Preferred mnemonic.
+    pub name: &'static str,                                         // +16 => 16 | + 8 =>  8 (bytes)
 
     /// Simulation runner.
-    pub run: fn(/*ctx: &mut RunContext*/),                          // + 8 => 56 | + 4 => 40
+    pub run: fn(/*ctx: &mut RunContext*/),                          // + 8 => 24 | + 4 => 12 
+
+    // ... probably more later
 }
 
 /// ColdFire opcode and operands specification.
@@ -184,15 +184,14 @@ macro_rules! one {
 macro_rules! instructions {
     {
         $(
-            $id:ident [ $($name:expr),+ ] ;
+            $id:ident = $name:expr , $run:expr ;
         )*
     } =>
     {
         $(
             pub static $id: Instruction = Instruction {
-                names: &[$($name),+],
-                disasm:     None,
-                run:        run_stub,
+                name: $name,
+                run:  $run,
             };
         )*
     };
@@ -265,13 +264,13 @@ macro_rules! operand {
 }
 
 instructions! {
-//  IDENT  NAMES
-//  -----  ---------------------------
-    ADDL   ["add.l",  "addl" , "add" ];
-    ADDAL  ["adda.l", "addal", "adda"];
-    ADDIL  ["addi.l", "addil", "addi"];
-    ADDQL  ["addq.l", "addql", "addq"];
-    ADDXL  ["addx.l", "addxl", "addx"];
+//  IDENT     MNEMONIC    RUN
+//  -----     --------    --------
+    ADDL    = "add.l",    run_stub;
+    ADDAL   = "adda.l",   run_stub;
+    ADDIL   = "addi.l",   run_stub;
+    ADDQL   = "addq.l",   run_stub;
+    ADDXL   = "addx.l",   run_stub;
 }
 
 opcodes! {
