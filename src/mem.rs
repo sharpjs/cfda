@@ -75,5 +75,19 @@ mod tests {
         let addr   = region.end_vma();
         assert_eq!(addr, 0x3100);
     }
+    
+    #[test]
+    #[should_panic]
+    pub fn end_lma_out_of_range() {
+        let region = Region { lma: 0x2000, vma: 0x3000, len: u32::max_value() };
+        let addr   = region.end_lma();
+    }
+    
+    #[test]
+    #[should_panic]
+    pub fn end_vma_out_of_range() {
+        let region = Region { lma: 0x2000, vma: 0x3000, len: u32::max_value() };
+        let addr   = region.end_vma();
+    }
 }
 
