@@ -22,6 +22,7 @@ extern crate num_bigint;
 mod ast;
 mod cf;
 mod fmt;
+mod mem;
 mod ops;
 
 fn main() {
