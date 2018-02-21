@@ -465,6 +465,24 @@ instructions! {
 }
 
 opcodes! {
+//
+// 0x00 // Bit Manipulation/Immediate
+// 0x10 // Move Byte
+// 0x20 // Move Longword
+// 0x30 // Move Word
+// 0x40 // Miscellaneous
+// 0x50 // ADDQ/SUBQ/Scc/TPF
+// 0x60 // Bcc/BSR/BRA
+// 0x70 // MOVEQ/MVS/MVZ
+// 0x80 // OR/DIV
+// 0x90 // SUB/SUBX
+// 0xA0 // MAC/EMAC instructions/MOV3Q
+// 0xB0 // CMP/EOR
+// 0xC0 // AND/MUL
+// 0xD0 // ADD/ADDX
+// 0xE0 // Shift
+// 0xF0 // Floating-Point/Debug/Cache Instructions
+//
 //  NAME     WORDS                 MASKS                 OPERANDS                                       S  FLAGS
 //  -------  --------------------  --------------------  ---------------------------------------------  -  -----
     ADDXL    (0o150600)            (0o170770)            [DataReg:0, DataReg:9]                         L  ISA_A_UP;
