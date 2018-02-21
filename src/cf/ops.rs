@@ -466,22 +466,22 @@ instructions! {
 
 opcodes! {
 //
-// 0x00 // Bit Manipulation/Immediate
-// 0x10 // Move Byte
-// 0x20 // Move Longword
-// 0x30 // Move Word
-// 0x40 // Miscellaneous
-// 0x50 // ADDQ/SUBQ/Scc/TPF
-// 0x60 // Bcc/BSR/BRA
-// 0x70 // MOVEQ/MVS/MVZ
-// 0x80 // OR/DIV
-// 0x90 // SUB/SUBX
-// 0xA0 // MAC/EMAC instructions/MOV3Q
-// 0xB0 // CMP/EOR
-// 0xC0 // AND/MUL
-// 0xD0 // ADD/ADDX
-// 0xE0 // Shift
-// 0xF0 // Floating-Point/Debug/Cache Instructions
+// 0o00.... = 0x0... // Bit Manipulation/Immediate
+// 0o01.... = 0x1... // Move Byte
+// 0o02.... = 0x2... // Move Longword
+// 0o03.... = 0x3... // Move Word
+// 0o04.... = 0x4... // Miscellaneous
+// 0o05.... = 0x5... // ADDQ/SUBQ/Scc/TPF
+// 0o06.... = 0x6... // Bcc/BSR/BRA
+// 0o07.... = 0x7... // MOVEQ/MVS/MVZ
+// 0o10.... = 0x8... // OR/DIV
+// 0o11.... = 0x9... // SUB/SUBA/SUBX
+// 0o12.... = 0xA... // MAC/EMAC instructions/MOV3Q
+// 0o13.... = 0xB... // CMP/EOR
+// 0o14.... = 0xC... // AND/MUL
+// 0o15.... = 0xD... // ADD/ADDA/ADDX
+// 0o16.... = 0xE... // Shift
+// 0o17.... = 0xF... // Floating-Point/Debug/Cache
 //
 //  NAME     WORDS                 MASKS                 OPERANDS                                       S  FLAGS
 //  -------  --------------------  --------------------  ---------------------------------------------  -  -----
