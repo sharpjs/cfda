@@ -67,8 +67,24 @@ pub struct RewindReader<R: ReadToBuf> {
 const BUF_CAP: usize = 64;
 
 impl<R: ReadToBuf> RewindReader<R> {
+    /// Creates a `RewindReader` at position 0 with the default buffer capacity.
     pub fn new(src: R) -> Self {
         Self { vec: Vec::with_capacity(BUF_CAP), src, vec_pos: 0, src_pos: 0 }
+    }
+
+    /// Creates a `RewindReader` at the given position with the default buffer capacity.
+    pub fn with_position(src: R, pos: usize) -> Self {
+        Self { vec: Vec::with_capacity(BUF_CAP), src, vec_pos: 0, src_pos: pos }
+    }
+
+    /// Creates a `RewindReader` at position 0 with the given buffer capacity.
+    pub fn with_capacity(src: R, cap: usize) -> Self {
+        Self { vec: Vec::with_capacity(cap), src, vec_pos: 0, src_pos: 0 }
+    }
+
+    /// Creates a `RewindReader` at the given position with the given buffer capacity.
+    pub fn with_position_and_capacity(src: R, pos: usize, cap: usize) -> Self {
+        Self { vec: Vec::with_capacity(cap), src, vec_pos: 0, src_pos: pos }
     }
 }
 
