@@ -14,20 +14,21 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
-#![allow(dead_code)]
-#![allow(unused_variables)]
+#[derive(Clone, Debug)]
+struct Node<K, V> {
+    bits:    K,
+    mask:    K,
+    content: Content<K, V>,
+}
 
-extern crate num_bigint;
+#[derive(Clone, Debug)]
+enum Content<K, V> {
+    Value(V),
+    Nodes(Vec<Node<K, V>>),
+}
 
-mod ast;
-mod cf;
-mod fmt;
-mod io;
-mod mem;
-mod ops;
-mod util;
-
-fn main() {
-    println!("Hello, world!");
+#[derive(Clone, Debug)]
+pub struct BitTrie<K, V> {
+    nodes: Vec<Node<K, V>>
 }
 
