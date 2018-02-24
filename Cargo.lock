@@ -8,6 +8,7 @@ name = "cfda"
 version = "0.0.0"
 dependencies = [
  "num-bigint 0.1.43 (registry+https://github.com/rust-lang/crates.io-index)",
+ "num-traits 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]

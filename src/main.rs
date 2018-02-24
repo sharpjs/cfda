@@ -18,6 +18,7 @@
 #![allow(unused_variables)]
 
 extern crate num_bigint;
+extern crate num_traits;
 
 mod ast;
 mod cf;
