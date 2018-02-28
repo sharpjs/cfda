@@ -15,6 +15,8 @@
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
 mod bit_trie;
+mod word;
 
 pub use self::bit_trie::*;
+pub use self::word::*;
 
