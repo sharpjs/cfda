@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
-use self::Items::*;
+use self::Seg::*;
 use super::word::Word;
 
 pub trait DecodeItem: 'static {
@@ -26,30 +26,30 @@ pub trait DecodeItem: 'static {
 
 #[derive(Clone, Debug)]
 pub struct DecodeIndex<T: DecodeItem> {
-    items: Items<T>
+    segs: Vec<Seg<T>>
 }
 
 #[derive(Clone, Debug)]
-enum Items<T: DecodeItem> {
+enum Seg<T: DecodeItem> {
     Scan(&'static [T]),
     Trie(Vec<Node<T>>),
 }
 
 #[derive(Clone, Debug)]
 struct Node<T: DecodeItem> {
-    bits:  T::Word,
-    mask:  T::Word,
-    items: Items<T>,
+    bits: T::Word,
+    mask: T::Word,
+    segs: Vec<Seg<T>>,
 }
 
 impl<T> DecodeIndex<T> where T: DecodeItem {
     const MAX_SEL_BITS: u8 = 6;
 
+    /*
     pub fn empty() -> Self {
         Self { items: Trie(vec![]) }
     }
 
-    /*
     pub fn from(src: &[&T]) -> Self {
         if src.is_empty() {
             Self::empty()
@@ -58,7 +58,7 @@ impl<T> DecodeIndex<T> where T: DecodeItem {
         }
     }
 
-    fn index(src: &'static [T], care: T::Word) -> Items<T> {
+    fn index(src: &'static [T], care: T::Word) -> Seg<T> {
         debug_assert!(!src.is_empty());
 
         // Scan 0:
