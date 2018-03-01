@@ -45,11 +45,11 @@ struct Node<T: DecodeItem> {
 impl<T> DecodeIndex<T> where T: DecodeItem {
     const MAX_SEL_BITS: u8 = 6;
 
-    /*
     pub fn empty() -> Self {
-        Self { items: Trie(vec![]) }
+        Self { segs: vec![] }
     }
 
+    /*
     pub fn from(src: &[&T]) -> Self {
         if src.is_empty() {
             Self::empty()
