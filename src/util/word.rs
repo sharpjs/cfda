@@ -44,11 +44,6 @@ pub trait Word: Copy + Eq + Ord + Debug
     fn is_nonzero(self) -> bool {
         self != Self::ZERO
     }
-
-    #[inline(always)]
-    fn leftmost_bit(self) -> Self {
-        Self::ONE << (self.leading_zeros() ^ (Self::BITS - 1))
-    }
 }
 
 impl Word for u32 {
