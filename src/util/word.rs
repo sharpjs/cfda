@@ -18,12 +18,17 @@ use std::fmt::Debug;
 use std::ops::*;
 
 pub trait Word: Copy + Eq + Ord + Debug
-    + Not    <    Output=Self>
-    + Shl    <u8, Output=Self> + ShlAssign    <u8  >
-    + Shr    <u8, Output=Self> + ShrAssign    <u8  >
-    + BitAnd <    Output=Self> + BitAndAssign <Self>
-    + BitXor <    Output=Self> + BitXorAssign <Self>
-    + BitOr  <    Output=Self> + BitOrAssign  <Self>
+    + Not     <Output=Self>
+    + Mul     <Output=Self>     + MulAssign    <Self>
+    + Div     <Output=Self>     + DivAssign    <Self>
+    + Rem     <Output=Self>     + RemAssign    <Self>
+    + Add     <Output=Self>     + AddAssign    <Self>
+    + Sub     <Output=Self>     + SubAssign    <Self>
+    + Shl     <u8, Output=Self> + ShlAssign    <u8>
+    + Shr     <u8, Output=Self> + ShrAssign    <u8>
+    + BitAnd  <Output=Self>     + BitAndAssign <Self>
+    + BitXor  <Output=Self>     + BitXorAssign <Self>
+    + BitOr   <Output=Self>     + BitOrAssign  <Self>
 {
     const BITS: u8;
     const ZERO: Self;
