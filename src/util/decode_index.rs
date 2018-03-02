@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
-use self::Seg::*;
 use super::word::Word;
 
 pub trait DecodeItem: 'static {
@@ -26,144 +25,45 @@ pub trait DecodeItem: 'static {
 
 #[derive(Clone, Debug)]
 pub struct DecodeIndex<T: DecodeItem> {
-    segs: Vec<Seg<T>>
+    node: Node<T>
 }
 
 #[derive(Clone, Debug)]
-enum Seg<T: DecodeItem> {
+enum Node<T: DecodeItem> {
+    Empty,
     Scan(&'static [T]),
-    Trie(Vec<Node<T>>),
+    Trie(Trie<T>),
 }
 
 #[derive(Clone, Debug)]
-struct Node<T: DecodeItem> {
-    bits: T::Word,
-    mask: T::Word,
-    segs: Vec<Seg<T>>,
+struct Trie<T: DecodeItem> {
+    mask:  T::Word,
+    shift: u8,
+    nodes: Box<[Node<T>]>,
 }
 
 impl<T> DecodeIndex<T> where T: DecodeItem {
-    const MAX_SEL_BITS: u8 = 6;
+    const MAX_SEL_BITS: u8 = 4;
 
     pub fn empty() -> Self {
-        Self { segs: vec![] }
+        Self { node: Node::Empty }
     }
 
-    /*
-    pub fn from(src: &[&T]) -> Self {
+    pub fn from(src: &'static [T]) -> Self {
         if src.is_empty() {
             Self::empty()
         } else {
-            Self::from_(src, !T::Word::ZERO)
+            Self { node: Self::index(src, !T::Word::ZERO) }
         }
     }
 
-    fn index(src: &'static [T], care: T::Word) -> Seg<T> {
+    fn index(src: &'static [T], care: T::Word) -> Node<T> {
         debug_assert!(!src.is_empty());
 
-        // Scan 0:
-        // * Determine which bits are significant (mask) for all items.
-        // * Determine which bits have the same value for all items.
+        // TODO
 
-        let (first, rest) = src.split_first().unwrap();
-
-        let mut prev = first.bits();        // bits of previous item
-        let mut diff = T::Word::ZERO;       // bits that differ (1=different)
-        let mut mask = first.mask() & care; // bits significant to all items
-
-        for item in rest {
-            let bits = item.bits();
-            diff |= bits ^ prev;
-            prev  = bits;
-            mask &= item.mask();
-        }
-
-        // Choose a 'selector'
-        //   -- a range of selective (significant and differing) bits.
-
-        let (mask, pos, len) = Self::find_mask(mask & diff, Self::MAX_SEL_BITS);
-
-        // If no selective range, a trie is impossible; use scan instead.
-        // This branch also used for single items.
-
-        if len == 0 {
-            return Scan(src)
-        }
-
-        // Scan 1:
-        // * Discover contiguous item ranges with same selector.
-
-        let mut ranges = Vec::with_capacity(1 << len);
-        {
-            let mut start  = 0;
-            let mut end    = 1;
-            let mut prev   = first.bits() & mask;
-
-            for item in rest {
-                let bits = item.bits() & mask;
-                let next = end + 1;
-
-                if bits != prev {
-                    ranges.push((start..end, prev));
-                    start = end;
-                    prev  = bits;
-                }
-
-                end = next;
-            }
-        }
-
-        // Scan 2:
-        // * 
-        //
-        // need: (sel) => (range, is_contig)
-
-
-        // * Contiguous => trie; noncontiguous => scan.
-        //
-        //for (i, item) in src.iter().enumerate() {
-        //    let sel = ((item.bits() & mask) >> pos).to_usize();
-        //    {
-        //        let range = &mut ranges[sel];
-        //        if range.len() == 0 {
-        //            *range = i..(i+1);
-        //        } else if range.end + 1 == i {
-        //            range.end = i;
-        //        } else {
-        //            panic!();
-        //        }
-        //    }
-        //}
-
-        /*
-        let care = care & !mask; // for subnodes
-
-        // Distribute items into bins by their selective bits.
-
-        let mut bins = vec![Vec::new(); 1 << len];
-
-        for &x in src {
-            let i = ((x.bits() & mask) >> (pos as usize)).to_usize().unwrap();
-            bins[i].push(x);
-        }
-
-        // Convert bins into nodes
-
-        Self {
-            nodes: bins
-                .into_iter()
-                .map(|items| Node {
-                    bits:    T::Word::ZERO, // TODO
-                    mask:    T::Word::ZERO, // TODO
-                    content: Content::Trie(Self::from_(&items[..], care)),
-                })
-                .collect()
-        }
-        */
-
-        Trie(vec![])
+        Node::Scan(&src[..])
     }
-    */
 
     // Find length, position, and mask of longest consecutive ones, up to the
     // given maximum length.
