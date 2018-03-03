@@ -88,20 +88,32 @@ pub enum Operand {
     // X: pc-relative + displacement + scaled index
     // I: immediate
 
-    /// Any addressing mode (6 bits)
+    /// Readable addressing mode (6 bits)
     MdaipmdxnfDXI(BitPos),
+
+    /// Writable addressing modes (6 bits)
+    Mdaipmdxnf___(BitPos),
 
     /// Readable data addressing modes (6 bits)
     Md_ipmdxnfDXI(BitPos),
 
-    /// Writable addressing modes (6 bits)
-    Mdaipmdxnf___(BitPos),
+    /// Writable data addressing modes (6 bits)
+    Md_ipmdxnf___(BitPos),
+
+    /// Readable memory addressing modes without side effects (6 bits)
+    M__i__dxnfDX_(BitPos),
 
     /// Writable memory addressing modes (6 bits)
     M__ipmdxnf___(BitPos),
 
     /// Source modes for op with extension word (6 bits)
     Md_ipmd______(BitPos),
+
+    /// Address register indirect mode, potentially displaced (movem) (6 bits)
+    M__i__d______(BitPos),
+
+    /// Data register or immediate modes (move to ccr/sr) (6 bits)
+    Md__________I(BitPos),
 
     /// Data register (3 bits)
     DataReg(BitPos),
@@ -130,6 +142,9 @@ pub enum Operand {
     /// Condition code register (implicit)
     Sr,
 
+    /// User stack pointer (implicit)
+    Usp,
+
     /// Data/address register list (16 bits in extension word)
     RegList,
 
@@ -141,6 +156,9 @@ pub enum Operand {
 
     /// Quick immediate (3 bits unsigned; 0 => 8)
     Quick3(BitPos),
+
+    /// Quick immediate (4 bits unsigned)
+    Quick4(BitPos),
 
     /// Quick immediate (8 bits signed)
     Quick8(BitPos),
@@ -369,6 +387,8 @@ instructions! {
     EXTW    = "ext.w",    run_stub;
     EXTL    = "ext.l",    run_stub;
     EXTBL   = "extb.l",   run_stub;
+
+    ILLEGAL = "illegal",  run_stub;
                      
     JMP     = "jmp",      run_stub;
                      
@@ -564,10 +584,53 @@ opcodes! {
     BGTS     (0x6E00)              (0xFF00)              [PcRel8:0]                                     B  ISA_A_UP;
     BLES     (0x6F00)              (0xFF00)              [PcRel8:0]                                     B  ISA_A_UP;
 
-    NOP      (0x4E71)              (0xFFFF)              []                                             -  ISA_A_UP;
-
-    REMSL    (0o046100, 0o004000)  (0o177700, 0o107770)  [Md_ipmd______:0, DataReg:16, DataRegDiff:28]  L  HWDIV;
+    // 0x4xxx
+    NEGXL    (0o040200)            (0o177770)            [DataReg:0]                                    L  ISA_A_UP;
+    MOVEW    (0o040300)            (0o177770)            [Sr, DataReg:0]                                W  ISA_A_UP;
+    LEAL     (0o040300)            (0o170700)            [M__i__dxnfDX_:0, AddrReg:9]                   L  ISA_A_UP;
+  //STRLDSR  (0o040347, 0o043374)  (0o177777, 0o177777)  [Immediate]                                    W  ISA_C_UP;
+    CLRB     (0o041000)            (0o177700)            [Md_ipmdxnf___:0]                              B  ISA_A_UP;
+    CLRW     (0o041100)            (0o177700)            [Md_ipmdxnf___:0]                              W  ISA_A_UP;
+    CLRL     (0o041200)            (0o177700)            [Md_ipmdxnf___:0]                              L  ISA_A_UP;
+    MOVEW    (0o041300)            (0o177770)            [Ccr, DataReg:0]                               W  ISA_A_UP;
+    NEGL     (0o042200)            (0o177770)            [DataReg:0]                                    L  ISA_A_UP;
+    MOVEW    (0o042300)            (0o177700)            [Md__________I:0, Ccr]                         W  ISA_A_UP;
+    NOTL     (0o043200)            (0o177770)            [DataReg:0]                                    L  ISA_A_UP;
+    MOVEW    (0o043300)            (0o177770)            [Md__________I:0, Sr]                          W  ISA_A_UP;
+    SWAPW    (0o044100)            (0o177770)            [DataReg:0]                                    W  ISA_A_UP;
+    PEAL     (0o044100)            (0o177700)            [M__i__dxnfDX_:0]                              L  ISA_A_UP;
+    EXTW     (0o044200)            (0o177770)            [DataReg:0]                                    W  ISA_A_UP;
+    EXTL     (0o044300)            (0o177770)            [DataReg:0]                                    L  ISA_A_UP;
+    EXTBL    (0o044700)            (0o177770)            [DataReg:0]                                    L  ISA_A_UP;
+    MOVEML   (0o044300)            (0o177700)            [RegList, M__i__d______:0]                     L  ISA_A_UP;
+    MOVEML   (0o046300)            (0o177700)            [M__i__d______:0, RegList]                     L  ISA_A_UP;
+    TSTB     (0o045000)            (0o177700)            [MdaipmdxnfDXI:0]                              B  ISA_A_UP;
+    TSTW     (0o045100)            (0o177700)            [MdaipmdxnfDXI:0]                              W  ISA_A_UP;
+    TSTL     (0o045200)            (0o177700)            [MdaipmdxnfDXI:0]                              L  ISA_A_UP;
+    TSTW     (0o045300)            (0o177700)            [MdaipmdxnfDXI:0]                              W  ISA_A;
+  //TASB     (0o045300)            (0o177700)            [M__ipmdxnf___]                                B  ISA_B_UP;
+    HALT     (0o045310)            (0o177777)            []                                             -  ISA_A_UP;
+    PULSE    (0o045314)            (0o177777)            []                                             -  ISA_A_UP;
+    ILLEGAL  (0o045374)            (0o177777)            []                                             -  ISA_A_UP;
+    MULUL    (0o046000, 0o000000)  (0o177700, 0o107777)  [Md_ipmd______:0, DataReg:28]                  L  HWDIV;
+    MULSL    (0o046000, 0o004000)  (0o177700, 0o107777)  [Md_ipmd______:0, DataReg:28]                  L  HWDIV;
+    DIVUL    (0o046100, 0o000000)  (0o177700, 0o107770)  [Md_ipmd______:0, DataReg:16, DataRegSame:28]  L  HWDIV;
     REMUL    (0o046100, 0o000000)  (0o177700, 0o107770)  [Md_ipmd______:0, DataReg:16, DataRegDiff:28]  L  HWDIV;
+    DIVSL    (0o046100, 0o004000)  (0o177700, 0o107770)  [Md_ipmd______:0, DataReg:16, DataRegSame:28]  L  HWDIV;
+    REMSL    (0o046100, 0o004000)  (0o177700, 0o107770)  [Md_ipmd______:0, DataReg:16, DataRegDiff:28]  L  HWDIV;
+  //SATSL    (0o046200)            (0o177770)            [DataReg:0]                                    L  ISA_B_UP;
+    TRAP     (0o047100)            (0o177760)            [Quick4:0]                                     -  ISA_A_UP;
+    LINKW    (0o047120)            (0o177770)            [AddrReg:0, Immediate]                         W  ISA_A_UP;
+    UNLK     (0o047130)            (0o177770)            [AddrReg:0]                                    -  ISA_A_UP;
+    MOVEL    (0o047140)            (0o177770)            [AddrReg:0, Usp]                               L  ISA_B_UP;
+    MOVEL    (0o047150)            (0o177770)            [Usp, AddrReg:0]                               L  ISA_B_UP;
+    NOP      (0o047161)            (0o177777)            []                                             -  ISA_A_UP;
+    STOP     (0o047162)            (0o177777)            [Immediate]                                    W  ISA_A_UP;
+    RTE      (0o047163)            (0o177777)            []                                             -  ISA_A_UP;
+    RTS      (0o047165)            (0o177777)            []                                             -  ISA_A_UP;
+    MOVECL   (0o047173, 0o000000)  (0o177777, 0o000000)  [NormalReg:28, CtlReg:16]                      L  ISA_A_UP;
+    JSR      (0o047200)            (0o177700)            [M__i__dxnfDX_:0]                              -  ISA_A_UP;
+    JMP      (0o047300)            (0o177700)            [M__i__dxnfDX_:0]                              -  ISA_A_UP;
 }
 
 macro_rules! aliases {
