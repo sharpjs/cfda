@@ -60,7 +60,30 @@ impl<T> DecodeIndex<T> where T: DecodeItem {
     fn index(src: &'static [T], care: T::Word) -> Node<T> {
         debug_assert!(!src.is_empty());
 
-        // TODO
+        let (first, rest) = src.split_first().unwrap();
+
+        // Scan 0: Find potential selective bits
+        // * Determine which bits are significant (mask) for all items.
+        // * Determine which bits differ in value (diff) across all items.
+
+        let (mask, diff) = {
+            let mut diff = T::Word::ZERO;       // bits that differ (1=different)
+            let mut prev = first.bits();        // bits of previous item
+            let mut mask = first.mask() & care; // bits significant to all items
+
+            for item in rest {
+                let bits = item.bits();
+                diff |= bits ^ prev;
+                prev  = bits;
+                mask &= item.mask();
+            }
+
+            (mask, diff)
+        };
+
+        // TODO: Choose most selective consecutive bits
+        //
+        // ..11.111...1. 
 
         Node::Scan(&src[..])
     }

@@ -601,9 +601,8 @@ opcodes! {
     PEAL     (0o044100)            (0o177700)            [M__i__dxnfDX_:0]                              L  ISA_A_UP;
     EXTW     (0o044200)            (0o177770)            [DataReg:0]                                    W  ISA_A_UP;
     EXTL     (0o044300)            (0o177770)            [DataReg:0]                                    L  ISA_A_UP;
-    EXTBL    (0o044700)            (0o177770)            [DataReg:0]                                    L  ISA_A_UP;
     MOVEML   (0o044300)            (0o177700)            [RegList, M__i__d______:0]                     L  ISA_A_UP;
-    MOVEML   (0o046300)            (0o177700)            [M__i__d______:0, RegList]                     L  ISA_A_UP;
+    EXTBL    (0o044700)            (0o177770)            [DataReg:0]                                    L  ISA_A_UP;
     TSTB     (0o045000)            (0o177700)            [MdaipmdxnfDXI:0]                              B  ISA_A_UP;
     TSTW     (0o045100)            (0o177700)            [MdaipmdxnfDXI:0]                              W  ISA_A_UP;
     TSTL     (0o045200)            (0o177700)            [MdaipmdxnfDXI:0]                              L  ISA_A_UP;
@@ -619,6 +618,7 @@ opcodes! {
     DIVSL    (0o046100, 0o004000)  (0o177700, 0o107770)  [Md_ipmd______:0, DataReg:16, DataRegSame:28]  L  HWDIV;
     REMSL    (0o046100, 0o004000)  (0o177700, 0o107770)  [Md_ipmd______:0, DataReg:16, DataRegDiff:28]  L  HWDIV;
   //SATSL    (0o046200)            (0o177770)            [DataReg:0]                                    L  ISA_B_UP;
+    MOVEML   (0o046300)            (0o177700)            [M__i__d______:0, RegList]                     L  ISA_A_UP;
     TRAP     (0o047100)            (0o177760)            [Quick4:0]                                     -  ISA_A_UP;
     LINKW    (0o047120)            (0o177770)            [AddrReg:0, Immediate]                         W  ISA_A_UP;
     UNLK     (0o047130)            (0o177770)            [AddrReg:0]                                    -  ISA_A_UP;
