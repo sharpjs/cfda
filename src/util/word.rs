@@ -53,6 +53,32 @@ pub trait Word: Copy + Eq + Ord + Debug
     }
 }
 
+impl Word for u16 {
+    const BITS: u8   = 16;
+    const ZERO: Self =  0;
+    const ONE:  Self =  1;
+
+    #[inline(always)]
+    fn to_usize(self) -> usize {
+        self as usize
+    }
+
+    #[inline(always)]
+    fn wrapping_neg(self) -> Self {
+        self.wrapping_neg()
+    }
+
+    #[inline(always)]
+    fn leading_zeros(self) -> u8 {
+        self.leading_zeros() as u8
+    }
+
+    #[inline(always)]
+    fn trailing_zeros(self) -> u8 {
+        self.trailing_zeros() as u8
+    }
+}
+
 impl Word for u32 {
     const BITS: u8   = 32;
     const ZERO: Self =  0;
