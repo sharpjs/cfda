@@ -15,6 +15,7 @@
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
 mod decode_index;
+mod decode_index2;
 mod word;
 
 pub use self::decode_index::*;
