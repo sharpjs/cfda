@@ -60,22 +60,68 @@ static DECODE_ROOT: Node<Ins> =
 ;
 
 static DECODE_XXXXXX: [Node<Ins>; 16] = [
-    /*00....*/ Empty,
-    /*01....*/ Empty,
-    /*02....*/ Empty,
-    /*03....*/ Empty,
-    /*04....*/ Empty,
-    /*05....*/ Empty,
-    /*06....*/ Empty,
-    /*07....*/ Empty,
-    /*10....*/ Empty,
-    /*11....*/ Trie8(&DECODE_11XXXX, /*>>*/ 6),
-    /*12....*/ Empty,
-    /*13....*/ Empty,
-    /*14....*/ Empty,
-    /*15....*/ Trie8(&DECODE_15XXXX, /*>>*/ 6),
-    /*16....*/ Empty,
-    /*17....*/ Empty,
+    /*00....*/ Trie8(&DECODE_00XXXX, /*>>*/ 6),     // Bit Manipulation/Immediate
+    /*01....*/ Leaf(&MOVEB),                        // Move Byte
+    /*02....*/ Scan2(&DECODE_02XXXX),               // Move Long
+    /*03....*/ Scan2(&DECODE_03XXXX),               // Move Word
+    /*04....*/ Empty,                               // Miscellaneous
+    /*05....*/ Empty,                               // ADDQ/SUBQ/Scc/TPF
+    /*06....*/ Empty,                               // Bcc/BSR/BRA
+    /*07....*/ Empty,                               // MOVEQ/MVS/MVZ
+    /*10....*/ Empty,                               // OR/DIV
+    /*11....*/ Trie8(&DECODE_11XXXX, /*>>*/ 6),     // SUB/SUBA/SUBX
+    /*12....*/ Empty,                               // MAC/EMAC/MOV3Q
+    /*13....*/ Empty,                               // CMP/EOR
+    /*14....*/ Empty,                               // AND/MUL
+    /*15....*/ Trie8(&DECODE_15XXXX, /*>>*/ 6),     // ADD/ADDA/ADDX
+    /*16....*/ Empty,                               // Shift
+    /*17....*/ Empty,                               // Floating-Point/Debug/Cache
+];
+
+// Bit Manipulation/Immediate
+static DECODE_00XXXX: [Node<Ins>; 8] = [
+    /*00.0..*/ Empty,
+    /*00.1..*/ Empty,
+    /*00.2..*/ Empty,
+    /*00.3..*/ Empty,
+    /*00.4..*/ Scan2(&DECODE_00X4XX),
+    /*00.5..*/ Scan2(&DECODE_00X5XX),
+    /*00.6..*/ Scan2(&DECODE_00X6XX),
+    /*00.7..*/ Scan2(&DECODE_00X7XX),
+];
+
+// Bit Test
+static DECODE_00X4XX: [Node<Ins>; 2] = [
+    /*[0]*/ Leaf(&BTSTL),
+    /*[1]*/ Leaf(&BTSTB),
+];
+
+// Bit Change
+static DECODE_00X5XX: [Node<Ins>; 2] = [
+    /*[0]*/ Leaf(&BCHGL),
+    /*[1]*/ Leaf(&BCHGB),
+];
+
+// Bit Clear
+static DECODE_00X6XX: [Node<Ins>; 2] = [
+    /*[0]*/ Leaf(&BCLRL),
+    /*[1]*/ Leaf(&BCLRB),
+];
+
+// Bit Set
+static DECODE_00X7XX: [Node<Ins>; 2] = [
+    /*[0]*/ Leaf(&BSETL),
+    /*[1]*/ Leaf(&BSETB),
+];
+
+static DECODE_02XXXX: [Node<Ins>; 2] = [
+    /*[0]*/ Leaf(&MOVEL),
+    /*[1]*/ Leaf(&MOVEAL),
+];
+
+static DECODE_03XXXX: [Node<Ins>; 2] = [
+    /*[0]*/ Leaf(&MOVEW),
+    /*[1]*/ Leaf(&MOVEAW),
 ];
 
 static DECODE_11XXXX: [Node<Ins>; 8] = [
@@ -110,12 +156,25 @@ static DECODE_15X6XX: [Node<Ins>; 2] = [
     /*[1]*/ Leaf(&ADDXL),                           // addx.l
 ];
 
-static ADDL:  Ins = Ins;
-static ADDAL: Ins = Ins;
-static ADDXL: Ins = Ins;
-static SUBL:  Ins = Ins;
-static SUBAL: Ins = Ins;
-static SUBXL: Ins = Ins;
+static ADDL:   Ins = Ins;
+static ADDAL:  Ins = Ins;
+static ADDXL:  Ins = Ins;
+static BCHGB:  Ins = Ins;
+static BCHGL:  Ins = Ins;
+static BCLRB:  Ins = Ins;
+static BCLRL:  Ins = Ins;
+static BSETB:  Ins = Ins;
+static BSETL:  Ins = Ins;
+static BTSTB:  Ins = Ins;
+static BTSTL:  Ins = Ins;
+static MOVEB:  Ins = Ins;
+static MOVEW:  Ins = Ins;
+static MOVEL:  Ins = Ins;
+static MOVEAW: Ins = Ins;
+static MOVEAL: Ins = Ins;
+static SUBL:   Ins = Ins;
+static SUBAL:  Ins = Ins;
+static SUBXL:  Ins = Ins;
 
 //static OPS_17XXXX: [Node<u32>] = [
 //];
