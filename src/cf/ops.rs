@@ -57,40 +57,40 @@ impl DecodeItem for Instruction {
     }
 }
 
-static ADDL:   Instruction = Instruction { name: "add.l"   };
-static ADDAL:  Instruction = Instruction { name: "adda.l"  };
-static ADDIL:  Instruction = Instruction { name: "addi.l"  };
-static ADDQL:  Instruction = Instruction { name: "addq.l"  };
-static ADDXL:  Instruction = Instruction { name: "addx.l"  };
-static BCHGB:  Instruction = Instruction { name: "bchg.b"  };
-static BCHGL:  Instruction = Instruction { name: "bchg.l"  };
-static BCLRB:  Instruction = Instruction { name: "bclr.b"  };
-static BCLRL:  Instruction = Instruction { name: "bclr.l"  };
-static BSETB:  Instruction = Instruction { name: "bset.b"  };
-static BSETL:  Instruction = Instruction { name: "bset.l"  };
-static BTSTB:  Instruction = Instruction { name: "btst.b"  };
-static BTSTL:  Instruction = Instruction { name: "btst.l"  };
-static CMPIB:  Instruction = Instruction { name: "cmpi.b"  };
-static CMPIW:  Instruction = Instruction { name: "cmpi.w"  };
-static CMPIL:  Instruction = Instruction { name: "cmpi.l"  };
-static DIVSW:  Instruction = Instruction { name: "divs.w"  };
-static DIVSL:  Instruction = Instruction { name: "divs.l"  };
-static DIVUW:  Instruction = Instruction { name: "divu.w"  };
-static DIVUL:  Instruction = Instruction { name: "divu.l"  };
-static MOVEB:  Instruction = Instruction { name: "move.b"  };
-static MOVEW:  Instruction = Instruction { name: "move.w"  };
-static MOVEL:  Instruction = Instruction { name: "move.l"  };
-static MOVEAW: Instruction = Instruction { name: "movea.w" };
-static MOVEAL: Instruction = Instruction { name: "movea.l" };
-static MULSW:  Instruction = Instruction { name: "muls.w"  };
-static MULSL:  Instruction = Instruction { name: "muls.l"  };
-static MULUW:  Instruction = Instruction { name: "mulu.w"  };
-static MULUL:  Instruction = Instruction { name: "mulu.l"  };
-static SUBL:   Instruction = Instruction { name: "sub.l"   };
-static SUBAL:  Instruction = Instruction { name: "suba.l"  };
-static SUBIL:  Instruction = Instruction { name: "subi.l"  };
-static SUBQL:  Instruction = Instruction { name: "subq.l"  };
-static SUBXL:  Instruction = Instruction { name: "subx.l"  };
+pub static ADDL:   Instruction = Instruction { name: "add.l"   };
+pub static ADDAL:  Instruction = Instruction { name: "adda.l"  };
+pub static ADDIL:  Instruction = Instruction { name: "addi.l"  };
+pub static ADDQL:  Instruction = Instruction { name: "addq.l"  };
+pub static ADDXL:  Instruction = Instruction { name: "addx.l"  };
+pub static BCHGB:  Instruction = Instruction { name: "bchg.b"  };
+pub static BCHGL:  Instruction = Instruction { name: "bchg.l"  };
+pub static BCLRB:  Instruction = Instruction { name: "bclr.b"  };
+pub static BCLRL:  Instruction = Instruction { name: "bclr.l"  };
+pub static BSETB:  Instruction = Instruction { name: "bset.b"  };
+pub static BSETL:  Instruction = Instruction { name: "bset.l"  };
+pub static BTSTB:  Instruction = Instruction { name: "btst.b"  };
+pub static BTSTL:  Instruction = Instruction { name: "btst.l"  };
+pub static CMPIB:  Instruction = Instruction { name: "cmpi.b"  };
+pub static CMPIW:  Instruction = Instruction { name: "cmpi.w"  };
+pub static CMPIL:  Instruction = Instruction { name: "cmpi.l"  };
+pub static DIVSW:  Instruction = Instruction { name: "divs.w"  };
+pub static DIVSL:  Instruction = Instruction { name: "divs.l"  };
+pub static DIVUW:  Instruction = Instruction { name: "divu.w"  };
+pub static DIVUL:  Instruction = Instruction { name: "divu.l"  };
+pub static MOVEB:  Instruction = Instruction { name: "move.b"  };
+pub static MOVEW:  Instruction = Instruction { name: "move.w"  };
+pub static MOVEL:  Instruction = Instruction { name: "move.l"  };
+pub static MOVEAW: Instruction = Instruction { name: "movea.w" };
+pub static MOVEAL: Instruction = Instruction { name: "movea.l" };
+pub static MULSW:  Instruction = Instruction { name: "muls.w"  };
+pub static MULSL:  Instruction = Instruction { name: "muls.l"  };
+pub static MULUW:  Instruction = Instruction { name: "mulu.w"  };
+pub static MULUL:  Instruction = Instruction { name: "mulu.l"  };
+pub static SUBL:   Instruction = Instruction { name: "sub.l"   };
+pub static SUBAL:  Instruction = Instruction { name: "suba.l"  };
+pub static SUBIL:  Instruction = Instruction { name: "subi.l"  };
+pub static SUBQL:  Instruction = Instruction { name: "subq.l"  };
+pub static SUBXL:  Instruction = Instruction { name: "subx.l"  };
 
 #[cfg(test)]
 mod tests {
