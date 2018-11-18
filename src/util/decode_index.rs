@@ -32,30 +32,71 @@ use self::DecodeIndex::*;
 // decode_index_node
 //
 
-
+/// Trait for items in a `DecodeIndex`.
 pub trait DecodeItem: 'static {
+
+    /// The type of word to be decoded.
     type Word: Word;
+
+    /// Type output type of an index lookup.
     type Output;
 
+    /// Attempts to match the item with the given word.
     fn try_decode(&self, word: Self::Word) -> Option<Self::Output>;
 }
 
+/// A data structure for efficient decoding of instructions.
+///
+/// A `DecodeIndex` is a recursive, tree-shaped structure.  An index consists
+/// of a single node, which can be leaf or non-leaf.  A leaf node either is
+/// empty or references a single item.  A non-leaf node references a set of
+/// subnodes, each of which is an independent index.  A non-leaf node also
+/// indicates how the appropriate subnode is chosen during an index lookup.
+///
 #[derive(Clone, Debug)]
 pub enum DecodeIndex<T: DecodeItem> {
+
+    // === LEAF ===
+
+    /// An empty leaf node.
     Empty,
 
-    Leaf   (&'static T),
+    /// A leaf node with one item.
+    Leaf(&'static T),
 
-    Scan2  (&'static [DecodeIndex<T>;  2]),
-    Scan3  (&'static [DecodeIndex<T>;  3]),
-    Scan4  (&'static [DecodeIndex<T>;  4]),
+    // === SCAN ===
 
-    Trie2  (&'static [DecodeIndex<T>;  2], u8),
-    Trie4  (&'static [DecodeIndex<T>;  4], u8),
-    Trie8  (&'static [DecodeIndex<T>;  8], u8),
-    Trie16 (&'static [DecodeIndex<T>; 16], u8),
+    /// Two subnodes, selected by sequential scan.
+    Scan2(&'static [DecodeIndex<T>; 2]),
 
-    Chain  (&'static DecodeIndex<T>),
+    /// Three subnodes, selected by sequential scan.
+    Scan3(&'static [DecodeIndex<T>; 3]),
+
+    /// Four subnodes, selected by sequential scan.
+    Scan4(&'static [DecodeIndex<T>; 4]),
+
+    // === TRIE ===
+
+    /// 2 subnodes, selected by the 1-bit field at the given position.
+    Trie2(&'static [DecodeIndex<T>; 2], u8),
+
+    /// 4 subnodes, selected by the 2-bit field whose least significant bit is
+    /// at the given position.
+    Trie4(&'static [DecodeIndex<T>; 4], u8),
+
+    /// 8 subnodes, selected by the 3-bit field whose least significant bit is
+    /// at the given position.
+    Trie8(&'static [DecodeIndex<T>; 8], u8),
+
+    /// 16 subnodes, selected by the 4-bit field whose least significant bit is
+    /// at the given position.
+    Trie16(&'static [DecodeIndex<T>; 16], u8),
+
+    // === CHAIN ===
+
+    /// A single subnode.  A lookup against the subnode will use the next word
+    /// from input.
+    Chain(&'static DecodeIndex<T>),
 }
 
 enum Decoded<T> where T: DecodeItem {
