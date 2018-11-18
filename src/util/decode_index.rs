@@ -14,6 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
+use super::word::Word;
+use self::DecodeIndex::*;
+
+// Decoding Data Structures
+// ------------------------
+//
 // aliases
 //   |
 //   V
@@ -23,10 +29,9 @@
 //   | encoding (bits, mask, args, flags)
 //   |  #
 //   |  |
-// decode_index_entry
+// decode_index_node
+//
 
-use super::word::Word;
-use self::Node::*;
 
 pub trait DecodeItem: 'static {
     type Word: Word;
@@ -36,26 +41,21 @@ pub trait DecodeItem: 'static {
 }
 
 #[derive(Clone, Debug)]
-pub struct DecodeIndex<T: DecodeItem> {
-    root: Node<T>
-}
-
-#[derive(Clone, Debug)]
-pub enum Node<T: DecodeItem> {
+pub enum DecodeIndex<T: DecodeItem> {
     Empty,
 
     Leaf   (&'static T),
 
-    Scan2  (&'static [Node<T>;  2]),
-    Scan3  (&'static [Node<T>;  3]),
-    Scan4  (&'static [Node<T>;  4]),
+    Scan2  (&'static [DecodeIndex<T>;  2]),
+    Scan3  (&'static [DecodeIndex<T>;  3]),
+    Scan4  (&'static [DecodeIndex<T>;  4]),
 
-    Trie2  (&'static [Node<T>;  2], u8),
-    Trie4  (&'static [Node<T>;  4], u8),
-    Trie8  (&'static [Node<T>;  8], u8),
-    Trie16 (&'static [Node<T>; 16], u8),
+    Trie2  (&'static [DecodeIndex<T>;  2], u8),
+    Trie4  (&'static [DecodeIndex<T>;  4], u8),
+    Trie8  (&'static [DecodeIndex<T>;  8], u8),
+    Trie16 (&'static [DecodeIndex<T>; 16], u8),
 
-    Chain  (&'static Node<T>),
+    Chain  (&'static DecodeIndex<T>),
 }
 
 enum Decoded<T> where T: DecodeItem {
@@ -63,22 +63,22 @@ enum Decoded<T> where T: DecodeItem {
     More(&'static DecodeIndex<T>),
 }
 
-enum NodeResult<T> where T: DecodeItem {
-    Fail,                       // 0 items; lookup fails
-    Succeed(&'static T),        // 1 item;  lookup succeeds
-    Examine(&'static Node<T>),  // ? items; examine subnode using same word
-    Advance(&'static Node<T>),  // ? items; examine subnode using next word
+enum DecodeIndexResult<T> where T: DecodeItem {
+    Fail,                               // 0 items; lookup fails
+    Succeed(&'static T),                // 1 item;  lookup succeeds
+    Examine(&'static DecodeIndex<T>),   // ? items; examine subnode using same word
+    Advance(&'static DecodeIndex<T>),   // ? items; examine subnode using next word
 }
 
 impl<T> DecodeIndex<T> where T: DecodeItem {
     fn get(&self, word: T::Word) -> Option<T::Output> {
-        self.root.get(word)
+        self.get_(word)
     }
 
     fn get2<I>(&self, words: &mut I) -> Option<&'static T> where
         I: Iterator<Item=T::Word>,
     {
-        let mut node = &self.root;
+        let mut node = self;
 
         loop {
             let word = match words.next() {
@@ -88,22 +88,20 @@ impl<T> DecodeIndex<T> where T: DecodeItem {
 
             loop {
                 match node.lookup(word) {
-                    NodeResult::Fail          => return None,
-                    NodeResult::Succeed(item) => return Some(item),
-                    NodeResult::Examine(next) => { node = next        },
-                    NodeResult::Advance(next) => { node = next; break },
+                    DecodeIndexResult::Fail          => return None,
+                    DecodeIndexResult::Succeed(item) => return Some(item),
+                    DecodeIndexResult::Examine(next) => { node = next        },
+                    DecodeIndexResult::Advance(next) => { node = next; break },
                 }
             }
         }
     }
-}
-
-impl<T> Node<T> where T: DecodeItem {
-    fn lookup(&self, word: T::Word) -> NodeResult<T> {
+                                     
+    fn lookup(&self, word: T::Word) -> DecodeIndexResult<T> {
         panic!()
     }
 
-    fn get(&self, word: T::Word) -> Option<T::Output> {
+    fn get_(&self, word: T::Word) -> Option<T::Output> {
         match *self {
             Empty                 => None,
             Leaf   (item)         => item.try_decode(word),
@@ -136,7 +134,7 @@ impl<T> Node<T> where T: DecodeItem {
 //
 //    #[test]
 //    fn size_of_node() {
-//        assert_eq!( size_of::<Node<Ins>>(), 16 );
+//        assert_eq!( size_of::<DecodeIndex<Ins>>(), 16 );
 //    }
 //
 //    #[test]
