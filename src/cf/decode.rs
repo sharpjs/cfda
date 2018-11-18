@@ -18,15 +18,15 @@ use util::DecodeIndex;
 use util::DecodeIndex::*;
 use super::ops::*;
 
-type Dc = DecodeIndex<Instruction>;
+type Node = DecodeIndex<Instruction>;
 
 // Root Node
-static DECODE_ROOT: Dc =
+static DECODE_ROOT: Node =
     /*......*/ Trie16(&DECODE_XXXXXX, 12)
 ;
 
 // All Instructions
-static DECODE_XXXXXX: [Dc; 16] = [
+static DECODE_XXXXXX: [Node; 16] = [
     /*00....*/ Trie8(&DECODE_00XXXX, /*>>*/ 6),     // Bit Manipulation/Immediate
     /*01....*/ Leaf(&MOVEB),                        // Move Byte
     /*02....*/ Scan2(&DECODE_02XXXX),               // Move Long
@@ -46,7 +46,7 @@ static DECODE_XXXXXX: [Dc; 16] = [
 ];
 
 // Bit Manipulation/Immediate
-static DECODE_00XXXX: [Dc; 8] = [
+static DECODE_00XXXX: [Node; 8] = [
     /*00.0..*/ Trie2(&DECODE_00X0XX, /*shr*/10),
     /*00.1..*/ Empty,
     /*00.2..*/ Empty,
@@ -58,54 +58,54 @@ static DECODE_00XXXX: [Dc; 8] = [
 ];
 
 // Bit Test Immediate / Compare Byte Immediate
-static DECODE_00X0XX: [Dc; 2] = [
+static DECODE_00X0XX: [Node; 2] = [
     /* 0000 .0. 000 ... ... */ Scan2(&DECODE_0000XX),
     /* 0000 .1. 000 ... ... */ Leaf(&CMPIB),
 ];
 
 // Bit Test Immediate
-static DECODE_0000XX: [Dc; 2] = [
+static DECODE_0000XX: [Node; 2] = [
     /*[0]*/ Leaf(&BTSTL), // use immediate encoding, dst=dr
     /*[1]*/ Leaf(&BTSTB), // use immediate encoding, dst=ea
 ];
 
 // Bit Test
-static DECODE_00X4XX: [Dc; 2] = [
+static DECODE_00X4XX: [Node; 2] = [
     /*[0]*/ Leaf(&BTSTL),
     /*[1]*/ Leaf(&BTSTB),
 ];
 
 // Bit Change
-static DECODE_00X5XX: [Dc; 2] = [
+static DECODE_00X5XX: [Node; 2] = [
     /*[0]*/ Leaf(&BCHGL),
     /*[1]*/ Leaf(&BCHGB),
 ];
 
 // Bit Clear
-static DECODE_00X6XX: [Dc; 2] = [
+static DECODE_00X6XX: [Node; 2] = [
     /*[0]*/ Leaf(&BCLRL),
     /*[1]*/ Leaf(&BCLRB),
 ];
 
 // Bit Set
-static DECODE_00X7XX: [Dc; 2] = [
+static DECODE_00X7XX: [Node; 2] = [
     /*[0]*/ Leaf(&BSETL),
     /*[1]*/ Leaf(&BSETB),
 ];
 
 // Move Long
-static DECODE_02XXXX: [Dc; 2] = [
+static DECODE_02XXXX: [Node; 2] = [
     /*[0]*/ Leaf(&MOVEL),
     /*[1]*/ Leaf(&MOVEAL),
 ];
 
 // Move Word
-static DECODE_03XXXX: [Dc; 2] = [
+static DECODE_03XXXX: [Node; 2] = [
     /*[0]*/ Leaf(&MOVEW),
     /*[1]*/ Leaf(&MOVEAW),
 ];
 
-static DECODE_11XXXX: [Dc; 8] = [
+static DECODE_11XXXX: [Node; 8] = [
     /*11.0..*/ Empty,
     /*11.1..*/ Empty,
     /*11.2..*/ Leaf(&SUBL),                         // sub.l ea,dr
@@ -116,12 +116,12 @@ static DECODE_11XXXX: [Dc; 8] = [
     /*11.7..*/ Leaf(&SUBAL),                        // suba.l
 ];
 
-static DECODE_11X6XX: [Dc; 2] = [
+static DECODE_11X6XX: [Node; 2] = [
     /*[0]*/ Leaf(&SUBL),                            // sub.l dr,ea
     /*[1]*/ Leaf(&SUBXL),                           // subx.l
 ];
 
-static DECODE_15XXXX: [Dc; 8] = [
+static DECODE_15XXXX: [Node; 8] = [
     /*15.0..*/ Empty,
     /*15.1..*/ Empty,
     /*15.2..*/ Leaf(&ADDL),                         // add.l ea,dr
@@ -132,7 +132,7 @@ static DECODE_15XXXX: [Dc; 8] = [
     /*15.7..*/ Leaf(&ADDAL),                        // adda.l
 ];
 
-static DECODE_15X6XX: [Dc; 2] = [
+static DECODE_15X6XX: [Node; 2] = [
     /*[0]*/ Leaf(&ADDL),                            // add.l dr,ea
     /*[1]*/ Leaf(&ADDXL),                           // addx.l
 ];
