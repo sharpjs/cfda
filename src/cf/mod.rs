@@ -15,6 +15,7 @@
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
 mod ast;
+mod decode;
 mod disasm;
 mod mode;
 mod ops;

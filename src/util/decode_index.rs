@@ -26,8 +26,7 @@
 // decode_index_entry
 
 use super::word::Word;
-
-type Flags = u32;
+use self::Node::*;
 
 pub trait DecodeItem: 'static {
     type Word: Word;
@@ -42,7 +41,7 @@ pub struct DecodeIndex<T: DecodeItem> {
 }
 
 #[derive(Clone, Debug)]
-enum Node<T: DecodeItem> {
+pub enum Node<T: DecodeItem> {
     Empty,
 
     Leaf   (&'static T),
@@ -58,170 +57,6 @@ enum Node<T: DecodeItem> {
 
     Chain  (&'static Node<T>),
 }
-
-use self::Node::*;
-
-pub struct Ins;
-
-impl DecodeItem for Ins {
-    type Word   = u16;
-    type Output = Ins;
-
-    fn try_decode(&self, word: u16) -> Option<Ins> { Some(Ins) }
-}
-
-// Root Node
-static DECODE_ROOT: Node<Ins> =
-    /*......*/ Trie16(&DECODE_XXXXXX, 12)
-;
-
-// All Instructions
-static DECODE_XXXXXX: [Node<Ins>; 16] = [
-    /*00....*/ Trie8(&DECODE_00XXXX, /*>>*/ 6),     // Bit Manipulation/Immediate
-    /*01....*/ Leaf(&MOVEB),                        // Move Byte
-    /*02....*/ Scan2(&DECODE_02XXXX),               // Move Long
-    /*03....*/ Scan2(&DECODE_03XXXX),               // Move Word
-    /*04....*/ Empty,                               // Miscellaneous
-    /*05....*/ Empty,                               // ADDQ/SUBQ/Scc/TPF
-    /*06....*/ Empty,                               // Bcc/BSR/BRA
-    /*07....*/ Empty,                               // MOVEQ/MVS/MVZ
-    /*10....*/ Empty,                               // OR/DIV
-    /*11....*/ Trie8(&DECODE_11XXXX, /*>>*/ 6),     // SUB/SUBA/SUBX
-    /*12....*/ Empty,                               // MAC/EMAC/MOV3Q
-    /*13....*/ Empty,                               // CMP/EOR
-    /*14....*/ Empty,                               // AND/MUL
-    /*15....*/ Trie8(&DECODE_15XXXX, /*>>*/ 6),     // ADD/ADDA/ADDX
-    /*16....*/ Empty,                               // Shift
-    /*17....*/ Empty,                               // Floating-Point/Debug/Cache
-];
-
-// Bit Manipulation/Immediate
-static DECODE_00XXXX: [Node<Ins>; 8] = [
-    /*00.0..*/ Trie2(&DECODE_00X0XX, /*shr*/10),
-    /*00.1..*/ Empty,
-    /*00.2..*/ Empty,
-    /*00.3..*/ Empty,
-    /*00.4..*/ Scan2(&DECODE_00X4XX),               // Bit Test
-    /*00.5..*/ Scan2(&DECODE_00X5XX),               // Bit Change
-    /*00.6..*/ Scan2(&DECODE_00X6XX),               // Bit Clear
-    /*00.7..*/ Scan2(&DECODE_00X7XX),               // Bit Set
-];
-
-// Bit Test Immediate / Compare Byte Immediate
-static DECODE_00X0XX: [Node<Ins>; 2] = [
-    /* 0000 .0. 000 ... ... */ Scan2(&DECODE_0000XX),
-    /* 0000 .1. 000 ... ... */ Leaf(&CMPIB),
-];
-
-// Bit Test Immediate
-static DECODE_0000XX: [Node<Ins>; 2] = [
-    /*[0]*/ Leaf(&BTSTL), // use immediate encoding, dst=dr
-    /*[1]*/ Leaf(&BTSTB), // use immediate encoding, dst=ea
-];
-
-// Bit Test
-static DECODE_00X4XX: [Node<Ins>; 2] = [
-    /*[0]*/ Leaf(&BTSTL),
-    /*[1]*/ Leaf(&BTSTB),
-];
-
-// Bit Change
-static DECODE_00X5XX: [Node<Ins>; 2] = [
-    /*[0]*/ Leaf(&BCHGL),
-    /*[1]*/ Leaf(&BCHGB),
-];
-
-// Bit Clear
-static DECODE_00X6XX: [Node<Ins>; 2] = [
-    /*[0]*/ Leaf(&BCLRL),
-    /*[1]*/ Leaf(&BCLRB),
-];
-
-// Bit Set
-static DECODE_00X7XX: [Node<Ins>; 2] = [
-    /*[0]*/ Leaf(&BSETL),
-    /*[1]*/ Leaf(&BSETB),
-];
-
-// Move Long
-static DECODE_02XXXX: [Node<Ins>; 2] = [
-    /*[0]*/ Leaf(&MOVEL),
-    /*[1]*/ Leaf(&MOVEAL),
-];
-
-// Move Word
-static DECODE_03XXXX: [Node<Ins>; 2] = [
-    /*[0]*/ Leaf(&MOVEW),
-    /*[1]*/ Leaf(&MOVEAW),
-];
-
-static DECODE_11XXXX: [Node<Ins>; 8] = [
-    /*11.0..*/ Empty,
-    /*11.1..*/ Empty,
-    /*11.2..*/ Leaf(&SUBL),                         // sub.l ea,dr
-    /*11.3..*/ Empty,
-    /*11.4..*/ Empty,
-    /*11.5..*/ Empty,
-    /*11.6..*/ Scan2(&DECODE_11X6XX),               // sub.l dr,ea; subx.l
-    /*11.7..*/ Leaf(&SUBAL),                        // suba.l
-];
-
-static DECODE_11X6XX: [Node<Ins>; 2] = [
-    /*[0]*/ Leaf(&SUBL),                            // sub.l dr,ea
-    /*[1]*/ Leaf(&SUBXL),                           // subx.l
-];
-
-static DECODE_15XXXX: [Node<Ins>; 8] = [
-    /*15.0..*/ Empty,
-    /*15.1..*/ Empty,
-    /*15.2..*/ Leaf(&ADDL),                         // add.l ea,dr
-    /*15.3..*/ Empty,
-    /*15.4..*/ Empty,
-    /*15.5..*/ Empty,
-    /*15.6..*/ Scan2(&DECODE_15X6XX),               // add.l dr,ea; addx.l
-    /*15.7..*/ Leaf(&ADDAL),                        // adda.l
-];
-
-static DECODE_15X6XX: [Node<Ins>; 2] = [
-    /*[0]*/ Leaf(&ADDL),                            // add.l dr,ea
-    /*[1]*/ Leaf(&ADDXL),                           // addx.l
-];
-
-// Instructs + Encodings
-static ADDL:   Ins = Ins;
-static ADDAL:  Ins = Ins;
-static ADDIL:  Ins = Ins;
-static ADDQL:  Ins = Ins;
-static ADDXL:  Ins = Ins;
-static BCHGB:  Ins = Ins;
-static BCHGL:  Ins = Ins;
-static BCLRB:  Ins = Ins;
-static BCLRL:  Ins = Ins;
-static BSETB:  Ins = Ins;
-static BSETL:  Ins = Ins;
-static BTSTB:  Ins = Ins;
-static BTSTL:  Ins = Ins;
-static CMPIB:  Ins = Ins;
-static CMPIW:  Ins = Ins;
-static CMPIL:  Ins = Ins;
-static DIVSW:  Ins = Ins;
-static DIVSL:  Ins = Ins;
-static DIVUW:  Ins = Ins;
-static DIVUL:  Ins = Ins;
-static MOVEB:  Ins = Ins;
-static MOVEW:  Ins = Ins;
-static MOVEL:  Ins = Ins;
-static MOVEAW: Ins = Ins;
-static MOVEAL: Ins = Ins;
-static MULSW:  Ins = Ins;
-static MULSL:  Ins = Ins;
-static MULUW:  Ins = Ins;
-static MULUL:  Ins = Ins;
-static SUBL:   Ins = Ins;
-static SUBAL:  Ins = Ins;
-static SUBIL:  Ins = Ins;
-static SUBQL:  Ins = Ins;
-static SUBXL:  Ins = Ins;
 
 enum Decoded<T> where T: DecodeItem {
     Item(&'static T),
@@ -294,19 +129,19 @@ impl<T> Node<T> where T: DecodeItem {
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use std::mem::size_of;
-
-    #[test]
-    fn size_of_node() {
-        assert_eq!( size_of::<Node<Ins>>(), 16 );
-    }
-
-    #[test]
-    fn size_of_option_decoded() {
-        assert_eq!( size_of::<Option<Decoded<Ins>>>(), 16 );
-    }
-}
+//#[cfg(test)]
+//mod tests {
+//    use super::*;
+//    use std::mem::size_of;
+//
+//    #[test]
+//    fn size_of_node() {
+//        assert_eq!( size_of::<Node<Ins>>(), 16 );
+//    }
+//
+//    #[test]
+//    fn size_of_option_decoded() {
+//        assert_eq!( size_of::<Option<Decoded<Ins>>>(), 16 );
+//    }
+//}
 
