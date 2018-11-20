@@ -14,11 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
-mod read_bytes;
-mod read_to_buf;
-mod rewind_read;
+use std::io::Result;
 
-pub use self::read_bytes::*;
-pub use self::read_to_buf::*;
-pub use self::rewind_read::*;
+/// A specialized reader that reads bytes from a source into an internal buffer
+/// and returns the bytes via a slice of the buffer.
+pub trait ReadBytes {
+    /// Reads `n` bytes, returning them as a slice.
+    fn read_bytes(&mut self, n: usize) -> Result<&[u8]>;
+}
 

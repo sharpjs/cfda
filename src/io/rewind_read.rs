@@ -17,6 +17,7 @@
 use std::io::{Error as E, Result};
 use std::io::ErrorKind::*;
 
+use super::ReadBytes;
 use super::ReadToBuf;
 
 /// A reader that can rewind to an earlier position in the stream.
@@ -50,9 +51,6 @@ pub trait RewindRead {
 
     /// Rewinds pending bytes, making them readable again.
     fn rewind(&mut self);
-
-    /// Reads `n` bytes, returning them as a slice.
-    fn read_bytes(&mut self, n: usize) -> Result<&[u8]>;
 }
 
 /// Transforms any reader into a rewindable reader.
@@ -123,7 +121,9 @@ impl<R: ReadToBuf> RewindRead for RewindReader<R> {
         // Make all rewindable bytes unread again
         self.vec_pos = 0;
     }
+}
 
+impl<R: ReadToBuf> ReadBytes for RewindReader<R> {
     fn read_bytes(&mut self, n: usize) -> Result<&[u8]> {
         // Compute vector indexes of the read
         let beg = self.vec_pos;
