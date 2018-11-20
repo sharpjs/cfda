@@ -15,7 +15,7 @@
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
 use super::word::Word;
-use self::DecodeIndex::*;
+//use self::DecodeIndex::*;
 
 // Decoding Data Structures
 // ------------------------
@@ -99,73 +99,77 @@ pub enum DecodeIndex<T: DecodeItem> {
     Chain(&'static DecodeIndex<T>),
 }
 
-enum Decoded<T> where T: DecodeItem {
+pub enum Decoded<T> where T: DecodeItem {
     Item(&'static T),
     More(&'static DecodeIndex<T>),
 }
 
-enum DecodeIndexResult<T> where T: DecodeItem {
-    Fail,                               // 0 items; lookup fails
-    Succeed(&'static T),                // 1 item;  lookup succeeds
-    Examine(&'static DecodeIndex<T>),   // ? items; examine subnode using same word
-    Advance(&'static DecodeIndex<T>),   // ? items; examine subnode using next word
-}
+//enum DecodeIndexResult<T> where T: DecodeItem {
+//    Fail,                               // 0 items; lookup fails
+//    Succeed(&'static T),                // 1 item;  lookup succeeds
+//    Examine(&'static DecodeIndex<T>),   // ? items; examine subnode using same word
+//    Advance(&'static DecodeIndex<T>),   // ? items; examine subnode using next word
+//}
 
 impl<T> DecodeIndex<T> where T: DecodeItem {
-    fn get(&self, word: T::Word) -> Option<T::Output> {
-        self.get_(word)
-    }
-
-    fn get2<I>(&self, words: &mut I) -> Option<&'static T> where
-        I: Iterator<Item=T::Word>,
-    {
-        let mut node = self;
-
-        loop {
-            let word = match words.next() {
-                None    => return None,
-                Some(w) => w,
-            };
-
-            loop {
-                match node.lookup(word) {
-                    DecodeIndexResult::Fail          => return None,
-                    DecodeIndexResult::Succeed(item) => return Some(item),
-                    DecodeIndexResult::Examine(next) => { node = next        },
-                    DecodeIndexResult::Advance(next) => { node = next; break },
-                }
-            }
-        }
-    }
-                                     
-    fn lookup(&self, word: T::Word) -> DecodeIndexResult<T> {
+    fn decode<W>(&self, words: W) -> Option<T::Output> {
         panic!()
     }
 
-    fn get_(&self, word: T::Word) -> Option<T::Output> {
-        match *self {
-            Empty                 => None,
-            Leaf   (item)         => item.try_decode(word),
-            Scan2  (nodes)        => Self::scan(nodes, word),
-            Scan3  (nodes)        => Self::scan(nodes, word),
-            Scan4  (nodes)        => Self::scan(nodes, word),
-            Trie2  (nodes, shift) => Self::seek(nodes, word, shift, 0b0001),
-            Trie4  (nodes, shift) => Self::seek(nodes, word, shift, 0b0011),
-            Trie8  (nodes, shift) => Self::seek(nodes, word, shift, 0b0111),
-            Trie16 (nodes, shift) => Self::seek(nodes, word, shift, 0b1111),
-            Chain  (node)         => panic!(),
-        }
-    }
+    //fn get(&self, word: T::Word) -> Option<T::Output> {
+    //    self.get_(word)
+    //}
 
-    fn scan(nodes: &[Self], word: T::Word) -> Option<T::Output> {
-        nodes.iter().find_map(|n| n.get(word))
-    }
+    //fn get2<I>(&self, words: &mut I) -> Option<&'static T> where
+    //    I: Iterator<Item=T::Word>,
+    //{
+    //    let mut node = self;
 
-    fn seek(nodes: &[Self], word: T::Word, shift: u8, mask: u8) -> Option<T::Output> {
-        let mask = T::Word::from(mask);
-        let bits = word >> shift & mask;
-        nodes[bits.to_usize()].get(word)
-    }
+    //    loop {
+    //        let word = match words.next() {
+    //            None    => return None,
+    //            Some(w) => w,
+    //        };
+
+    //        loop {
+    //            match node.lookup(word) {
+    //                DecodeIndexResult::Fail          => return None,
+    //                DecodeIndexResult::Succeed(item) => return Some(item),
+    //                DecodeIndexResult::Examine(next) => { node = next        },
+    //                DecodeIndexResult::Advance(next) => { node = next; break },
+    //            }
+    //        }
+    //    }
+    //}
+    //                                 
+    //fn lookup(&self, word: T::Word) -> DecodeIndexResult<T> {
+    //    panic!()
+    //}
+
+    //fn get_(&self, word: T::Word) -> Option<T::Output> {
+    //    match *self {
+    //        Empty                 => None,
+    //        Leaf   (item)         => item.try_decode(word),
+    //        Scan2  (nodes)        => Self::scan(nodes, word),
+    //        Scan3  (nodes)        => Self::scan(nodes, word),
+    //        Scan4  (nodes)        => Self::scan(nodes, word),
+    //        Trie2  (nodes, shift) => Self::seek(nodes, word, shift, 0b0001),
+    //        Trie4  (nodes, shift) => Self::seek(nodes, word, shift, 0b0011),
+    //        Trie8  (nodes, shift) => Self::seek(nodes, word, shift, 0b0111),
+    //        Trie16 (nodes, shift) => Self::seek(nodes, word, shift, 0b1111),
+    //        Chain  (node)         => panic!(),
+    //    }
+    //}
+
+    //fn scan(nodes: &[Self], word: T::Word) -> Option<T::Output> {
+    //    nodes.iter().find_map(|n| n.get(word))
+    //}
+
+    //fn seek(nodes: &[Self], word: T::Word, shift: u8, mask: u8) -> Option<T::Output> {
+    //    let mask = T::Word::from(mask);
+    //    let bits = word >> shift & mask;
+    //    nodes[bits.to_usize()].get(word)
+    //}
 }
 
 //#[cfg(test)]
