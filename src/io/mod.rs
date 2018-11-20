@@ -14,12 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
-mod pending_read;
+mod rewind_read;
 
 use std::io::{Read, Result};
 use std::io::ErrorKind::*;
 
-pub use self::pending_read::*;
+pub use self::rewind_read::*;
 
 /// Extends `std::io::Read` with the `read_to_buf` method.
 pub trait ReadToBuf: Read {
