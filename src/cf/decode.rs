@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
-use util::DecodeIndex;
-use util::DecodeIndex::*;
 use super::ops::*;
+use crate::util::DecodeIndex;
+use crate::util::DecodeIndex::*;
 
 type Node = DecodeIndex<Instruction>;
 
@@ -45,12 +45,12 @@ static DECODE_XXXXXX: [Node; 16] = [
     /*17....*/ Empty,                               // Floating-Point/Debug/Cache
 ];
 
-// Bit Manipulation/Immediate
+// Bit Manipulation / Immediate
 static DECODE_00XXXX: [Node; 8] = [
-    /*00.0..*/ Trie2(&DECODE_00X0XX, /*shr*/10),
-    /*00.1..*/ Empty,
-    /*00.2..*/ Empty,
-    /*00.3..*/ Empty,
+    /*00.0..*/ Trie2(&DECODE_00X0XX, /*>>*/ 10),
+    /*00.1..*/ Trie2(&DECODE_00X1XX, /*>>*/ 10),
+    /*00.2..*/ Trie8(&DECODE_00X2XX, /*>>*/  9),
+    /*00.3..*/ Trie2(&DECODE_00X3XX, /*>>*/ 11),
     /*00.4..*/ Scan2(&DECODE_00X4XX),               // Bit Test
     /*00.5..*/ Scan2(&DECODE_00X5XX),               // Bit Change
     /*00.6..*/ Scan2(&DECODE_00X6XX),               // Bit Clear
@@ -59,14 +59,64 @@ static DECODE_00XXXX: [Node; 8] = [
 
 // Bit Test Immediate / Compare Byte Immediate
 static DECODE_00X0XX: [Node; 2] = [
-    /* 0000 .0. 000 ... ... */ Scan2(&DECODE_0000XX),
-    /* 0000 .1. 000 ... ... */ Leaf(&CMPIB),
+    /*00(.0.)0..*/ Scan2(&DECODE_0000XX),
+    /*00(.1.)0..*/ Leaf(&CMPIB),
 ];
 
 // Bit Test Immediate
 static DECODE_0000XX: [Node; 2] = [
-    /*[0]*/ Leaf(&BTSTL), // use immediate encoding, dst=dr
-    /*[1]*/ Leaf(&BTSTB), // use immediate encoding, dst=ea
+    /*[0]*/ Leaf(&BTSTL),                           // src=imm8, dst=dr
+    /*[1]*/ Leaf(&BTSTB),                           // src=imm8, dst=ea
+];
+
+// Bit Change Immediate / Compare Word Immediate
+static DECODE_00X1XX: [Node; 2] = [
+    /*00(.0.)1..*/ Scan2(&DECODE_0001XX),
+    /*00(.1.)1..*/ Leaf(&CMPIW),
+];
+
+// Bit Change Immediate
+static DECODE_0001XX: [Node; 2] = [
+    /*[0]*/ Leaf(&BCHGL),                           // src=imm8, dst=dr
+    /*[1]*/ Leaf(&BCHGB),                           // src=imm8, dst=ea
+];
+
+// Bit Clear Immediate / Arithmetic Long Immediate
+static DECODE_00X2XX: [Node; 8] = [
+    /*0002..*/ Leaf(&ORIL),
+    /*0012..*/ Leaf(&ANDIL),
+    /*0022..*/ Leaf(&SUBIL),
+    /*0032..*/ Leaf(&ADDIL),
+    /*0042..*/ Scan2(&DECODE_0042XX),
+    /*0052..*/ Leaf(&EORIL),
+    /*0062..*/ Leaf(&CMPIL),
+    /*0072..*/ Empty,
+];
+
+// Bit Clear Immediate
+static DECODE_0042XX: [Node; 2] = [
+    /*[0]*/ Leaf(&BCLRL),                           // src=imm8, dst=dr
+    /*[1]*/ Leaf(&BCLRB),                           // src=imm8, dst=ea
+];
+
+// Bit Set Immediate / Reverse / Find First 1
+static DECODE_00X3XX: [Node; 2] = [
+    /*00(0..)3..*/ Trie4(&DECODE_0003XX, /*>>*/ 9),
+    /*00(1..)3..*/ Scan2(&DECODE_0043XX),
+];
+
+// Reverse / Find First 1
+static DECODE_0003XX: [Node; 4] = [
+    /*0003..*/ Leaf(&BITREVL),
+    /*0013..*/ Leaf(&BYTEREVL),
+    /*0023..*/ Leaf(&FF1L),
+    /*0033..*/ Empty,
+];
+
+// Bit Set Immediate
+static DECODE_0043XX: [Node; 2] = [
+    /*[0]*/ Leaf(&BSETL),                           // src=imm8, dst=dr
+    /*[1]*/ Leaf(&BSETB),                           // src=imm8, dst=ea
 ];
 
 // Bit Test
