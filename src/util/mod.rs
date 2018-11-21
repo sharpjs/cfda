@@ -18,6 +18,7 @@ mod byte_order;
 mod decode_index;
 mod word;
 
+pub use self::byte_order::*;
 pub use self::decode_index::*;
 pub use self::word::*;
 
