@@ -26,9 +26,9 @@ pub struct Instruction {                                            // 64-bit   
 //  pub run: fn(/*ctx: &mut RunContext*/),                          // + 8 => 24 | + 4 => 12 
 }
 
-/// ColdFire opcode specification.
+/// ColdFire instruction encoding specification.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
-pub struct Op {                                                     // 64-bit    | 32-bit
+pub struct Encoding {                                                     // 64-bit    | 32-bit
     /// Values of required bits in opword and extension word.
     pub bits: (u16, u16),                                           // + 4 => 12 | + 4 =>  8 
  

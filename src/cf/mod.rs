@@ -22,5 +22,5 @@ mod ops;
 mod reg;
 
 pub use self::ast::Arg;
-pub use self::ops::Op;
+pub use self::ops::{Encoding as Op}; // TODO: Get rid of this
 
