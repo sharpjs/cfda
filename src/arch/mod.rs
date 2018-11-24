@@ -14,22 +14,31 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
-#![allow(dead_code)]
-#![allow(unused_variables)]
+use crate::util::Word;
 
-extern crate num_bigint;
-extern crate num_traits;
+/// A computer architecture.
+pub trait Arch {
+    /// The type of the largest logical memory address within the archicture.
+    type Addr: Word;
 
-mod arch;
-mod ast;
-mod cf;
-mod fmt;
-mod io;
-mod mem;
-mod ops;
-mod util;
+    /// The type of data referenced by an address within the architecture.
+    /// This will be `u8` for byte-addressable architectures.
+    type Data: Word;
+}
 
-fn main() {
-    println!("Hello, world!");
+/// The architecture of the Motorola 68000 and its descendants.
+pub struct M68k;
+
+impl Arch for M68k {
+    type Addr = u32;
+    type Data = u8;
+}
+
+/// The architecture of the DEC PDP-11 and its descendants.
+pub struct Pdp11;
+
+impl Arch for Pdp11 {
+    type Addr = u16; // logical; physical could be as much as 22 bits
+    type Data = u8;
 }
 
