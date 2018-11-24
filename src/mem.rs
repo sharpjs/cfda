@@ -51,31 +51,32 @@ impl<A> Region<A> where A: Arch {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::arch::{X86_64 as A};
 
     #[test]
     pub fn reloc_positive() {
-        let region = Region { lma: 0x2000, vma: 0x3000, len: 0x0100 };
+        let region = Region::<A> { lma: 0x2000, vma: 0x3000, len: 0x0100 };
         let reloc  = region.reloc();
         assert_eq!(reloc, 0x1000);
     }
 
     #[test]
     pub fn reloc_negative() {
-        let region = Region { lma: 0x2000, vma: 0x1000, len: 0x0100 };
+        let region = Region::<A> { lma: 0x2000, vma: 0x1000, len: 0x0100 };
         let reloc  = region.reloc();
-        assert_eq!(reloc, 0x1000u32.wrapping_neg());
+        assert_eq!(reloc, 0x1000u64.wrapping_neg());
     }
 
     #[test]
     pub fn end_lma() {
-        let region = Region { lma: 0x2000, vma: 0x3000, len: 0x0100 };
+        let region = Region::<A> { lma: 0x2000, vma: 0x3000, len: 0x0100 };
         let addr   = region.end_lma();
         assert_eq!(addr, 0x2100);
     }
 
     #[test]
     pub fn end_vma() {
-        let region = Region { lma: 0x2000, vma: 0x3000, len: 0x0100 };
+        let region = Region::<A> { lma: 0x2000, vma: 0x3000, len: 0x0100 };
         let addr   = region.end_vma();
         assert_eq!(addr, 0x3100);
     }
@@ -83,14 +84,14 @@ mod tests {
     #[test]
     #[should_panic]
     pub fn end_lma_out_of_range() {
-        let region = Region { lma: 0x2000, vma: 0x3000, len: u32::max_value() };
+        let region = Region::<A>  { lma: 0x2000, vma: 0x3000, len: u64::max_value() };
         let addr   = region.end_lma();
     }
     
     #[test]
     #[should_panic]
     pub fn end_vma_out_of_range() {
-        let region = Region { lma: 0x2000, vma: 0x3000, len: u32::max_value() };
+        let region = Region::<A>  { lma: 0x2000, vma: 0x3000, len: u64::max_value() };
         let addr   = region.end_vma();
     }
 }
