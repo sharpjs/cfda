@@ -56,6 +56,37 @@ pub trait Word: Copy + Eq + Ord + Debug
     }
 }
 
+impl Word for u8 {
+    const BITS: u8   = 8;
+    const ZERO: Self = 0;
+    const ONE:  Self = 1;
+
+    #[inline(always)]
+    fn to_usize(self) -> usize {
+        self as usize
+    }
+
+    #[inline(always)]
+    fn to_u64(self) -> u64 {
+        self as u64
+    }
+
+    #[inline(always)]
+    fn wrapping_neg(self) -> Self {
+        self.wrapping_neg()
+    }
+
+    #[inline(always)]
+    fn leading_zeros(self) -> u8 {
+        self.leading_zeros() as u8
+    }
+
+    #[inline(always)]
+    fn trailing_zeros(self) -> u8 {
+        self.trailing_zeros() as u8
+    }
+}
+
 impl Word for u16 {
     const BITS: u8   = 16;
     const ZERO: Self =  0;
@@ -100,6 +131,37 @@ impl Word for u32 {
     #[inline(always)]
     fn to_u64(self) -> u64 {
         self as u64
+    }
+
+    #[inline(always)]
+    fn wrapping_neg(self) -> Self {
+        self.wrapping_neg()
+    }
+
+    #[inline(always)]
+    fn leading_zeros(self) -> u8 {
+        self.leading_zeros() as u8
+    }
+
+    #[inline(always)]
+    fn trailing_zeros(self) -> u8 {
+        self.trailing_zeros() as u8
+    }
+}
+
+impl Word for u64 {
+    const BITS: u8   = 64;
+    const ZERO: Self =  0;
+    const ONE:  Self =  1;
+
+    #[inline(always)]
+    fn to_usize(self) -> usize {
+        self as usize
+    }
+
+    #[inline(always)]
+    fn to_u64(self) -> u64 {
+        self
     }
 
     #[inline(always)]
