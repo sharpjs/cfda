@@ -16,6 +16,18 @@
 
 use std::mem::transmute;
 
+/// Trait for types that have a known byte order.
+pub trait ByteOrdered {
+    /// Gets the byte order.
+    fn byte_order(&self) -> ByteOrder;
+}
+
+/// Trait for types that have a mutable byte order.
+pub trait ByteOrderedMut: ByteOrdered {
+    /// Sets the byte order to `order`.
+    fn set_byte_order(&mut self, order: ByteOrder);
+}
+
 /// Specifies the order of bytes within an encoded numeric value.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub enum ByteOrder {
