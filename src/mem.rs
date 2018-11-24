@@ -14,32 +14,36 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
+use crate::arch::Arch;
+use crate::util::Word;
+
 /// A memory region.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
-pub struct Region {
+pub struct Region<A: Arch> {
     /// Load Memory Address (LMA).  LMA + relocation = VMA.
-    pub lma: u32,
+    pub lma: u64,
 
     /// Virtual Memory Address (VMA).  LMA + relocation = VMA.
-    pub vma: u32,
+    pub vma: A::Addr,
 
     /// Length in bytes.
-    pub len: u32,
+    pub len: A::Addr,
+}
 }
 
-impl Region {
+impl<A> Region<A> where A: Arch {
     /// Gets the relocation in bytes.  LMA + relocation = VMA.
-    pub fn reloc(&self) -> u32 {
-        self.vma.wrapping_sub(self.lma)
+    pub fn reloc(&self) -> u64 {
+        self.vma.to_u64().wrapping_sub(self.lma)
     }
 
     /// Gets the ending Load Memory Address.
-    pub fn end_lma(&self) -> u32 {
-        self.lma + self.len
+    pub fn end_lma(&self) -> u64 {
+        self.lma + self.len.to_u64()
     }
 
     /// Gets the ending Virtual Memory Address.
-    pub fn end_vma(&self) -> u32 {
+    pub fn end_vma(&self) -> A::Addr {
         self.vma + self.len
     }
 }
