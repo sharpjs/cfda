@@ -42,3 +42,11 @@ impl Arch for Pdp11 {
     type Data = u8;
 }
 
+/// The architecture of 64-bit x86 CPUs.
+pub struct X86_64;
+
+impl Arch for X86_64 {
+    type Addr = u64;
+    type Data = u8;
+}
+
