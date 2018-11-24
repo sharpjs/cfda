@@ -26,10 +26,10 @@ pub struct Region<A: Arch> {
     /// Virtual Memory Address (VMA).  LMA + relocation = VMA.
     pub vma: A::Addr,
 
-    /// Length in bytes.
+    /// Length, in address units.
     pub len: A::Addr,
 
-    /// THe kind of content within the region.
+    /// The kind of content within the region.
     pub kind: RegionKind,
 }
 
@@ -42,7 +42,7 @@ pub enum RegionKind {
 }
 
 impl<A> Region<A> where A: Arch {
-    /// Gets the relocation in bytes.  LMA + relocation = VMA.
+    /// Gets the relocation, in address units.  LMA + relocation = VMA.
     pub fn reloc(&self) -> u64 {
         self.vma.to_u64().wrapping_sub(self.lma)
     }
