@@ -17,7 +17,7 @@
 use std::fmt::Debug;
 use std::ops::*;
 
-pub trait Word: Copy + Eq + Ord + Debug
+pub trait Word: Copy + Eq + Ord + Debug + 'static
     + From    <u8>
     + Not     <Output=Self>
     + Mul     <Output=Self>     + MulAssign    <Self>
