@@ -27,6 +27,7 @@ pub trait Arch {
 }
 
 /// The architecture of the Motorola 68000 and its descendants.
+#[derive(PartialEq, Eq, Debug)]
 pub struct M68k;
 
 impl Arch for M68k {
@@ -35,6 +36,7 @@ impl Arch for M68k {
 }
 
 /// The architecture of the DEC PDP-11 and its descendants.
+#[derive(PartialEq, Eq, Debug)]
 pub struct Pdp11;
 
 impl Arch for Pdp11 {
@@ -43,6 +45,7 @@ impl Arch for Pdp11 {
 }
 
 /// The architecture of 64-bit x86 CPUs.
+#[derive(PartialEq, Eq, Debug)]
 pub struct X86_64;
 
 impl Arch for X86_64 {
