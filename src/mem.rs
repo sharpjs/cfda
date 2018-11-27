@@ -42,7 +42,13 @@ pub enum RegionKind {
 }
 
 impl<A> Region<A> where A: Arch {
-    /// Gets the relocation, in address units.  LMA + relocation = VMA.
+    /// Creates a new `Region`.
+    pub fn new(lma: u64, vma: A::Addr, len: A::Addr, kind: RegionKind) -> Self {
+        //if vma.checked_add(len).is_none() { panic!() }
+        Self { lma, vma, len, kind }
+    }
+ 
+    /// Gets the relocation.  LMA + relocation = VMA.
     pub fn reloc(&self) -> u64 {
         self.vma.to_u64().wrapping_sub(self.lma)
     }
@@ -63,6 +69,13 @@ mod tests {
     use super::*;
     use super::RegionKind::{Code as C};
     use crate::arch::{X86_64 as A};
+
+    #[test]
+    pub fn new() {
+        let region_a = Region::<A>::new(0x2000, 0x3000, 0x0100, C);
+        let region_b = Region::<A> { lma: 0x2000, vma: 0x3000, len: 0x0100, kind: C };
+        assert_eq!(region_a, region_b);
+    }
 
     #[test]
     pub fn reloc_positive() {
