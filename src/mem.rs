@@ -17,7 +17,7 @@
 use crate::arch::Arch;
 use crate::util::Word;
 
-/// A memory region.
+/// A description of a memory region.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub struct Region<A: Arch> {
     /// Load Memory Address (LMA).  LMA + relocation = VMA.
