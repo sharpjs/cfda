@@ -16,17 +16,18 @@
 
 use crate::util::Word;
 
-/// A computer architecture.
+/// An instruction set architecture.
 pub trait Arch {
-    /// The type of the largest logical memory address within the archicture.
+    /// The type of the widest virtual address.
     type Addr: Word;
 
-    /// The type of data referenced by an address within the architecture.
-    /// This will be `u8` for byte-addressable architectures.
+    /// The type of narrowest data location identified by a virtual address.
+    /// This type is `u8` for byte-addressable architectures or other types for
+    /// word-addressible architectures.
     type Data: Word;
 }
 
-/// The architecture of the Motorola 68000 and its descendants.
+/// Motorola 68000 architecture family.
 #[derive(PartialEq, Eq, Debug)]
 pub struct M68k;
 
@@ -35,7 +36,7 @@ impl Arch for M68k {
     type Data = u8;
 }
 
-/// The architecture of the DEC PDP-11 and its descendants.
+/// DEC PDP-11 architecture.
 #[derive(PartialEq, Eq, Debug)]
 pub struct Pdp11;
 
@@ -44,7 +45,7 @@ impl Arch for Pdp11 {
     type Data = u8;
 }
 
-/// The architecture of 64-bit x86 CPUs.
+/// 64-bit x86 architectures.
 #[derive(PartialEq, Eq, Debug)]
 pub struct X86_64;
 
