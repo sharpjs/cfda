@@ -15,10 +15,13 @@
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
 use std::fmt::Debug;
+use std::hash::Hash;
 use std::ops::*;
 
-pub trait Word: Copy + Eq + Ord + Debug + 'static
+/// Trait for machine word types.
+pub trait Word: Copy + Eq + Ord + Hash + Debug + 'static
     + From    <u8>
+//  + Neg     <Output=Self>
     + Not     <Output=Self>
     + Mul     <Output=Self>     + MulAssign    <Self>
     + Div     <Output=Self>     + DivAssign    <Self>
@@ -32,29 +35,25 @@ pub trait Word: Copy + Eq + Ord + Debug + 'static
     + BitOr   <Output=Self>     + BitOrAssign  <Self>
 {
     const BITS: u8;
+    //const MIN:  Self;
     const ZERO: Self;
     const ONE:  Self;
+    //const MAX:  Self;
 
     fn to_usize(self) -> usize;
 
     fn to_u64(self) -> u64;
+}
 
-    fn wrapping_neg(self) -> Self;
+/*
+macro_rules! impl_word {
+    { $n:ident : $t:ty } => {
 
-    fn leading_zeros(self) -> u8;
-
-    fn trailing_zeros(self) -> u8;
-
-    #[inline(always)]
-    fn is_zero(self) -> bool {
-        self == Self::ZERO
-    }
-
-    #[inline(always)]
-    fn is_nonzero(self) -> bool {
-        self != Self::ZERO
+        impl Word for $t {
+        }
     }
 }
+*/
 
 impl Word for u8 {
     const BITS: u8   = 8;
@@ -69,21 +68,6 @@ impl Word for u8 {
     #[inline(always)]
     fn to_u64(self) -> u64 {
         self as u64
-    }
-
-    #[inline(always)]
-    fn wrapping_neg(self) -> Self {
-        self.wrapping_neg()
-    }
-
-    #[inline(always)]
-    fn leading_zeros(self) -> u8 {
-        self.leading_zeros() as u8
-    }
-
-    #[inline(always)]
-    fn trailing_zeros(self) -> u8 {
-        self.trailing_zeros() as u8
     }
 }
 
@@ -101,21 +85,6 @@ impl Word for u16 {
     fn to_u64(self) -> u64 {
         self as u64
     }
-
-    #[inline(always)]
-    fn wrapping_neg(self) -> Self {
-        self.wrapping_neg()
-    }
-
-    #[inline(always)]
-    fn leading_zeros(self) -> u8 {
-        self.leading_zeros() as u8
-    }
-
-    #[inline(always)]
-    fn trailing_zeros(self) -> u8 {
-        self.trailing_zeros() as u8
-    }
 }
 
 impl Word for u32 {
@@ -132,21 +101,6 @@ impl Word for u32 {
     fn to_u64(self) -> u64 {
         self as u64
     }
-
-    #[inline(always)]
-    fn wrapping_neg(self) -> Self {
-        self.wrapping_neg()
-    }
-
-    #[inline(always)]
-    fn leading_zeros(self) -> u8 {
-        self.leading_zeros() as u8
-    }
-
-    #[inline(always)]
-    fn trailing_zeros(self) -> u8 {
-        self.trailing_zeros() as u8
-    }
 }
 
 impl Word for u64 {
@@ -162,21 +116,6 @@ impl Word for u64 {
     #[inline(always)]
     fn to_u64(self) -> u64 {
         self
-    }
-
-    #[inline(always)]
-    fn wrapping_neg(self) -> Self {
-        self.wrapping_neg()
-    }
-
-    #[inline(always)]
-    fn leading_zeros(self) -> u8 {
-        self.leading_zeros() as u8
-    }
-
-    #[inline(always)]
-    fn trailing_zeros(self) -> u8 {
-        self.trailing_zeros() as u8
     }
 }
 
