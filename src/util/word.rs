@@ -42,6 +42,10 @@ pub trait Word: Copy + Eq + Ord + Hash + Debug + 'static
     fn to_usize(self) -> usize;
 
     fn to_u64(self) -> u64;
+
+    fn checked_add(self, Self) -> Option<Self>;
+
+    fn checked_sub(self, Self) -> Option<Self>;
 }
 
 impl Word for u8 {
@@ -58,6 +62,16 @@ impl Word for u8 {
     #[inline(always)]
     fn to_u64(self) -> u64 {
         self as u64
+    }
+
+    #[inline(always)]
+    fn checked_add(self, other: Self) -> Option<Self> {
+        self.checked_add(other)
+    }
+
+    #[inline(always)]
+    fn checked_sub(self, other: Self) -> Option<Self> {
+        self.checked_sub(other)
     }
 }
 
@@ -76,6 +90,16 @@ impl Word for u16 {
     fn to_u64(self) -> u64 {
         self as u64
     }
+
+    #[inline(always)]
+    fn checked_add(self, other: Self) -> Option<Self> {
+        self.checked_add(other)
+    }
+
+    #[inline(always)]
+    fn checked_sub(self, other: Self) -> Option<Self> {
+        self.checked_sub(other)
+    }
 }
 
 impl Word for u32 {
@@ -93,6 +117,16 @@ impl Word for u32 {
     fn to_u64(self) -> u64 {
         self as u64
     }
+
+    #[inline(always)]
+    fn checked_add(self, other: Self) -> Option<Self> {
+        self.checked_add(other)
+    }
+
+    #[inline(always)]
+    fn checked_sub(self, other: Self) -> Option<Self> {
+        self.checked_sub(other)
+    }
 }
 
 impl Word for u64 {
@@ -109,6 +143,16 @@ impl Word for u64 {
     #[inline(always)]
     fn to_u64(self) -> u64 {
         self
+    }
+
+    #[inline(always)]
+    fn checked_add(self, other: Self) -> Option<Self> {
+        self.checked_add(other)
+    }
+
+    #[inline(always)]
+    fn checked_sub(self, other: Self) -> Option<Self> {
+        self.checked_sub(other)
     }
 }
 
