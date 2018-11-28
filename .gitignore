@@ -4,6 +4,9 @@
 # Vim
 *.swp
 
+# Other
+tmp/
+
 # Mac OS X
 .DS_Store
 
