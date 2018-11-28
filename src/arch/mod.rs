@@ -41,7 +41,7 @@ impl Arch for M68k {
 pub struct Pdp11;
 
 impl Arch for Pdp11 {
-    type Addr = u16; // logical; physical could be as much as 22 bits
+    type Addr = u16;
     type Data = u8;
 }
 
