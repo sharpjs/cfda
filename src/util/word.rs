@@ -35,30 +35,20 @@ pub trait Word: Copy + Eq + Ord + Hash + Debug + 'static
     + BitOr   <Output=Self>     + BitOrAssign  <Self>
 {
     const BITS: u8;
-    //const MIN:  Self;
     const ZERO: Self;
     const ONE:  Self;
-    //const MAX:  Self;
+    const MAX:  Self;
 
     fn to_usize(self) -> usize;
 
     fn to_u64(self) -> u64;
 }
 
-/*
-macro_rules! impl_word {
-    { $n:ident : $t:ty } => {
-
-        impl Word for $t {
-        }
-    }
-}
-*/
-
 impl Word for u8 {
-    const BITS: u8   = 8;
-    const ZERO: Self = 0;
-    const ONE:  Self = 1;
+    const BITS: u8   =    8;
+    const ZERO: Self =    0;
+    const ONE:  Self =    1;
+    const MAX:  Self = 0xFF;
 
     #[inline(always)]
     fn to_usize(self) -> usize {
@@ -72,9 +62,10 @@ impl Word for u8 {
 }
 
 impl Word for u16 {
-    const BITS: u8   = 16;
-    const ZERO: Self =  0;
-    const ONE:  Self =  1;
+    const BITS: u8   =     16;
+    const ZERO: Self =      0;
+    const ONE:  Self =      1;
+    const MAX:  Self = 0xFFFF;
 
     #[inline(always)]
     fn to_usize(self) -> usize {
@@ -88,9 +79,10 @@ impl Word for u16 {
 }
 
 impl Word for u32 {
-    const BITS: u8   = 32;
-    const ZERO: Self =  0;
-    const ONE:  Self =  1;
+    const BITS: u8   =          32;
+    const ZERO: Self =           0;
+    const ONE:  Self =           1;
+    const MAX:  Self = 0xFFFF_FFFF;
 
     #[inline(always)]
     fn to_usize(self) -> usize {
@@ -104,9 +96,10 @@ impl Word for u32 {
 }
 
 impl Word for u64 {
-    const BITS: u8   = 64;
-    const ZERO: Self =  0;
-    const ONE:  Self =  1;
+    const BITS: u8   =                    64;
+    const ZERO: Self =                     0;
+    const ONE:  Self =                     1;
+    const MAX:  Self = 0xFFFF_FFFF_FFFF_FFFF;
 
     #[inline(always)]
     fn to_usize(self) -> usize {
