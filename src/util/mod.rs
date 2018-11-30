@@ -15,10 +15,12 @@
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
 mod byte_order;
+mod cast;
 mod decode_index;
 mod word;
 
 pub use self::byte_order::*;
+pub use self::cast::*;
 pub use self::decode_index::*;
 pub use self::word::*;
 
