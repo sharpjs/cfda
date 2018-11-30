@@ -14,15 +14,23 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
-mod byte_order;
-mod cast;
-mod field;
-mod decode_index;
-mod word;
+use std::ops::{Shr, BitAnd};
+use crate::util::Cast;
 
-pub use self::byte_order::*;
-pub use self::cast::*;
-pub use self::field::*;
-pub use self::decode_index::*;
-pub use self::word::*;
+/// Access to embedded bit fields.
+pub trait Field<P, M> {
+    /// Gets the value of the bit field at position `pos`, masked with `mask`.
+    fn field(self, pos: P, mask: M) -> M;
+}
+
+impl<T, P, M> Field<P, M> for T
+where
+    T: Shr<P, Output=T> + Cast<M>,
+    M: BitAnd<Output=M>
+{
+    #[inline(always)]
+    fn field(self, pos: P, mask: M) -> M {
+        (self >> pos).cast() & mask
+    }
+}
 
