@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
+use std::num::Wrapping;
+
 /// Simple, reinterpreting conversion to another, usually primitive, type.
 /// Conversion to narrower types truncates, while conversion to wider types
 /// extends.
@@ -34,16 +36,21 @@ macro_rules! impl_cast {
 }
 
 impl_cast! {
-      u8 => u8, u16, u32, u64, u128;
-     u16 => u8, u16, u32, u64, u128;
-     u32 => u8, u16, u32, u64, u128;
-     u64 => u8, u16, u32, u64, u128;
-    u128 => u8, u16, u32, u64, u128;
+      u8 => u8, u16, u32, u64, u128, i8, i16, i32, i64, i128;
+     u16 => u8, u16, u32, u64, u128, i8, i16, i32, i64, i128;
+     u32 => u8, u16, u32, u64, u128, i8, i16, i32, i64, i128;
+     u64 => u8, u16, u32, u64, u128, i8, i16, i32, i64, i128;
+    u128 => u8, u16, u32, u64, u128, i8, i16, i32, i64, i128;
 
-      i8 => i8, i16, i32, i64, i128;
-     i16 => i8, i16, i32, i64, i128;
-     i32 => i8, i16, i32, i64, i128;
-     i64 => i8, i16, i32, i64, i128;
-    i128 => i8, i16, i32, i64, i128;
+      i8 => u8, u16, u32, u64, u128, i8, i16, i32, i64, i128;
+     i16 => u8, u16, u32, u64, u128, i8, i16, i32, i64, i128;
+     i32 => u8, u16, u32, u64, u128, i8, i16, i32, i64, i128;
+     i64 => u8, u16, u32, u64, u128, i8, i16, i32, i64, i128;
+    i128 => u8, u16, u32, u64, u128, i8, i16, i32, i64, i128;
+}
+
+impl<S, T> Cast<Wrapping<T>> for Wrapping<S> where S: Cast<T> {
+    #[inline(always)]
+    fn cast(self) -> Wrapping<T> { Wrapping(self.0.cast()) }
 }
 
