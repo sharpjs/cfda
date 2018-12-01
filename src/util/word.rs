@@ -17,10 +17,12 @@
 use std::fmt::Debug;
 use std::hash::Hash;
 use std::ops::*;
+use crate::util::Cast;
 
 /// Trait for machine word types.
 pub trait Word: Copy + Eq + Ord + Hash + Debug + 'static
     + From    <u8>
+    + Cast    <u64>
 //  + Neg     <Output=Self>
     + Not     <Output=Self>
     + Mul     <Output=Self>     + MulAssign    <Self>
@@ -39,9 +41,8 @@ pub trait Word: Copy + Eq + Ord + Hash + Debug + 'static
     const ONE:  Self;
     const MAX:  Self;
 
-    fn to_usize(self) -> usize;
-
-    fn to_u64(self) -> u64;
+    // Using u64 for LMA, so this is required.
+    fn to_u64(self) -> u64 { self.cast() }
 
     fn checked_add(self, Self) -> Option<Self>;
 
@@ -54,15 +55,10 @@ impl Word for u8 {
     const ONE:  Self =    1;
     const MAX:  Self = 0xFF;
 
-    #[inline(always)]
-    fn to_usize(self) -> usize {
-        self as usize
-    }
-
-    #[inline(always)]
-    fn to_u64(self) -> u64 {
-        self as u64
-    }
+    //#[inline(always)]
+    //fn to_u64(self) -> u64 {
+    //    self as u64
+    //}
 
     #[inline(always)]
     fn checked_add(self, other: Self) -> Option<Self> {
@@ -82,16 +78,6 @@ impl Word for u16 {
     const MAX:  Self = 0xFFFF;
 
     #[inline(always)]
-    fn to_usize(self) -> usize {
-        self as usize
-    }
-
-    #[inline(always)]
-    fn to_u64(self) -> u64 {
-        self as u64
-    }
-
-    #[inline(always)]
     fn checked_add(self, other: Self) -> Option<Self> {
         self.checked_add(other)
     }
@@ -109,16 +95,6 @@ impl Word for u32 {
     const MAX:  Self = 0xFFFF_FFFF;
 
     #[inline(always)]
-    fn to_usize(self) -> usize {
-        self as usize
-    }
-
-    #[inline(always)]
-    fn to_u64(self) -> u64 {
-        self as u64
-    }
-
-    #[inline(always)]
     fn checked_add(self, other: Self) -> Option<Self> {
         self.checked_add(other)
     }
@@ -134,16 +110,6 @@ impl Word for u64 {
     const ZERO: Self =                     0;
     const ONE:  Self =                     1;
     const MAX:  Self = 0xFFFF_FFFF_FFFF_FFFF;
-
-    #[inline(always)]
-    fn to_usize(self) -> usize {
-        self as usize
-    }
-
-    #[inline(always)]
-    fn to_u64(self) -> u64 {
-        self
-    }
 
     #[inline(always)]
     fn checked_add(self, other: Self) -> Option<Self> {
