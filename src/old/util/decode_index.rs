@@ -124,13 +124,13 @@ impl<T> DecodeIndex<T> where T: DecodeItem {
     //    I: Iterator<Item=T::Word>,
     //{
     //    let mut node = self;
-
+    //
     //    loop {
     //        let word = match words.next() {
     //            None    => return None,
     //            Some(w) => w,
     //        };
-
+    //
     //        loop {
     //            match node.lookup(word) {
     //                DecodeIndexResult::Fail          => return None,
@@ -141,7 +141,7 @@ impl<T> DecodeIndex<T> where T: DecodeItem {
     //        }
     //    }
     //}
-    //                                 
+
     //fn lookup(&self, word: T::Word) -> DecodeIndexResult<T> {
     //    panic!()
     //}

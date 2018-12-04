@@ -17,6 +17,40 @@
 use crate::arch::Arch;
 use crate::util::Word;
 
+//         potentially decoded
+// done    |   decoding         future
+// ........uuuu********xxxxxxxxx????????
+// |       |   |       |        |       |
+// |       |   |       |        |       end of block
+// |       |   |       |        end of previous decoding attempt (not needed?)
+// |       |   |       next in current decoding attempt
+// |       |   start of current decoding attempt
+// |       undecodable, but not yet settled on what it is
+// start of block
+//
+// buffer: &'a [A::Data]    (*A::Data, usize)
+// done:   usize
+// start:  usize
+// next:   usize
+//
+// cursor: Cursor<A::Data>
+//  - start of block
+//  - end of block
+//  - pos of not yet finalized decoding
+//
+// attempt: Cursor<A::Data>
+//  - start of current attempt
+//  - end of block
+//  - pos of next in decoding attempt
+
+pub struct Block<'a, A: Arch> {
+    bytes: &'a [u8],
+    region: Region<A>,
+}
+
+pub struct Cursor<'a, A: Arch> {
+}
+
 /// A description of a memory region.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub struct Region<A: Arch> {
@@ -44,7 +78,12 @@ pub enum RegionKind {
 impl<A> Region<A> where A: Arch {
     /// Creates a new `Region`.
     pub fn new(lma: u64, vma: A::Addr, len: A::Addr, kind: RegionKind) -> Self {
-        //if vma.checked_add(len).is_none() { panic!() }
+        if lma.checked_add(len.to_u64()).is_none() {
+            panic!("Region LMA would overflow.")
+        }
+        if vma.checked_add(len).is_none() {
+            panic!("Region VMA would overflow.")
+        }
         Self { lma, vma, len, kind }
     }
  
@@ -108,14 +147,14 @@ mod tests {
     #[test]
     #[should_panic]
     pub fn end_lma_out_of_range() {
-        let region = Region::<A>  { lma: 0x2000, vma: 0x3000, len: u64::max_value(), kind: C };
+        let region = Region::<A> { lma: 0x2000, vma: 0x3000, len: u64::max_value(), kind: C };
         let addr   = region.end_lma();
     }
     
     #[test]
     #[should_panic]
     pub fn end_vma_out_of_range() {
-        let region = Region::<A>  { lma: 0x2000, vma: 0x3000, len: u64::max_value(), kind: C };
+        let region = Region::<A> { lma: 0x2000, vma: 0x3000, len: u64::max_value(), kind: C };
         let addr   = region.end_vma();
     }
 }
