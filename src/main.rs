@@ -17,18 +17,6 @@
 #![allow(dead_code)]
 #![allow(unused_variables)]
 
-//extern crate num_bigint;
-//extern crate num_traits;
-
-//mod arch;
-//mod ast;
-//mod cf;
-//mod fmt;
-//mod io;
-//mod mem;
-//mod ops;
-//mod util;
-
 fn main() {
     println!("Hello, world!");
 }
