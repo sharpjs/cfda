@@ -52,49 +52,49 @@ pub trait Endian {
 }
 
 macro_rules! impl_endian_int {
-    { $( $t:ident ),* } => {
-        $(
-            /// Converts `self` from the target's byte order to the given byte order.
-            impl Endian for $t {
-                fn to_order(self, order: ByteOrder) -> Self {
-                    match order {
-                        LE => self.to_le(),
-                        BE => self.to_be(),
-                    }
-                }
-
-                /// Converts a value from the given byte order to the target's byte order.
-                fn from_order(order: ByteOrder, x: Self) -> Self {
-                    match order {
-                        LE => $t::from_le(x),
-                        BE => $t::from_be(x),
-                    }
+    { $( $t:ident ),* } => {$(
+        /// Converts `self` from the target's byte order to the given byte order.
+        impl Endian for $t {
+            #[inline]
+            fn to_order(self, order: ByteOrder) -> Self {
+                match order {
+                    LE => self.to_le(),
+                    BE => self.to_be(),
                 }
             }
-        )*
-    }
+
+            /// Converts a value from the given byte order to the target's byte order.
+            #[inline]
+            fn from_order(order: ByteOrder, x: Self) -> Self {
+                match order {
+                    LE => $t::from_le(x),
+                    BE => $t::from_be(x),
+                }
+            }
+        }
+    )*}
 }
 
 macro_rules! impl_endian_float {
-    { $( $t:ident : $i:ident ),* } => {
-        $(
-            /// Converts `self` from the target's byte order to the given byte order.
-            impl Endian for $t {
-                fn to_order(self, order: ByteOrder) -> Self {
-                    let mut i: $i = unsafe { transmute(self) };
-                    i = i.to_order(order);
-                    unsafe { transmute(i) }
-                }
-
-                /// Converts a value from the given byte order to the target's byte order.
-                fn from_order(order: ByteOrder, x: Self) -> Self {
-                    let mut i: $i = unsafe { transmute(x) };
-                    i = $i::from_order(order, i);
-                    unsafe { transmute(i) }
-                }
+    { $( $t:ident : $i:ident ),* } => {$(
+        /// Converts `self` from the target's byte order to the given byte order.
+        impl Endian for $t {
+            #[inline]
+            fn to_order(self, order: ByteOrder) -> Self {
+                let mut i: $i = unsafe { transmute(self) };
+                i = i.to_order(order);
+                unsafe { transmute(i) }
             }
-        )*
-    }
+
+            /// Converts a value from the given byte order to the target's byte order.
+            #[inline]
+            fn from_order(order: ByteOrder, x: Self) -> Self {
+                let mut i: $i = unsafe { transmute(x) };
+                i = $i::from_order(order, i);
+                unsafe { transmute(i) }
+            }
+        }
+    )*}
 }
 
 impl_endian_int! { u16, i16, u32, i32, u64, i64, usize, isize }
