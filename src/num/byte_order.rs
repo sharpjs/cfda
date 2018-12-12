@@ -29,7 +29,7 @@ pub trait ByteOrderedMut: ByteOrdered {
 }
 
 /// Specifies the order of bytes within an encoded numeric value.
-#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub enum ByteOrder {
     /// Little-endian byte order: least to most significant.
     LittleEndian,
