@@ -14,6 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
-pub mod cast;
-pub mod prim;
+use crate::mem::cast::ReadCast;
+use crate::num::{ByteOrdered, Endian};
+
+pub trait ReadPrimitive : ByteOrdered  {
+
+    fn bytes(&mut self) -> &mut &[u8];
+
+    fn read_u16(&mut self) -> Option<u16> {
+        let value = self.bytes().read::<u16>()?;
+        let order = self.byte_order();
+        Some(u16::from_order(order, value))
+    }
+}
 
