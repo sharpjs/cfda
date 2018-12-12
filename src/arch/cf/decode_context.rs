@@ -16,35 +16,32 @@
 
 // TODO: Make note about using u32 for op + ext word.
 
+use crate::mem::cast::TakeCast;
+
 #[derive(Clone, Copy, Debug)]
-pub struct DecodeContext<I> {
+pub struct DecodeContext<'a> {
     bits: u32,
-    more: I
+    rest: &'a [u8],
 }
 
-impl<I> DecodeContext<I> where I: Iterator<Item=u16> {
-    pub fn new(mut words: I) -> Option<Self> {
-        let word = match words.next() {
-            Some(w) => w as u32,
-            None    => return None,
-        };
-        Some(Self { bits: word, more: words })
+impl<'a> DecodeContext<'a> {
+    pub fn new(bytes: &'a [u8]) -> Option<Self> {
+        let (word, rest) = bytes.take::<u16>()?;
+        Some(Self { bits: word as u32, rest })
     }
 
-    pub fn advance(&mut self) -> bool {
-        let word = match self.more.next() {
-            Some(w) => w as u32,
-            None    => return false,
-        };
-        self.bits |= word << 16;
-        true
+    pub fn next(&self) -> Option<Self> {
+        let (word, rest) = self.rest.take::<u16>()?;
+        Some(Self { bits: self.bits | (word as u32) << 16, rest })
     }
 
     #[inline(always)]
     pub fn bits(&self) -> u32 { self.bits }
 
+    #[inline(always)]
+    pub fn rest(&self) -> &'a [u8] { self.rest }
+
     // check with mask
-    //
     // extract bit field
 }
 
