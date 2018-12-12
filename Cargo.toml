@@ -2,4 +2,5 @@
 name    = "cfda"
 version = "0.0.0"
 authors = ["Jeff Sharp <jeff.sharp@git>"]
+edition = "2018"
 
