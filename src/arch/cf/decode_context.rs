@@ -16,7 +16,7 @@
 
 // TODO: Make note about using u32 for op + ext word.
 
-use crate::mem::cast::TakeCast;
+use crate::mem::TakeCast;
 
 #[derive(Clone, Copy, Debug)]
 pub struct DecodeContext<'a> {

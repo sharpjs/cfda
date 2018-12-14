@@ -14,8 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
-use crate::mem::cast::ReadCast;
-use crate::mem::{ByteOrdered, Endian};
+use crate::mem::{ByteOrdered, Endian, ReadCast};
 
 macro_rules! fn_read {
     { $( $n:ident : $t:ident ; )* } => {$(

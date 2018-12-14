@@ -14,10 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
-pub mod cast;
-pub mod prim;
-
 mod byte_order;
+mod cast;
+mod prim;
 
 pub use self::byte_order::*;
+pub use self::cast::*;
+pub use self::prim::*;
 
