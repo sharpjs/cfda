@@ -17,3 +17,7 @@
 pub mod cast;
 pub mod prim;
 
+mod byte_order;
+
+pub use self::byte_order::*;
+
