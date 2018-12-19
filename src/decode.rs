@@ -37,3 +37,64 @@ pub trait Decode {
         -> Option<(Self::Output, &[Self::Unit])>;
 }
 
+// inconsistencies:
+//
+// unit    --[read in byte order]--> word
+//            ^^^^ and make backtrackable
+// context ------------------------> context  (unchanged)
+// output  ------------------------> output   (unchanged)
+//
+// DecodeCursor requirements:
+//   - input a buffer of Unit (perhaps u8)
+//   - readable in some word size
+//   - either backtrackable ... or (prefarably) captures reads already performed
+//   - get buffer of remaining units
+//   ... if copy, it can backtrack
+//
+// could use 32 (u16,u16) for m68k "word"
+
+pub trait DecodeCursor {
+    type Unit;
+    type Opword: Copy;
+
+    // gets the buf of remaining units
+    fn buffer(&self) -> &[Self::Unit];
+
+    // gets the opword that has been read
+    fn opword(&self) -> Self::Opword;
+
+    // reads more into the opword
+    fn read(&mut self) -> Option<Self::Opword>;
+}
+
+pub struct M68kDecodeCursor<'a> {
+    buffer: &'a [u8],
+    opword: u32,
+}
+
+impl<'a> DecodeCursor for M68kDecodeCursor<'a> {
+    type Unit   = u8;
+    type Opword = u32;
+
+    fn buffer(&self) -> &[u8] {
+        self.buffer
+    }
+
+    fn opword(&self) -> u32 {
+        self.opword
+    }
+
+    fn read(&mut self) -> Option<u32> {
+        // read extension word
+        let (read, next) = /* self.buffer.read_u16_be()? */ (0x1234u16, &self.buffer[4..]);
+
+        // put extension word in high half of opword
+        let opword = self.opword | (read as u32) << 16;
+
+        // advance
+        self.opword = opword;
+        self.buffer = next;
+        Some(opword)
+    }
+} 
+
