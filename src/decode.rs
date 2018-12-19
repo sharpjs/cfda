@@ -68,12 +68,12 @@ pub trait DecodeCursor: Copy {
 }
 
 #[derive(Copy, Clone, Eq, PartialEq, Debug)]
-pub struct M68kDecodeCursor<'a> {
+pub struct CfDecodeCursor<'a> {
     buffer: &'a [u8],
     opword: u32,
 }
 
-impl<'a> DecodeCursor for M68kDecodeCursor<'a> {
+impl<'a> DecodeCursor for CfDecodeCursor<'a> {
     type Unit   = u8;
     type Opword = u32;
 
