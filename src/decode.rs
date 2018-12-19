@@ -53,7 +53,7 @@ pub trait Decode {
 //
 // could use 32 (u16,u16) for m68k "word"
 
-pub trait DecodeCursor {
+pub trait DecodeCursor: Copy {
     type Unit;
     type Opword: Copy;
 
@@ -67,6 +67,7 @@ pub trait DecodeCursor {
     fn read(&mut self) -> Option<Self::Opword>;
 }
 
+#[derive(Copy, Clone, Eq, PartialEq, Debug)]
 pub struct M68kDecodeCursor<'a> {
     buffer: &'a [u8],
     opword: u32,
