@@ -18,6 +18,7 @@
 #![allow(unused_variables)]
 
 mod arch;
+mod decode;
 mod mem;
 mod num;
 
