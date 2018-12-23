@@ -14,47 +14,45 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
-use util::DecodeItem;
-
 /// ColdFire instruction specification.
-#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
-pub struct Instruction {                                            // 64-bit    | 32-bit
+#[derive(Clone, Copy, Debug)]
+pub struct Instruction {
     /// Preferred mnemonic.
-    pub name: &'static str,                                         // +16 => 16 | + 8 =>  8 (bytes)
-
-//  /// Simulation runner.
-//  pub run: fn(/*ctx: &mut RunContext*/),                          // + 8 => 24 | + 4 => 12 
+    pub name: &'static str,
 }
 
-/// ColdFire instruction encoding specification.
-#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
-pub struct Encoding {                                                     // 64-bit    | 32-bit
+/// ColdFire instruction one-word encoding specification.
+#[derive(Clone, Copy, Debug)]
+pub struct WordEncoding {
+    /// Values of required bits in opword.
+    pub bits: u16,
+ 
+    /// Mask of required bits in opword.
+    pub mask: u16,
+
+    /// Operand kinds and bit positions.
+    pub operands: [(u8, u8); 2],
+
+    /// Flags (architectures, arity, immediate size)
+    pub flags: u16,
+}
+
+/// ColdFire instruction two-word encoding specification.
+#[derive(Clone, Copy, Debug)]
+pub struct LongEncoding {
     /// Values of required bits in opword and extension word.
-    pub bits: (u16, u16),                                           // + 4 => 12 | + 4 =>  8 
+    /// The extension word portion occupies the upper 16 bits.
+    pub bits: u32,
  
     /// Mask of required bits in opword and extension word.
-    pub mask: (u16, u16),                                           // + 4 => 16 | + 4 => 12
+    /// The extension word portion occupies the upper 16 bits.
+    pub mask: u32,
 
-    /// Number of operands.
-    pub arity: u8,                                                  // + 1 => 17 | + 1 => 13
+    /// Operand kinds and bit positions.
+    pub operands: [(u8, u8); 5],
 
-//  /// Size of operands.
-//  pub size: Size,                                                 // + 1 => 18 | + 1 => 14
-//
-//  /// Operand kinds and positions.                
-//  pub operands: [Operand; 5],                                     // +10 => 28 | +10 => 24
-
-//  /// Flags (supported architectures, extension word usage)
-//  pub flags: Flags,                                               // + 4 => 32 | + 4 => 28
-}
-
-impl DecodeItem for Instruction {
-    type Word   = u16;
-    type Output = &'static Instruction;
-
-    fn try_decode(&self, word: u16) -> Option<&'static Instruction> {
-        Some(&ADDL)
-    }
+    /// Flags (architectures, arity, immediate size)
+    pub flags: u16,
 }
 
 // Source: ColdFire Family Programmer’s Reference Manual, Rev. 3
@@ -241,8 +239,4 @@ pub static SVSB:     Instruction = Instruction { name: "svs.b"     };
 
 // TODO: Multiply-Accumulate Instructions
 // TODO: Floating-Point Instructions
-
-#[cfg(test)]
-mod tests {
-}
 
