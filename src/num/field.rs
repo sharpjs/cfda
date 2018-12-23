@@ -18,35 +18,35 @@ use std::ops::{Shl, Shr, BitAnd, BitOr};
 use super::Cast;
 
 /// Trait for reading bit fields within numbers.
-pub trait Field<P, M> {
+pub trait Field<P, V> {
     /// Gets the value of the bit field at position `pos`, masked with `mask`.
-    fn field(self, pos: P, mask: M) -> M;
+    fn field(self, pos: P, mask: V) -> V;
 }
 
 /// Trait for writing bit fields within numbers.
-pub trait SetField<P, M> {
+pub trait SetField<P, V> {
     /// Sets the value of the bit field at position `pos`, masked with `mask`.
-    fn set_field(self, pos: P, mask: M, value: M) -> Self;
+    fn set_field(self, pos: P, mask: V, value: V) -> Self;
 }
 
-impl<T, P, M> Field<P, M> for T
+impl<T, P, V> Field<P, V> for T
 where
-    T: Shr<P, Output=T> + Cast<M>,
-    M: BitAnd<Output=M>
+    T: Shr<P, Output=T> + Cast<V>,
+    V: BitAnd<Output=V>
 {
     #[inline(always)]
-    fn field(self, pos: P, mask: M) -> M {
+    fn field(self, pos: P, mask: V) -> V {
         (self >> pos).cast() & mask
     }
 }
 
-impl<T, P, M> SetField<P, M> for T
+impl<T, P, V> SetField<P, V> for T
 where
     T: Shl<P, Output=T> + BitOr<Output=T>,
-    M: BitAnd<Output=M> + Cast<T>
+    V: BitAnd<Output=V> + Cast<T>
 {
     #[inline(always)]
-    fn set_field(self, pos: P, mask: M, value: M) -> Self {
+    fn set_field(self, pos: P, mask: V, value: V) -> Self {
         (value & mask).cast() << pos | self
     }
 }
