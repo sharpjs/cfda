@@ -19,7 +19,7 @@ use super::Ident;
 /// A slot containing a value and/or an identifier that resolves to that value.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub enum Slot<V> {
-    /// Unresolved identifier
+    /// Unresolved identifier.
     Ident(Ident),
 
     /// Identifier resolved to a value.

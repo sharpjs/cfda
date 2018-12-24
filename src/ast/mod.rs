@@ -14,16 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
-#![allow(dead_code)]
-#![allow(unused_variables)]
+mod ident;
+mod node;
+mod slot;
 
-mod arch;
-mod ast;
-mod decode;
-mod mem;
-mod num;
-
-fn main() {
-    println!("Hello, world!");
-}
+pub use self::ident::*;
+pub use self::node::*;
+pub use self::slot::*;
 
