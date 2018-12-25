@@ -16,3 +16,14 @@
 
 mod cf;
 
+use std::fmt::Debug;
+
+/// An instruction set architecture.
+pub trait Arch {
+    /// An operation or instruction in the architecture.
+    type Op: Debug;
+
+    /// An operation argument or operand in the architecture.
+    type Arg: Debug;
+}
+
