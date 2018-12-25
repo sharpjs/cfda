@@ -15,9 +15,11 @@
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
 mod ast;
+mod decode;
 mod inst;
 
 pub use self::ast::*;
+pub use self::decode::*;
 pub use self::inst::*;
 
 use super::Arch;
