@@ -14,26 +14,3 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
-use crate::mem::{ByteOrdered, Endian, ReadCast};
-
-macro_rules! fn_read {
-    { $( $n:ident : $t:ident ; )* } => {$(
-        fn $n(&mut self) -> Option<$t> {
-            let value = self.bytes().read::<$t>()?;
-            let order = self.byte_order();
-            Some($t::from_order(order, value))
-        }
-    )*}
-}
-
-pub trait ReadPrimitive : ByteOrdered  {
-
-    fn bytes(&mut self) -> &mut &[u8];
-
-    fn_read! {
-        //read_u8:  u8;  read_i8:  i8;
-        read_u16: u16; read_i16: i16;
-        read_u32: u32; read_i32: i32;
-    }
-}
-
