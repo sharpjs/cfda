@@ -14,25 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
-mod ast;
-mod inst;
-
-pub use self::ast::*;
-pub use self::inst::*;
-
-use super::Arch;
-
-use crate::ast::{Block, Stmt};
-
-/// The ColdFire instruction set architecture.
-#[derive(Debug)]
-pub struct Cf;
-
-impl Arch for Cf {
-    type Op  = CfOp;
-    type Arg = CfArg;
+/// A ColdFire assembly operation.
+#[derive(Clone, Eq, PartialEq, Debug)]
+pub enum CfOp {
+    Halt,
+    Nop,
+    //...
 }
 
-type CfBlock = Block<Cf>;
-type CfStmt  = Stmt <Cf>;
+/// A ColdFire assembly argument.
+#[derive(Clone, Eq, PartialEq, Debug)]
+pub enum CfArg {
+    Foo,
+    Bar
+    //...kk
+}
 
