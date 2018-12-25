@@ -14,9 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
-mod decode_context;
 mod inst;
 
-pub use self::decode_context::*;
 pub use self::inst::*;
 
