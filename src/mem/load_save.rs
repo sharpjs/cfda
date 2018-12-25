@@ -15,47 +15,68 @@
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
 use std::mem::size_of;
+use crate::mem::{ByteOrder, Endian};
 
-/// Ability to load and save arbitrary copyable values in a buffer.
-pub trait LoadSaveRaw {
-    /// Attempts to load a `T` value from the buffer.
+/// Trait to load values from buffers of type `B` given formats of type `F`.
+pub trait Load<B: ?Sized, F=()>: Sized {
+    /// Attempts to load a value from the buffer `buf` using the format `fmt`.
     ///
-    /// If the buffer length is sufficient to represent a `T` value, this
-    /// method loads a `T` value from the first elements of the buffer and
+    /// If the buffer length is sufficient to represent the `Self` type, this
+    /// method loads a `Self` value from the first elements of the buffer and
     /// returns both the value and a slice of the remaining elements.
     /// Otherwise, this method returns `None`.
-    fn load<T: Copy>(&self) -> Option<(T, &Self)>;
-
-    /// Attempts to save the given `T` value into the buffer.
-    ///
-    /// If the buffer length is sufficient to represent a `T` value, this
-    /// method saves the given `T` value in the first elements of the buffer
-    /// and returns a slice of the remaining elements.  Otherwise, this method
-    /// returns `None`.
-    fn save<T: Copy>(&mut self, val: T) -> Option<&mut Self>;
+    fn load(buf: &B, fmt: F) -> Option<(Self, &B)>;
 }
 
-impl LoadSaveRaw for [u8] {
+/// Trait to save values into buffers of type `B` given formats of type `F`.
+pub trait Save<B: ?Sized, F=()> {
+    /// Attempts to save the value in the buffer `buf` using the format `fmt`.
+    ///
+    /// If the buffer length is sufficient to represent the `Self` type, this
+    /// method saves `self` in the first elements of the buffer and returns a
+    /// slice of the remaining elements.  Otherwise, this method returns
+    /// `None`.
+    fn save<'a>(&self, buf: &'a mut B, fmt: F) -> Option<&'a mut B>;
+}
+
+impl<T> Load<[u8]> for T where T: Copy {
     #[inline]
-    fn load<T: Copy>(&self) -> Option<(T, &[u8])> {
+    fn load(buf: &[u8], _: ()) -> Option<(T, &[u8])> {
         let size = size_of::<T>();
-        if self.len() >= size {
-            let val = unsafe { *(self.as_ptr() as *const T) };
-            Some((val, &self[size..]))
+        if buf.len() >= size {
+            let val = unsafe { *(buf.as_ptr() as *const T) };
+            Some((val, &buf[size..]))
         } else {
             None
         }
     }
+}
 
+impl<T> Save<[u8]> for T where T: Copy {
     #[inline]
-    fn save<T: Copy>(&mut self, val: T) -> Option<&mut [u8]> {
+    fn save<'a>(&self, buf: &'a mut [u8], _: ()) -> Option<&'a mut [u8]> {
         let size = size_of::<T>();
-        if self.len() >= size {
-            unsafe { *(self.as_ptr() as *mut T) = val };
-            Some(&mut self[size..])
+        if buf.len() >= size {
+            unsafe { *(buf.as_ptr() as *mut T) = *self };
+            Some(&mut buf[size..])
         } else {
             None
         }
+    }
+}
+
+impl<T> Load<[u8], ByteOrder> for T where T: Copy + Endian {
+    #[inline]
+    fn load(buf: &[u8], fmt: ByteOrder) -> Option<(T, &[u8])> {
+        let (val, rem) = T::load(buf, ())?;
+        Some((T::from_order(fmt, val), rem))
+    }
+}
+
+impl<T> Save<[u8], ByteOrder> for T where T: Copy + Endian {
+    #[inline]
+    fn save<'a>(&self, buf: &'a mut [u8], fmt: ByteOrder) -> Option<&'a mut [u8]> {
+        self.to_order(fmt).save(buf, ())
     }
 }
 
@@ -64,35 +85,35 @@ mod tests {
     use super::*;
 
     #[test]
-    fn load_some() {
+    fn load_raw_some() {
         let buf = [0x12, 0x34, 0x56];
-        let (val, rem) = buf.load().unwrap();
+        let (val, rem) = u16::load(&buf[..], ()).unwrap();
         let val = u16::from_be(val);
         assert_eq!(val, 0x1234);
         assert_eq!(rem, [0x56]);
     }
 
     #[test]
-    fn load_none() {
+    fn load_raw_none() {
         let buf = [0x12];
-        let ret = buf.load::<u16>();
+        let ret = u16::load(&buf[..], ());
         assert_eq!(ret, None);
     }
 
     #[test]
-    fn save_some() {
+    fn save_raw_some() {
         let mut buf = [0x00, 0x00, 0x56];
         let val = 0x1234_u16.to_be();
-        let rem = buf.save(val).unwrap();
+        let rem = val.save(&mut buf[..], ()).unwrap();
         assert_eq!(rem, [            0x56]);
         assert_eq!(buf, [0x12, 0x34, 0x56]);
     }
 
     #[test]
-    fn save_none() {
+    fn save_raw_none() {
         let mut buf = [0x00];
         let val = 0x1234_u16.to_be();
-        let ret = buf.save(val);
+        let ret = val.save(&mut buf[..], ());
         assert_eq!(ret, None);
         assert_eq!(buf, [0x00]);
     }
