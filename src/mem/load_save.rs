@@ -82,6 +82,7 @@ impl<T> Save<[u8], ByteOrder> for T where T: Copy + Endian {
 
 #[cfg(test)]
 mod tests {
+    use crate::mem::BE;
     use super::*;
 
     #[test]
@@ -94,9 +95,24 @@ mod tests {
     }
 
     #[test]
+    fn load_endian_some() {
+        let buf = [0x12, 0x34, 0x56];
+        let (val, rem) = u16::load(&buf[..], BE).unwrap();
+        assert_eq!(val, 0x1234);
+        assert_eq!(rem, [0x56]);
+    }
+
+    #[test]
     fn load_raw_none() {
         let buf = [0x12];
         let ret = u16::load(&buf[..], ());
+        assert_eq!(ret, None);
+    }
+
+    #[test]
+    fn load_endian_none() {
+        let buf = [0x12];
+        let ret = u16::load(&buf[..], BE);
         assert_eq!(ret, None);
     }
 
@@ -110,10 +126,28 @@ mod tests {
     }
 
     #[test]
+    fn save_endian_some() {
+        let mut buf = [0x00, 0x00, 0x56];
+        let val = 0x1234_u16;
+        let rem = val.save(&mut buf[..], BE).unwrap();
+        assert_eq!(rem, [            0x56]);
+        assert_eq!(buf, [0x12, 0x34, 0x56]);
+    }
+
+    #[test]
     fn save_raw_none() {
         let mut buf = [0x00];
         let val = 0x1234_u16.to_be();
         let ret = val.save(&mut buf[..], ());
+        assert_eq!(ret, None);
+        assert_eq!(buf, [0x00]);
+    }
+
+    #[test]
+    fn save_endian_none() {
+        let mut buf = [0x00];
+        let val = 0x1234_u16;
+        let ret = val.save(&mut buf[..], BE);
         assert_eq!(ret, None);
         assert_eq!(buf, [0x00]);
     }
