@@ -14,3 +14,27 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
+use crate::arch::Arch;
+use super::Ident;
+use super::Slot;
+
+/// A block of assembly statements.
+#[derive(Debug)]
+pub struct Block<A: Arch> {
+    /// Assembly statements.
+    pub stmts: Vec<Stmt<A>>,
+}
+
+/// An assembly statement.
+#[derive(Debug)]
+pub struct Stmt<A: Arch> {
+    /// Labels preceding the statement.
+    pub labels: Vec<Ident>,
+
+    /// Operation requested by the statement.
+    pub op: Slot<A::Op>,
+
+    /// Arguments to the operation.
+    pub args: Vec<Slot<A::Arg>>,
+}
+
