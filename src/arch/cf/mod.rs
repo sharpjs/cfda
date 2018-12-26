@@ -16,10 +16,12 @@
 
 mod ast;
 mod decode;
+mod flags;
 mod inst;
 
 pub use self::ast::*;
 pub use self::decode::*;
+pub use self::flags::*;
 pub use self::inst::*;
 
 use super::Arch;
