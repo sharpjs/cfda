@@ -14,11 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
+mod arg;
 mod ast;
 mod decode;
 mod flags;
 mod inst;
 
+pub use self::arg::*;
 pub use self::ast::*;
 pub use self::decode::*;
 pub use self::flags::*;
