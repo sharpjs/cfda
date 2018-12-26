@@ -15,6 +15,7 @@
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
 use super::CfFlags;
+use super::Arg;
 
 /// ColdFire instruction specification.
 #[derive(Clone, Copy, Debug)]
@@ -33,7 +34,7 @@ pub struct WordEncoding {
     pub mask: u16,
 
     /// Operand kinds and bit positions.
-    pub operands: [(u8, u8); 2],
+    pub operands: [Arg; 2],
 
     /// Flags (arity, hardware support)
     pub flags: CfFlags,
@@ -51,7 +52,7 @@ pub struct LongEncoding {
     pub mask: u32,
 
     /// Operand kinds and bit positions.
-    pub operands: [(u8, u8); 5],
+    pub operands: [Arg; 5],
 
     /// Flags (arity, hardware support)
     pub flags: CfFlags,
