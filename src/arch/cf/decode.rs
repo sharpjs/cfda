@@ -26,7 +26,8 @@ pub struct CfContext;
 
 #[derive(Copy, Clone, Debug)]
 pub struct CfDecoder;
-impl Decode<u8, CfContext> for CfDecoder { type Output = CfStmt;
+impl Decode<[u8], CfContext> for CfDecoder {
+    type Output = CfStmt;
 
     fn decode<'a>(&self, buf: &'a [u8], ctx: &CfContext) -> Option<(CfStmt, &'a [u8])> {
         let (word, rest) = u16::load(buf, BE)?;
@@ -46,7 +47,7 @@ impl Opword for CfDecode16 {
     fn opword(&self) -> u16 { self.opword }
 }
 
-impl Decode<u8, CfDecode16> for WordEncoding {
+impl Decode<[u8], CfDecode16> for WordEncoding {
     type Output = CfStmt;
 
     fn decode<'a>(&self, buf: &'a [u8], ctx: &CfDecode16) -> Option<(CfStmt, &'a [u8])> {
@@ -67,7 +68,7 @@ struct CfDecode32 {
 
 pub struct CfDecoder;
 
-impl Decode<u8> for CfDecoder {
+impl Decode<[u8]> for CfDecoder {
     type Output = ();
 
     fn decode(&self, buf: &[u8], ctx: &()) -> Option<((), &[u8])> {

@@ -18,23 +18,23 @@ use crate::num::Field;
 
 /// Trait for decoding machine code.
 ///
-/// Type `U` is the unit of storage of machine code.  This type typically is
-/// `u8` for byte-oriented architectures and the word type for word-oriented
+/// Type `M` represents machine code in memory.  This type typically is `[u8]`
+/// for byte-oriented architectures and `[$word]` for word-oriented
 /// architectures.
 ///
-/// Type `C` is the contextual data readable during decoding.  This can be
-/// anything from relatively static configuration data to ephemeral partial
-/// decode state during a nested decode.
-pub trait Decode<U, C=()> {
+/// Type `C` is contextual data readable during decoding.  This can be anything
+/// from static configuration data to ephemeral partial decode state during a
+/// nested decode.
+pub trait Decode<M: ?Sized, C=()> {
     /// The result of successful decoding.
     type Output;
 
-    /// Attempts to decode the machine code in `buf`, given the context `ctx`.
+    /// Attempts to decode the machine code in `mem`, given the context `ctx`.
     ///
     /// If decoding is successful, this method returns a tuple consisting of
     /// the decoded result and the remaining machine code, if any.  If decoding
     /// was not successful, this method returns `None`.
-    fn decode<'a>(&self, buf: &'a [U], ctx: &C) -> Option<(Self::Output, &'a [U])>;
+    fn decode<'a>(&self, mem: &'a M, ctx: &C) -> Option<(Self::Output, &'a M)>;
 }
 
 /// Trait to obtain an opword from a decoding context.
@@ -93,15 +93,16 @@ pub enum DecodeIndex<T: 'static> {
     Trie16(&'static [DecodeIndex<T>; 16], u8),
 }
 
-impl<T, U, C> Decode<U, C> for DecodeIndex<T>
+impl<T, M, C> Decode<M, C> for DecodeIndex<T>
 where
-    T: Decode<U, C>,
+    T: Decode<M, C>,
+    M: ?Sized,
     C: Opword,
     C::Opword: Field<u8, u8>
 {
     type Output = T::Output;
 
-    fn decode<'a>(&self, buf: &'a [U], ctx: &C) -> Option<(T::Output, &'a [U])> {
+    fn decode<'a>(&self, mem: &'a M, ctx: &C) -> Option<(T::Output, &'a M)> {
         use self::DecodeIndex::*;
 
         enum Plan<T: 'static> {
@@ -111,7 +112,7 @@ where
 
         let plan = match *self {
             Empty               => return None,
-            Leaf   (item)       => return item.decode(buf, ctx),
+            Leaf   (item)       => return item.decode(mem, ctx),
             Scan2  (nodes)      => Plan::Scan(nodes),
             Scan3  (nodes)      => Plan::Scan(nodes),
             Scan4  (nodes)      => Plan::Scan(nodes),
@@ -123,11 +124,11 @@ where
 
         match plan {
             Plan::Scan(nodes) => {
-                nodes.iter().find_map(|n| n.decode(buf, ctx))
+                nodes.iter().find_map(|n| n.decode(mem, ctx))
             },
             Plan::Seek(nodes, pos, mask) => {
                 let val = ctx.opword().field(pos, mask);
-                nodes[val as usize].decode(buf, ctx)
+                nodes[val as usize].decode(mem, ctx)
             },
         }
     }
