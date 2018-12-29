@@ -90,14 +90,6 @@ macro_rules! operands5 {
     { $a:ident, $b:ident, $c:ident, $d:ident, $e:ident } => {[ O::$a,   O::$b,   O::$c,   O::$d,   O::$e   ]};
 }
 
-macro_rules! count {
-    { $($x:tt)* } => { 0 $(+ one!($x))* }
-}
-
-macro_rules! one {
-    { $($x:tt)* } => { 1 }
-}
-
 // ColdFire instruction encodings table
 // Source: ColdFire Family Programmer’s Reference Manual, Rev. 3
 
