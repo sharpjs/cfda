@@ -14,13 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
-/// Bit position within opword or extension word.
-pub type BitPos = u8;
-
-/// Specifies the bit position and accepted forms of an argument/operand.
+/// ColdFire operand kinds and bit positions.
 #[allow(non_camel_case_types)]
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
-pub enum Arg {
+pub enum Operand {
     /// Operand not used.
     None,
 
@@ -41,53 +38,59 @@ pub enum Arg {
     // X: pc-relative + displacement + scaled index
     // I: immediate
 
-    /// Readable addressing mode (6 bits)
-    MdaipmdxnfDXI(BitPos),
+    /// Readable addressing mode (6 bits at 5:0)
+    MdaipmdxnfDXI0,
+/*
+    /// Writable addressing modes (6 bits at 5:0)
+    Mdaipmdxnf___0,
 
-    /// Writable addressing modes (6 bits)
-    Mdaipmdxnf___(BitPos),
+    /// Readable data addressing modes (6 bits at 5:0)
+    Md_ipmdxnfDXI0,
 
-    /// Readable data addressing modes (6 bits)
-    Md_ipmdxnfDXI(BitPos),
+    /// Writable data addressing modes (6 bits at 5:0)
+    Md_ipmdxnf___0,
 
-    /// Writable data addressing modes (6 bits)
-    Md_ipmdxnf___(BitPos),
+    /// Readable memory addressing modes without side effects (6 bits at 5:0)
+    M__i__dxnfDX_0,
+*/
+    /// Writable memory addressing modes (6 bits at 5:0)
+    M__ipmdxnf___0,
 
-    /// Readable memory addressing modes without side effects (6 bits)
-    M__i__dxnfDX_(BitPos),
+    /// Source modes for op with extension word (6 bits at 5:0)
+    Md_ipmd______0,
+/*
+    /// Address register indirect mode, potentially displaced (movem) (6 bits at 5:0)
+    M__i__d______0,
 
-    /// Writable memory addressing modes (6 bits)
-    M__ipmdxnf___(BitPos),
+    /// Data register or immediate modes (move to ccr/sr) (6 bits at 5:0)
+    Md__________I0,
+*/
+    /// Data register (3 bits at 2:0)
+    DataReg0,
 
-    /// Source modes for op with extension word (6 bits)
-    Md_ipmd______(BitPos),
+    /// Data register (3 bits at 11:9)
+    DataReg9,
 
-    /// Address register indirect mode, potentially displaced (movem) (6 bits)
-    M__i__d______(BitPos),
-
-    /// Data register or immediate modes (move to ccr/sr) (6 bits)
-    Md__________I(BitPos),
-
-    /// Data register (3 bits)
-    DataReg(BitPos),
-
+    /// Data register (3 bits at 30:28)
+    DataReg28,
+/*
     /// Data register, same one as previous operand (3 bits)
     DataRegSame(BitPos),
 
     /// Data register, different one from prevous operand (3 bits)
     DataRegDiff(BitPos),
 
-    /// Address register (3 bits)
-    AddrReg(BitPos),
+    /// Address register (3 bits at ?)
+    AddrReg?,
 
-    /// Data or address register (4 bits)
-    NormalReg(BitPos),
+    /// Data or address register (4 bits at ?)
+    NormalReg?,
 
-    /// Control register (12 bits)
-    CtlReg(BitPos),
+    /// Control register (12 bits at ?)
+    CtlReg?,
 
-    /// Debug control register (5 bits)
-    DbgReg(BitPos),
+    /// Debug control register (5 bits at ?)
+    DbgReg?,
 
     /// Condition code register (implicit)
     Ccr,
@@ -102,27 +105,28 @@ pub enum Arg {
     RegList,
 
     /// Cache selector (2 bits)
-    CacheSel(BitPos),
+    CacheSel?,
 
     /// Immediate (16 or 32 bits in extension words)
     Immediate,
 
-    /// Quick immediate (3 bits unsigned; 0 => 8)
-    Quick3(BitPos),
+    /// Quick immediate (3 bits unsigned; 0 => 8; at ?)
+    Quick3?,
 
-    /// Quick immediate (4 bits unsigned)
-    Quick4(BitPos),
+    /// Quick immediate (4 bits unsigned at ?)
+    Quick4?,
 
-    /// Quick immediate (8 bits signed)
-    Quick8(BitPos),
+    /// Quick immediate (8 bits signed at ?)
+    Quick8?,
 
-    /// PC-relative immediate offset (8 bits signed)
-    PcRel8(BitPos),
+    /// PC-relative immediate offset (8 bits signed at ?)
+    PcRel8?,
 
     /// PC-relative immediate offset (16 bits signed in extension word)
     PcRel16,
 
     /// PC-relative immediate offset (32 bits signed in extension words)
     PcRel32,
+*/
 }
 
