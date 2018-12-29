@@ -14,17 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
-mod arg;
 mod ast;
 mod decode;
+mod encoding;
 mod flags;
 mod inst;
+mod operand;
 
-pub use self::arg::*;
 pub use self::ast::*;
 pub use self::decode::*;
+pub use self::encoding::*;
 pub use self::flags::*;
 pub use self::inst::*;
+pub use self::operand::*;
 
 use super::Arch;
 

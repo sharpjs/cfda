@@ -18,8 +18,9 @@
 use crate::decode::*;
 use crate::decode::DecodeIndex::*;
 use crate::mem::{BE, Load};
+
+use super::encoding::*;
 use super::CfStmt;
-use super::inst::*;
 
 #[derive(Copy, Clone, Debug)]
 pub struct CfContext;
