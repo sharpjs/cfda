@@ -34,6 +34,15 @@ macro_rules! instructions {
     }
 }
 
+macro_rules! aliases {
+    { $( $name:expr => $id:ident; )* } =>
+    {
+        pub static ALIASES: [(&str, usize); count!($($name)*)] = [$(
+            ($name, Instructions::$id as usize)
+        ),*];
+    };
+}
+
 // ColdFire instructions table
 // Source: ColdFire Family Programmer’s Reference Manual, Rev. 3
 
@@ -222,4 +231,42 @@ instructions! {
     // TODO: Floating-Point Instructions
 }
 
+aliases! {
+    "bra.s" => BRAB;
+    "bsr.s" => BSRB;
+    "bhi.s" => BHIB;
+    "bls.s" => BLSB;
+    "bhs.s" => BHSB;
+    "blo.s" => BLOB;
+    "bne.s" => BNEB;
+    "beq.s" => BEQB;
+    "bvc.s" => BVCB;
+    "bvs.s" => BVSB;
+    "bpl.s" => BPLB;
+    "bmi.s" => BMIB;
+    "bge.s" => BGEB;
+    "blt.s" => BLTB;
+    "bgt.s" => BGTB;
+    "ble.s" => BLEB;
+
+    "bcc.s" => BHSB;
+    "bcs.s" => BLOB;
+    "bnz.s" => BNEB;
+    "bz.s"  => BEQB;
+
+    "bcc.b" => BHSB;
+    "bcs.b" => BLOB;
+    "bnz.b" => BNEB;
+    "bz.b"  => BEQB;
+
+    "bcc.w" => BHSW;
+    "bcs.w" => BLOW;
+    "bnz.w" => BNEW;
+    "bz.w"  => BEQW;
+
+    "bcc.l" => BHSL;
+    "bcs.l" => BLOL;
+    "bnz.l" => BNEL;
+    "bz.l"  => BEQL;
+}
 
