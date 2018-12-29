@@ -46,7 +46,7 @@ pub const ISA_B_UP:     u16 =                  ISA_B | ISA_C;
 
 impl CfFlags {
     #[inline]
-    const fn new(arity: usize, features: u16) -> CfFlags {
+    pub const fn new(arity: usize, features: u16) -> CfFlags {
         CfFlags(
             (arity as u16 &    ARITY_MASK) |
             (features     & FEATURES_MASK)
@@ -54,17 +54,17 @@ impl CfFlags {
     }
 
     #[inline]
-    const fn arity(self) -> usize {
+    pub const fn arity(self) -> usize {
         (self.0 & ARITY_MASK) as usize
     }
 
     #[inline]
-    const fn features(self) -> u16 {
+    pub const fn features(self) -> u16 {
         self.0 & FEATURES_MASK
     }
 
     #[inline]
-    const fn has_any(self, features: u16) -> bool {
+    pub const fn has_any(self, features: u16) -> bool {
         self.features() & features != 0
     }
 }
