@@ -1,5 +1,5 @@
 // This file is part of cfda, a fun little disassembler project.
-// Copyright (C) 2017 Jeffrey Sharp
+// Copyright (C) 2019 Jeffrey Sharp
 //
 // cfda is free software: you can redistribute it and/or modify it
 // under the terms of the GNU General Public License as published
