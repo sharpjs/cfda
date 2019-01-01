@@ -18,7 +18,7 @@ use std::fmt::{self, Display, Formatter};
 
 /// A ColdFire assembly operation.
 #[derive(Clone, Eq, PartialEq, Debug)]
-pub enum CfOp {
+pub enum Op {
     Halt,
     Nop,
     //...
@@ -26,10 +26,11 @@ pub enum CfOp {
 
 /// A ColdFire assembly argument.
 #[derive(Clone, Eq, PartialEq, Debug)]
-pub enum CfArg {
+pub enum Arg {
     Foo,
     Bar
-    //...kk
+    //...
+}
 
 // -----------------------------------------------------------------------------
 // Data Registers

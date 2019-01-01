@@ -37,8 +37,8 @@ use crate::ast::{Block, Stmt};
 pub struct Cf;
 
 impl Arch for Cf {
-    type Op  = CfOp;
-    type Arg = CfArg;
+    type Op  = Op;
+    type Arg = Arg;
 }
 
 type CfBlock = Block<Cf>;
