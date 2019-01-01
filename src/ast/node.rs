@@ -19,14 +19,14 @@ use super::Ident;
 use super::Slot;
 
 /// A block of assembly statements.
-#[derive(Debug)]
+#[derive(/*Clone, PartialEq, Eq,*/ Debug)]
 pub struct Block<A: Arch> {
     /// Assembly statements.
     pub stmts: Vec<Stmt<A>>,
 }
 
 /// An assembly statement.
-#[derive(Debug)]
+#[derive(/*Clone, PartialEq, Eq,*/ Debug)]
 pub struct Stmt<A: Arch> {
     /// Labels preceding the statement.
     pub labels: Vec<Ident>,
@@ -36,5 +36,85 @@ pub struct Stmt<A: Arch> {
 
     /// Arguments to the operation.
     pub args: Vec<Slot<A::Arg>>,
+}
+
+/// An assembly expression.
+#[derive(Clone, PartialEq, Eq, Hash, Debug)]
+pub enum Expr {
+    // Atoms -----
+
+    /// An identifier.
+    Ident(Ident),
+
+    /// An integer literal.
+    LitInt(i64),
+
+    // /// A floating-point literal.
+    // LitFloat(f64), // TODO: hash not implemented
+
+    /// A string literal.
+    LitStr(String),
+
+    /// A character literal.
+    LitChar(String),
+
+    // Composite -----
+
+    /// A unary operation.
+    Unary(Unary),
+
+    /// A binary operation.
+    Binary(Binary),
+}
+
+/// An assembly unary operator expression.
+#[derive(Clone, PartialEq, Eq, Hash, Debug)]
+pub struct Unary { 
+    op:   UnaryOp,
+    expr: Box<Slot<Expr>>,
+}
+
+/// An assembly binary operator expression.
+#[derive(Clone, PartialEq, Eq, Hash, Debug)]
+pub struct Binary {
+    op:  BinaryOp,
+    lhs: Box<Slot<Expr>>,
+    rhs: Box<Slot<Expr>>,
+}
+
+/// An assembly unary operator.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+pub enum UnaryOp {
+    Pos,        // +x
+    Neg,        // -x
+    BitNot,     // ~x
+    LogNot,     // !x (not in GAS)
+}
+
+/// An assembly binary operator.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+pub enum BinaryOp {
+    // Arithmetic
+    Mul,        // * (signed)
+    Div,        // / (signed)
+    Mod,        // % (signed)
+    Add,        // +
+    Sub,        // -
+    // Bitwise
+    Shl,        // <<
+    Shr,        // >>
+    ShrS,       // ->> (arithmetic)
+    BitOr,      // |
+    BitXor,     // ^
+    // Relational
+    Lt,         // <
+    LtEq,       // <=
+    Gt,         // >
+    GtEq,       // >=
+    Eq,         // ==
+    NotEq,      // !=
+    // Logical
+    LogAnd,     // &&
+    LogOr,      // ||
 }
 
