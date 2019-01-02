@@ -14,6 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
+use crate::ast::Slot;
+use crate::decode::{* /*, DecodeIndex as X*/};
+use crate::num::Field;
+use super::{Arg, AddrReg, DataReg};
+
 /// ColdFire operand kinds and bit positions.
 #[allow(non_camel_case_types)]
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
@@ -129,4 +134,114 @@ pub enum Operand {
     PcRel32,
 */
 }
+
+impl Decode<[u8], u16> for Operand {
+    type Output = Arg;
+
+    fn decode<'a>(&self, buf: &'a [u8], ctx: &u16) -> Option<(Arg, &'a [u8])> {
+        match *self {
+            Operand::DataReg0 => {
+                Some(( data_reg_at(*ctx, 0)?, buf ))
+            },
+            Operand::DataReg9 => {
+                Some(( data_reg_at(*ctx, 9)?, buf ))
+            },
+            _ => None
+        }
+    }
+}
+
+fn data_reg_at<P, V>(word: V, pos: P) -> Option<Arg>
+where
+    V: Field<P, u8>
+{
+    let reg = DataReg::with_num(word.field(pos, 0b111))?;
+    let arg = Arg::DataReg(Slot::Value(reg));
+    Some(arg)
+}
+
+fn addr_reg_at<P, V>(word: V, pos: P) -> Option<Arg>
+where
+    V: Field<P, u8>
+{
+    let reg = AddrReg::with_num(word.field(pos, 0b111))?;
+    let arg = Arg::AddrReg(Slot::Value(reg));
+    Some(arg)
+}
+
+/*
+
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+pub struct Mode {
+    bits: u8,
+    mask: u8,
+    f:    fn(),
+}
+
+static MODES: [Mode; 12] = [
+    Mode { bits: 0b_000_000, mask: 0b_111_000, f: mode_data         },
+    Mode { bits: 0b_001_000, mask: 0b_111_000, f: mode_addr         },
+    Mode { bits: 0b_010_000, mask: 0b_111_000, f: mode_addr_ind     },
+    Mode { bits: 0b_011_000, mask: 0b_111_000, f: mode_addr_ind_inc },
+    Mode { bits: 0b_100_000, mask: 0b_111_000, f: mode_addr_ind_dec },
+    Mode { bits: 0b_101_000, mask: 0b_111_000, f: mode_addr_disp    },
+    Mode { bits: 0b_110_000, mask: 0b_111_000, f: mode_addr_index   },
+    Mode { bits: 0b_111_000, mask: 0b_111_111, f: mode_abs_short    },
+    Mode { bits: 0b_111_001, mask: 0b_111_111, f: mode_abs_long     },
+    Mode { bits: 0b_111_010, mask: 0b_111_111, f: mode_pc_disp      },
+    Mode { bits: 0b_111_011, mask: 0b_111_111, f: mode_pc_index     },
+    Mode { bits: 0b_111_100, mask: 0b_111_111, f: mode_imm          },
+];
+
+static MODES_ROOT: DecodeIndex<Mode> =
+    /*[..]*/ X::Trie8(&MODES_XX, 3);
+
+static MODES_XX: [DecodeIndex<Mode>; 8] = [
+    /*[0.]*/ X::Leaf(&MODES[0]),
+    /*[1.]*/ X::Leaf(&MODES[1]),
+    /*[2.]*/ X::Leaf(&MODES[2]),
+    /*[3.]*/ X::Leaf(&MODES[3]),
+    /*[4.]*/ X::Leaf(&MODES[4]),
+    /*[5.]*/ X::Leaf(&MODES[5]),
+    /*[6.]*/ X::Leaf(&MODES[6]),
+    /*[7.]*/ X::Trie8(&MODES_7X, 0),
+];
+
+static MODES_7X: [DecodeIndex<Mode>; 8] = [
+    /*[70]*/ X::Leaf(&MODES[ 7]),
+    /*[71]*/ X::Leaf(&MODES[ 8]),
+    /*[72]*/ X::Leaf(&MODES[ 9]),
+    /*[73]*/ X::Leaf(&MODES[10]),
+    /*[74]*/ X::Leaf(&MODES[11]),
+    /*[75]*/ X::Empty,
+    /*[76]*/ X::Empty,
+    /*[77]*/ X::Empty,
+];
+
+const MODE_DATA:            u16 = 1 <<  0;  // d "data"
+const MODE_ADDR:            u16 = 1 <<  1;  // a "address"
+const MODE_ADDR_IND:        u16 = 1 <<  2;  // i "indirect"
+const MODE_ADDR_IND_INC:    u16 = 1 <<  3;  // p "plus"
+const MODE_ADDR_IND_DEC:    u16 = 1 <<  4;  // m "minus"
+const MODE_ADDR_DISP:       u16 = 1 <<  5;  // d "displacement"
+const MODE_ADDR_DISP_IDX:   u16 = 1 <<  6;  // x "index"
+const MODE_ABS_NEAR:        u16 = 1 <<  7;  // n "near"
+const MODE_ABS_FAR:         u16 = 1 <<  8;  // f "far"
+const MODE_PC_DISP:         u16 = 1 <<  9;  // D "Displacement"
+const MODE_PC_DISP_IDX:     u16 = 1 << 10;  // X "indeX"
+const MODE_IMM:             u16 = 1 << 11;  // I "Immediate"
+
+fn mode_data() {}
+fn mode_addr() {}
+fn mode_addr_ind() {}
+fn mode_addr_ind_inc() {}
+fn mode_addr_ind_dec() {}
+fn mode_addr_disp() {}
+fn mode_addr_index() {}
+fn mode_pc_disp() {}
+fn mode_pc_index() {}
+fn mode_abs_short() {}
+fn mode_abs_long() {}
+fn mode_imm() {}
+*/
 
