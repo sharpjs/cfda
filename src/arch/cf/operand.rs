@@ -14,8 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
-use crate::ast::Slot;
+use crate::ast::{Expr, Slot};
 use crate::decode::{* /*, DecodeIndex as X*/};
+use crate::mem::{BE, Load};
 use crate::num::Field;
 use super::{Arg, AddrReg, DataReg};
 
@@ -111,10 +112,13 @@ pub enum Operand {
 
     /// Cache selector (2 bits)
     CacheSel?,
+*/
+    /// Immediate (16 bits in extension words)
+    Imm16,
 
-    /// Immediate (16 or 32 bits in extension words)
-    Immediate,
-
+    /// Immediate (32 bits in extension words)
+    Imm32,
+/*
     /// Quick immediate (3 bits unsigned; 0 => 8; at ?)
     Quick3?,
 
@@ -145,6 +149,14 @@ impl Decode<[u8], u16> for Operand {
             },
             Operand::DataReg9 => {
                 Some(( data_reg_at(*ctx, 9)?, buf ))
+            },
+            Operand::Imm16 => {
+                let (ext, buf) = u16::load(buf, BE)?;
+                Some(( Arg::Imm(Slot::Value(Expr::LitInt(ext as i64))), buf ))
+            },
+            Operand::Imm32 => {
+                let (ext, buf) = u32::load(buf, BE)?;
+                Some(( Arg::Imm(Slot::Value(Expr::LitInt(ext as i64))), buf ))
             },
             _ => None
         }
