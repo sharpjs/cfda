@@ -90,13 +90,6 @@ pub struct Index {
     pub scale: Expr,
 }
 
-/// ColdFire data register pair.
-#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
-pub struct DataRegPair (
-    DataReg,  // remainder
-    DataReg,  // divisor
-);
-
 /// ColdFire cache selectors.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub enum Cache {
@@ -277,6 +270,22 @@ impl Display for IndexReg {
             IndexReg::Data(ref r) => r.fmt(f),
             IndexReg::Addr(ref r) => r.fmt(f),
         }
+    }
+}
+
+// -----------------------------------------------------------------------------
+// Register Pairs
+
+/// ColdFire data register pair.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+pub struct DataRegPair (
+    DataReg,  // remainder
+    DataReg,  // divisor
+);
+
+impl Display for DataRegPair {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        write!(f, "{}:{}", self.0, self.1)
     }
 }
 
