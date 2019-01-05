@@ -85,10 +85,10 @@ pub enum Operand {
 
     /// Data register, different one from prevous operand (3 bits)
     DataRegDiff(BitPos),
-
-    /// Address register (3 bits at ?)
-    AddrReg?,
-
+*/
+    /// Address register (3 bits at 11:9)
+    AddrReg9,
+/*
     /// Data or address register (4 bits at ?)
     NormalReg?,
 
@@ -149,6 +149,9 @@ impl Decode<[u8], u16> for Operand {
             },
             Operand::DataReg9 => {
                 Some(( Arg::DataReg(DataReg::decode(*ctx, 9)), buf ))
+            },
+            Operand::AddrReg9 => {
+                Some(( Arg::AddrReg(AddrReg::decode(*ctx, 9)), buf ))
             },
             Operand::Imm16 => {
                 let (ext, buf) = u16::load(buf, BE)?;
