@@ -15,7 +15,10 @@
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
 use std::fmt::{self, Display, Formatter};
+use std::mem::transmute;
+use std::ops::Add;
 use crate::ast::Expr;
+use crate::num::{Cast, Field, SetField};
 
 /// A ColdFire assembly operation.
 #[derive(Clone, Eq, PartialEq, Debug)]
@@ -88,16 +91,6 @@ pub struct Index {
     pub scale: Expr,
 }
 
-/// ColdFire index register.
-#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
-pub enum IndexReg {
-    /// Data register.
-    Data(DataReg),
-
-    /// Address register.
-    Addr(AddrReg),
-}
-
 /// ColdFire data register pair.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub struct DataRegPair (
@@ -137,13 +130,28 @@ impl DataReg {
 
     #[inline]
     pub fn with_num(n: u8) -> Option<Self> {
-        use std::mem::transmute;
-
         if n <= Self::MAX_NUM {
             Some(unsafe { transmute(n) })
         } else {
             None
         }
+    }
+
+    #[inline]
+    pub fn decode<W, P>(word: W, pos: P) -> Self
+    where
+        W: Copy + Field<P, u8>
+    {
+        let n = word.field(pos, 0b111);
+        unsafe { transmute(n) }
+    }
+
+    #[inline]
+    pub fn encode<W, P>(self, word: &mut W, pos: P)
+    where
+        W: Copy + SetField<P, u8>
+    {
+        *word = word.set_field(pos, 0b111, self as u8);
     }
 
     #[inline]
@@ -185,13 +193,28 @@ impl AddrReg {
 
     #[inline]
     pub fn with_num(n: u8) -> Option<Self> {
-        use std::mem::transmute;
-
         if n <= Self::MAX_NUM {
             Some(unsafe { transmute(n) })
         } else {
             None
         }
+    }
+
+    #[inline]
+    pub fn decode<W, P>(word: W, pos: P) -> Self
+    where
+        W: Copy + Field<P, u8>
+    {
+        let n = word.field(pos, 0b111);
+        unsafe { transmute(n) }
+    }
+
+    #[inline]
+    pub fn encode<W, P>(self, word: &mut W, pos: P)
+    where
+        W: Copy + SetField<P, u8>
+    {
+        *word = word.set_field(pos, 0b111, self as u8);
     }
 
     #[inline]
@@ -208,6 +231,57 @@ impl AddrReg {
 impl Display for AddrReg {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         f.write_str(self.name())
+    }
+}
+
+// -----------------------------------------------------------------------------
+// Index Registers
+
+/// ColdFire index register.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+pub enum IndexReg {
+    /// Data register.
+    Data(DataReg),
+
+    /// Address register.
+    Addr(AddrReg),
+}
+
+impl IndexReg {
+    #[inline]
+    pub fn decode<W, P>(word: W, pos: P) -> Self
+    where
+        W: Copy + Field<P, u8>,
+        P: Copy + Add<Output=P>,
+        usize: Cast<P>
+    {
+        match word.field(pos + 3.cast(), 0b1) {
+            0 => IndexReg::Data(DataReg::decode(word, pos)),
+            _ => IndexReg::Addr(AddrReg::decode(word, pos)),
+        }
+    }
+
+    #[inline]
+    pub fn encode<W, P>(self, word: &mut W, pos: P)
+    where
+        W: Copy + SetField<P, u8>,
+        P: Copy + Add<Output=P>,
+        usize: Cast<P>
+    {
+        let n = match self {
+            IndexReg::Data(ref r) => { r.encode(word, pos); 0 },
+            IndexReg::Addr(ref r) => { r.encode(word, pos); 1 },
+        };
+        *word = word.set_field(pos + 3.cast(), 0b1, n);
+    }
+}
+
+impl Display for IndexReg {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        match *self {
+            IndexReg::Data(ref r) => r.fmt(f),
+            IndexReg::Addr(ref r) => r.fmt(f),
+        }
     }
 }
 
