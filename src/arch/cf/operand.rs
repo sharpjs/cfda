@@ -17,7 +17,7 @@
 use crate::ast::Expr;
 use crate::decode::{* /*, DecodeIndex as X*/};
 use crate::mem::{BE, Load};
-use crate::num::Field;
+//use crate::num::Field;
 use super::{Arg, AddrReg, DataReg};
 
 /// ColdFire operand kinds and bit positions.
@@ -145,10 +145,10 @@ impl Decode<[u8], u16> for Operand {
     fn decode<'a>(&self, buf: &'a [u8], ctx: &u16) -> Option<(Arg, &'a [u8])> {
         match *self {
             Operand::DataReg0 => {
-                Some(( data_reg_at(*ctx, 0)?, buf ))
+                Some(( Arg::DataReg(DataReg::decode(*ctx, 0)), buf ))
             },
             Operand::DataReg9 => {
-                Some(( data_reg_at(*ctx, 9)?, buf ))
+                Some(( Arg::DataReg(DataReg::decode(*ctx, 9)), buf ))
             },
             Operand::Imm16 => {
                 let (ext, buf) = u16::load(buf, BE)?;
@@ -161,24 +161,6 @@ impl Decode<[u8], u16> for Operand {
             _ => None
         }
     }
-}
-
-fn data_reg_at<P, V>(word: V, pos: P) -> Option<Arg>
-where
-    V: Field<P, u8>
-{
-    let reg = DataReg::with_num(word.field(pos, 0b111))?;
-    let arg = Arg::DataReg(reg);
-    Some(arg)
-}
-
-fn addr_reg_at<P, V>(word: V, pos: P) -> Option<Arg>
-where
-    V: Field<P, u8>
-{
-    let reg = AddrReg::with_num(word.field(pos, 0b111))?;
-    let arg = Arg::AddrReg(reg);
-    Some(arg)
 }
 
 /*

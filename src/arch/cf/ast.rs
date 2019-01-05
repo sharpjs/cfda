@@ -16,9 +16,8 @@
 
 use std::fmt::{self, Display, Formatter};
 use std::mem::transmute;
-use std::ops::Add;
 use crate::ast::Expr;
-use crate::num::{Cast, Field, SetField};
+use crate::num::{Field, SetField};
 
 /// A ColdFire assembly operation.
 #[derive(Clone, Eq, PartialEq, Debug)]
@@ -201,18 +200,18 @@ impl AddrReg {
     }
 
     #[inline]
-    pub fn decode<W, P>(word: W, pos: P) -> Self
+    pub fn decode<W>(word: W, pos: u8) -> Self
     where
-        W: Copy + Field<P, u8>
+        W: Copy + Field<u8, u8>
     {
         let n = word.field(pos, 0b111);
         unsafe { transmute(n) }
     }
 
     #[inline]
-    pub fn encode<W, P>(self, word: &mut W, pos: P)
+    pub fn encode<W>(self, word: &mut W, pos: u8)
     where
-        W: Copy + SetField<P, u8>
+        W: Copy + SetField<u8, u8>
     {
         *word = word.set_field(pos, 0b111, self as u8);
     }
@@ -249,30 +248,26 @@ pub enum IndexReg {
 
 impl IndexReg {
     #[inline]
-    pub fn decode<W, P>(word: W, pos: P) -> Self
+    pub fn decode<W>(word: W, pos: u8) -> Self
     where
-        W: Copy + Field<P, u8>,
-        P: Copy + Add<Output=P>,
-        usize: Cast<P>
+        W: Copy + Field<u8, u8>
     {
-        match word.field(pos + 3.cast(), 0b1) {
+        match word.field(pos + 3, 0b1) {
             0 => IndexReg::Data(DataReg::decode(word, pos)),
             _ => IndexReg::Addr(AddrReg::decode(word, pos)),
         }
     }
 
     #[inline]
-    pub fn encode<W, P>(self, word: &mut W, pos: P)
+    pub fn encode<W>(self, word: &mut W, pos: u8)
     where
-        W: Copy + SetField<P, u8>,
-        P: Copy + Add<Output=P>,
-        usize: Cast<P>
+        W: Copy + SetField<u8, u8>
     {
         let n = match self {
             IndexReg::Data(ref r) => { r.encode(word, pos); 0 },
             IndexReg::Addr(ref r) => { r.encode(word, pos); 1 },
         };
-        *word = word.set_field(pos + 3.cast(), 0b1, n);
+        *word = word.set_field(pos + 3, 0b1, n);
     }
 }
 
