@@ -81,10 +81,10 @@ pub enum Operand {
     DataReg28,
 /*
     /// Data register, same one as previous operand (3 bits)
-    DataRegSame(BitPos),
+    DataRegSame?,
 
     /// Data register, different one from prevous operand (3 bits)
-    DataRegDiff(BitPos),
+    DataRegDiff?,
 */
     /// Address register (3 bits at 11:9)
     AddrReg9,
