@@ -15,7 +15,7 @@
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
 use std::fmt::{self, Display, Formatter};
-use crate::ast::{Expr, Slot};
+use crate::ast::Expr;
 
 /// A ColdFire assembly operation.
 #[derive(Clone, Eq, PartialEq, Debug)]
@@ -34,40 +34,40 @@ pub enum Arg {
 // General addressing modes
 
     /// Data register direct.
-    DataReg(Slot<DataReg>),
+    DataReg(DataReg),
 
     /// Address register direct.
-    AddrReg(Slot<AddrReg>),
+    AddrReg(AddrReg),
 
     /// Address register indirect.
-    AddrRegInd(Slot<AddrReg>),
+    AddrRegInd(AddrReg),
 
     /// Address register indirect with post-increment.
-    AddrRegIndInc(Slot<AddrReg>),
+    AddrRegIndInc(AddrReg),
 
     /// Address register indirect with pre-decrement.
-    AddrRegIndDec(Slot<AddrReg>),
+    AddrRegIndDec(AddrReg),
 
     /// Address register indirect with displacement.
-    AddrRegDisp(Slot<AddrReg>, Slot<Expr>),
+    AddrRegDisp(AddrReg, Expr),
 
     /// Address register indirect with displacement and scaled index.
-    AddrRegIdx(Slot<AddrReg>, Slot<Expr>, Slot<Index>),
+    AddrRegIdx(AddrReg, Expr, Index),
 
     /// Program counter relative with displacement.
-    PcDisp(Slot<PcReg>, Slot<Expr>),
+    PcDisp(PcReg, Expr),
 
     /// Program counter relative with displacement and scaled index.
-    PcIdx(Slot<PcReg>, Slot<Expr>, Slot<Index>),
+    PcIdx(PcReg, Expr, Index),
 
     /// Absolute short.
-    AbsShort(Slot<Expr>),
+    AbsShort(Expr),
 
     /// Absolute long.
-    AbsLong(Slot<Expr>),
+    AbsLong(Expr),
 
     /// Immediate.
-    Imm(Slot<Expr>),
+    Imm(Expr),
 
 // Special addressing modes
 
@@ -82,10 +82,10 @@ pub enum Arg {
 #[derive(Clone, PartialEq, Eq, Hash, Debug)]
 pub struct Index {
     /// Index register.
-    pub reg: Slot<IndexReg>,
+    pub reg: IndexReg,
 
     /// Scale factor applied to index value.
-    pub scale: Slot<Expr>,
+    pub scale: Expr,
 }
 
 /// ColdFire index register.
@@ -101,8 +101,8 @@ pub enum IndexReg {
 /// ColdFire data register pair.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub struct DataRegPair (
-    Slot<DataReg>,  // remainder
-    Slot<DataReg>,  // divisor
+    DataReg,  // remainder
+    DataReg,  // divisor
 );
 
 /// ColdFire cache selectors.

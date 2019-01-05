@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
-use crate::ast::{Expr, Slot};
+use crate::ast::Expr;
 use crate::decode::{* /*, DecodeIndex as X*/};
 use crate::mem::{BE, Load};
 use crate::num::Field;
@@ -152,11 +152,11 @@ impl Decode<[u8], u16> for Operand {
             },
             Operand::Imm16 => {
                 let (ext, buf) = u16::load(buf, BE)?;
-                Some(( Arg::Imm(Slot::Value(Expr::LitInt(ext as i64))), buf ))
+                Some(( Arg::Imm(Expr::LitInt(ext as i64)), buf ))
             },
             Operand::Imm32 => {
                 let (ext, buf) = u32::load(buf, BE)?;
-                Some(( Arg::Imm(Slot::Value(Expr::LitInt(ext as i64))), buf ))
+                Some(( Arg::Imm(Expr::LitInt(ext as i64)), buf ))
             },
             _ => None
         }
@@ -168,7 +168,7 @@ where
     V: Field<P, u8>
 {
     let reg = DataReg::with_num(word.field(pos, 0b111))?;
-    let arg = Arg::DataReg(Slot::Value(reg));
+    let arg = Arg::DataReg(reg);
     Some(arg)
 }
 
@@ -177,7 +177,7 @@ where
     V: Field<P, u8>
 {
     let reg = AddrReg::with_num(word.field(pos, 0b111))?;
-    let arg = Arg::AddrReg(Slot::Value(reg));
+    let arg = Arg::AddrReg(reg);
     Some(arg)
 }
 
