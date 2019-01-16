@@ -121,9 +121,14 @@ impl DataReg {
     pub const MAX_NUM: u8 = 7;
 
     #[inline]
+    pub unsafe fn with_num_unchecked(n: u8) -> Self {
+        transmute(n)
+    }
+
+    #[inline]
     pub fn with_num(n: u8) -> Option<Self> {
         if n <= Self::MAX_NUM {
-            Some(unsafe { transmute(n) })
+            Some(unsafe { Self::with_num_unchecked(n) })
         } else {
             None
         }
@@ -135,7 +140,7 @@ impl DataReg {
         W: Copy + Field<P, u8>
     {
         let n = word.field(pos, 0b111);
-        unsafe { transmute(n) }
+        unsafe { Self::with_num_unchecked(n) }
     }
 
     #[inline]
@@ -173,6 +178,8 @@ pub enum AddrReg {
     A0, A1, A2, A3, A4, A5, A6, A7
 }
 
+use AddrReg::*;
+
 static ADDR_REG_NAMES: [&str; 8] = [
     "a0", "a1", "a2", "a3", "a4", "a5", "fp", "sp"
 ];
@@ -180,25 +187,30 @@ static ADDR_REG_NAMES: [&str; 8] = [
 impl AddrReg {
     pub const MAX_NUM: u8 = 7;
 
-    pub const FP: AddrReg = AddrReg::A6;
-    pub const SP: AddrReg = AddrReg::A7;
+    pub const FP: Self = A6;
+    pub const SP: Self = A7;
+
+    #[inline]
+    pub unsafe fn with_num_unchecked(n: u8) -> Self {
+        transmute(n)
+    }
 
     #[inline]
     pub fn with_num(n: u8) -> Option<Self> {
         if n <= Self::MAX_NUM {
-            Some(unsafe { transmute(n) })
+            Some(unsafe { Self::with_num_unchecked(n) })
         } else {
             None
         }
     }
 
     #[inline]
-    pub fn decode<W>(word: W, pos: u8) -> Self
+    pub fn decode<W, P>(word: W, pos: P) -> Self
     where
-        W: Copy + Field<u8, u8>
+        W: Copy + Field<P, u8>
     {
         let n = word.field(pos, 0b111);
-        unsafe { transmute(n) }
+        unsafe { Self::with_num_unchecked(n) }
     }
 
     #[inline]
@@ -245,9 +257,14 @@ impl IndexReg {
     where
         W: Copy + Field<u8, u8>
     {
-        match word.field(pos + 3, 0b1) {
-            0 => IndexReg::Data(DataReg::decode(word, pos)),
-            _ => IndexReg::Addr(AddrReg::decode(word, pos)),
+        let bits = word.field(pos, 0b1111);
+        let kind = bits >> 3;
+        let num  = bits  & 0b111;
+
+        match kind {
+            0 => IndexReg::Data(unsafe { transmute(num) }),
+            1 => IndexReg::Addr(unsafe { transmute(num) }),
+            _ => unreachable!()
         }
     }
 
@@ -256,19 +273,20 @@ impl IndexReg {
     where
         W: Copy + SetField<u8, u8>
     {
-        let n = match self {
-            IndexReg::Data(ref r) => { r.encode(word, pos); 0 },
-            IndexReg::Addr(ref r) => { r.encode(word, pos); 1 },
+        let bits = match self {
+            IndexReg::Data(r) => {          r as u8 },
+            IndexReg::Addr(r) => { 0b1000 | r as u8 },
         };
-        *word = word.set_field(pos + 3, 0b1, n);
+
+        *word = word.set_field(pos, 0b1111, bits);
     }
 }
 
 impl Display for IndexReg {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         match *self {
-            IndexReg::Data(ref r) => r.fmt(f),
-            IndexReg::Addr(ref r) => r.fmt(f),
+            IndexReg::Data(r) => r.fmt(f),
+            IndexReg::Addr(r) => r.fmt(f),
         }
     }
 }
@@ -433,6 +451,26 @@ mod tests {
     pub fn addr_reg_aliases() {
         assert_eq!( AddrReg::FP, A6 ); // As of 2019-01-01, * does not import the aliases
         assert_eq!( AddrReg::SP, A7 ); // As of 2019-01-01, * does not import the aliases
+    }
+
+    #[test]
+    pub fn index_reg_fmt() {
+        assert_eq!( format!("{}", IndexReg::Data(D0)), "d0" );
+        assert_eq!( format!("{}", IndexReg::Data(D1)), "d1" );
+        assert_eq!( format!("{}", IndexReg::Data(D2)), "d2" );
+        assert_eq!( format!("{}", IndexReg::Data(D3)), "d3" );
+        assert_eq!( format!("{}", IndexReg::Data(D4)), "d4" );
+        assert_eq!( format!("{}", IndexReg::Data(D5)), "d5" );
+        assert_eq!( format!("{}", IndexReg::Data(D6)), "d6" );
+        assert_eq!( format!("{}", IndexReg::Data(D7)), "d7" );
+        assert_eq!( format!("{}", IndexReg::Addr(A0)), "a0" );
+        assert_eq!( format!("{}", IndexReg::Addr(A1)), "a1" );
+        assert_eq!( format!("{}", IndexReg::Addr(A2)), "a2" );
+        assert_eq!( format!("{}", IndexReg::Addr(A3)), "a3" );
+        assert_eq!( format!("{}", IndexReg::Addr(A4)), "a4" );
+        assert_eq!( format!("{}", IndexReg::Addr(A5)), "a5" );
+        assert_eq!( format!("{}", IndexReg::Addr(A6)), "fp" );
+        assert_eq!( format!("{}", IndexReg::Addr(A7)), "sp" );
     }
 
     #[test]
