@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with cfda.  If not, see <http://www.gnu.org/licenses/>.
 
-use std::ops::{Shl, Shr, BitAnd, BitOr};
+use std::ops::{BitAnd, BitXor, Shl, Shr};
 use super::Cast;
 
 /// Trait for reading bit fields within numbers.
@@ -31,8 +31,9 @@ pub trait SetField<P, V> {
 
 impl<T, P, V> Field<P, V> for T
 where
-    T: Shr<P, Output=T> + Cast<V>,
-    V: BitAnd<Output=V>
+    T: Copy + Shr<P, Output=T> + Cast<V>,
+    P: Copy,
+    V: Copy + BitAnd<Output=V>
 {
     #[inline(always)]
     fn field(self, pos: P, mask: V) -> V {
@@ -42,12 +43,17 @@ where
 
 impl<T, P, V> SetField<P, V> for T
 where
-    T: Shl<P, Output=T> + BitOr<Output=T>,
-    V: BitAnd<Output=V> + Cast<T>
+    T: Copy + Shl<P, Output=T> + BitAnd<Output=T> + BitXor<Output=T>,
+    P: Copy,
+    V: Copy + Cast<T>
 {
     #[inline(always)]
     fn set_field(self, pos: P, mask: V, value: V) -> Self {
-        (value & mask).cast() << pos | self
+        let mask  = mask .cast() << pos;
+        let value = value.cast() << pos;
+        self ^ ((self ^ value) & mask)
+        // https://graphics.stanford.edu/~seander/bithacks.html#MaskedMerge 
+        // = (self & !mask) | (value & mask)
     }
 }
 
