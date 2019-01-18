@@ -363,6 +363,19 @@ mod tests {
     }
 
     #[test]
+    pub fn data_reg_encode() {
+        let mut word = 0u32;
+        D0.encode(&mut word, 3); assert_eq!( word, 0o00 );
+        D1.encode(&mut word, 3); assert_eq!( word, 0o10 );
+        D2.encode(&mut word, 3); assert_eq!( word, 0o20 );
+        D3.encode(&mut word, 3); assert_eq!( word, 0o30 );
+        D4.encode(&mut word, 3); assert_eq!( word, 0o40 );
+        D5.encode(&mut word, 3); assert_eq!( word, 0o50 );
+        D6.encode(&mut word, 3); assert_eq!( word, 0o60 );
+        D7.encode(&mut word, 3); assert_eq!( word, 0o70 );
+    }
+
+    #[test]
     pub fn data_reg_num() {
         assert_eq!( D0.num(), 0 );
         assert_eq!( D1.num(), 1 );
