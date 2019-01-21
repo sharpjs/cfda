@@ -26,7 +26,10 @@ pub trait Field<P, V> {
 /// Trait for writing bit fields within numbers.
 pub trait SetField<P, V> {
     /// Sets the value of the bit field at position `pos`, masked with `mask`.
-    fn set_field(self, pos: P, mask: V, value: V) -> Self;
+    fn with_field(self, pos: P, mask: V, value: V) -> Self;
+
+    /// Sets the value of the bit field at position `pos`, masked with `mask`.
+    fn set_field(&mut self, pos: P, mask: V, value: V);
 }
 
 impl<T, P, V> Field<P, V> for T
@@ -48,12 +51,17 @@ where
     V: Copy + Cast<T>
 {
     #[inline(always)]
-    fn set_field(self, pos: P, mask: V, value: V) -> Self {
+    fn with_field(self, pos: P, mask: V, value: V) -> Self {
         let mask  = mask .cast() << pos;
         let value = value.cast() << pos;
         self ^ ((self ^ value) & mask)
         // https://graphics.stanford.edu/~seander/bithacks.html#MaskedMerge 
         // = (self & !mask) | (value & mask)
+    }
+
+    #[inline(always)]
+    fn set_field(&mut self, pos: P, mask: V, value: V) {
+        *self = self.with_field(pos, mask, value)
     }
 }
 
@@ -72,14 +80,27 @@ mod tests {
     }
 
     #[test]
-    pub fn set_field() {
+    pub fn with_field() {
         //            FEDCBA(987)6543210
         let word = 0b_000000_000_0000000_u16;
         let mask =        0b_111_u8;
         let val  =        0b_101_u8;
         let ret  = 0b_000000_101_0000000_u16;
 
-        assert_eq!( word.set_field(7, mask, val), ret );
+        assert_eq!( word.with_field(7, mask, val), ret );
+    }
+
+    #[test]
+    pub fn set_field() {
+        //            FEDCBA(987)6543210
+        let mut word = 0b_000000_000_0000000_u16;
+        let     mask =        0b_111_u8;
+        let     val  =        0b_101_u8;
+        let     ret  = 0b_000000_101_0000000_u16;
+
+        word.set_field(7, mask, val);
+
+        assert_eq!( word, ret );
     }
 }
 

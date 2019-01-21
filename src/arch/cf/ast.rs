@@ -148,7 +148,7 @@ impl DataReg {
     where
         W: Copy + SetField<P, u8>
     {
-        *word = word.set_field(pos, 0b111, self as u8);
+        *word = word.with_field(pos, 0b111, self as u8);
     }
 
     #[inline]
@@ -218,7 +218,7 @@ impl AddrReg {
     where
         W: Copy + SetField<u8, u8>
     {
-        *word = word.set_field(pos, 0b111, self as u8);
+        *word = word.with_field(pos, 0b111, self as u8);
     }
 
     #[inline]
@@ -278,7 +278,7 @@ impl IndexReg {
             IndexReg::Addr(r) => { 0b1000 | r as u8 },
         };
 
-        *word = word.set_field(pos, 0b1111, bits);
+        *word = word.with_field(pos, 0b1111, bits);
     }
 }
 
