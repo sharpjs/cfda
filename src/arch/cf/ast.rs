@@ -347,7 +347,7 @@ impl Display for SrReg {
 mod tests {
     use super::*;
     use super::DataReg::*;
-    use super::AddrReg::*;
+    //use super::AddrReg::*;
 
     #[test]
     pub fn data_reg_with_num() {

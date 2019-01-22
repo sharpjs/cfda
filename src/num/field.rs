@@ -55,8 +55,8 @@ where
         let mask  = mask .cast() << pos;
         let value = value.cast() << pos;
         self ^ ((self ^ value) & mask)
-        // https://graphics.stanford.edu/~seander/bithacks.html#MaskedMerge 
         // = (self & !mask) | (value & mask)
+        // from: https://graphics.stanford.edu/~seander/bithacks.html#MaskedMerge 
     }
 
     #[inline(always)]
