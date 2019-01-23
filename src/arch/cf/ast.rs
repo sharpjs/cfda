@@ -425,6 +425,19 @@ mod tests {
     }
 
     #[test]
+    pub fn addr_reg_encode() {
+        let mut word = 0u32;
+        A0.encode(&mut word, 3); assert_eq!( word, 0o00 );
+        A1.encode(&mut word, 3); assert_eq!( word, 0o10 );
+        A2.encode(&mut word, 3); assert_eq!( word, 0o20 );
+        A3.encode(&mut word, 3); assert_eq!( word, 0o30 );
+        A4.encode(&mut word, 3); assert_eq!( word, 0o40 );
+        A5.encode(&mut word, 3); assert_eq!( word, 0o50 );
+        A6.encode(&mut word, 3); assert_eq!( word, 0o60 );
+        A7.encode(&mut word, 3); assert_eq!( word, 0o70 );
+    }
+
+    #[test]
     pub fn addr_reg_num() {
         assert_eq!( A0.num(), 0 );
         assert_eq!( A1.num(), 1 );
@@ -484,6 +497,27 @@ mod tests {
         assert_eq!( format!("{}", IndexReg::Addr(A5)), "a5" );
         assert_eq!( format!("{}", IndexReg::Addr(A6)), "fp" );
         assert_eq!( format!("{}", IndexReg::Addr(A7)), "sp" );
+    }
+
+    #[test]
+    pub fn index_reg_encode() {
+        let mut word = 0u32;
+        IndexReg::Data(D0).encode(&mut word, 3); assert_eq!( word, 0o000 );
+        IndexReg::Data(D1).encode(&mut word, 3); assert_eq!( word, 0o010 );
+        IndexReg::Data(D2).encode(&mut word, 3); assert_eq!( word, 0o020 );
+        IndexReg::Data(D3).encode(&mut word, 3); assert_eq!( word, 0o030 );
+        IndexReg::Data(D4).encode(&mut word, 3); assert_eq!( word, 0o040 );
+        IndexReg::Data(D5).encode(&mut word, 3); assert_eq!( word, 0o050 );
+        IndexReg::Data(D6).encode(&mut word, 3); assert_eq!( word, 0o060 );
+        IndexReg::Data(D7).encode(&mut word, 3); assert_eq!( word, 0o070 );
+        IndexReg::Addr(A0).encode(&mut word, 3); assert_eq!( word, 0o100 );
+        IndexReg::Addr(A1).encode(&mut word, 3); assert_eq!( word, 0o110 );
+        IndexReg::Addr(A2).encode(&mut word, 3); assert_eq!( word, 0o120 );
+        IndexReg::Addr(A3).encode(&mut word, 3); assert_eq!( word, 0o130 );
+        IndexReg::Addr(A4).encode(&mut word, 3); assert_eq!( word, 0o140 );
+        IndexReg::Addr(A5).encode(&mut word, 3); assert_eq!( word, 0o150 );
+        IndexReg::Addr(A6).encode(&mut word, 3); assert_eq!( word, 0o160 );
+        IndexReg::Addr(A7).encode(&mut word, 3); assert_eq!( word, 0o170 );
     }
 
     #[test]
